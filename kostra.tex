@@ -1,0 +1,4113 @@
+\documentclass[a4wide]{report}
+\usepackage[czech]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{multirow}
+\usepackage{a4wide}
+
+\usepackage{color}
+\usepackage[unicode,colorlinks,hyperindex,plainpages=false,pdftex]{hyperref}
+
+\usepackage{listings}  
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\lstset{language=VHDL,commentstyle=\color{mygreen},tabsize=4}
+
+\begin{document}
+
+\tableofcontents
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Princip činnosti polovodičových prvků} \label{cha:1}
+
+???
+
+(dioda, bipolární a unipolární tranzistor ve spínacím režimu, realizace logických členů NAND a NOR v technologii CMOS)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Kombinační logické obvody} \label{cha:2}
+
+2. semestr, INC, 3. přednáška
+
+(multiplexor, demultiplexor, kodér, dekodér, binární sčítačka)
+
+Hierarchicky uspořádaný obvod, ve kterém jednotlivé komponentu zpracovávají informaci reprezentovanou v binární podobě (log. úrovně) a mezi sebou komunikují.
+
+\subsection{Komponenty}
+\begin{itemize}
+	\item Kombinační chování
+	\item Každý vstup připojen pouze k jednomu výstupu (výstupy nelze spojovat)
+	\item Struktura neobsahuje cykly (zpětné vazby)
+\end{itemize}
+
+Členy AND (\&), OR ($\geq{}1$), NOT (1$\circ$), NAND (\&$\circ$), NOR ($\geq{}1\circ$), XOR ($=1$).
+
+Aktivitu v log. 0 značí $\circ$.
+
+Moduly: Složitější komponenty složené z jednodušších log. členů. Vykonávají specifickou, často používanou funkci. Stavební bloky obvodu.
+
+\section{Demultiplexor}
+
+\begin{description}
+	\item[D] 1 datový vstup
+	\item[A] N adresových vstupů
+	\item[Y] $2^N$ výstupů
+\end{description}
+
+Přenos logické úrovně z D na jeden z výstupů Y. Ostatní neaktivné. Výstup určen binární hodnotou A.
+
+DMX 1-$2^N$
+
+\subsection{DMX 1-4}
+
+\begin{itemize}
+	\item Vstupy: $D$, $A_1$, $A_0$
+	\item Výstupy: $Y_3$, $Y_2$, $Y_1$, $Y_0$
+\end{itemize}
+
+\begin{tabular}{ |c c c | c c c c |}
+\hline
+\multicolumn{3}{ | c |}{Vstupy} & \multicolumn{4}{ | c |}{Výstupy} \\
+$D$ & $A_1$ & $A_0$ & $Y_3$ & $Y_2$ & $Y_1$ & $Y_0$ \\ \hline
+0 & 0 & 0 & 0 & 0 & 0 & \textbf{0} \\ 
+0 & 0 & 1 & 0 & 0 & \textbf{0} & 0 \\
+0 & 1 & 0 & 0 & \textbf{0} & 0 & 0 \\
+0 & 1 & 1 & \textbf{0} & 0 & 0 & 0 \\ \hline
+
+1 & 0 & 0 & 0 & 0 & 0 & \textbf{1} \\ 
+1 & 0 & 1 & 0 & 0 & \textbf{1} & 0 \\
+1 & 1 & 0 & 0 & \textbf{1} & 0 & 0 \\
+1 & 1 & 1 & \textbf{1} & 0 & 0 & 0 \\ \hline
+\end{tabular}
+
+\section{Dekodér}
+
+Demultiplexor s D=1. N adresních vstupů, $2^N$ výstupů.
+
+Použití: adresový dekodér, pro displeje, nebo paměti.
+
+Může obsahovat povolovací vstup, potom se chová stejně jako DMX.
+
+\subsection{DC 2 - 4}
+
+\begin{tabular}{ |c c | c c c c |}
+\hline
+\multicolumn{2}{ | c |}{Vstupy} & \multicolumn{4}{ | c |}{Výstupy} \\
+$A_1$ & $A_0$ & $Y_3$ & $Y_2$ & $Y_1$ & $Y_0$ \\ \hline
+ 0 & 0 & 0 & 0 & 0 & \textbf{1} \\ 
+ 0 & 1 & 0 & 0 & \textbf{1} & 0 \\
+ 1 & 0 & 0 & \textbf{1} & 0 & 0 \\
+ 1 & 1 & \textbf{1} & 0 & 0 & 0 \\ \hline
+\end{tabular}
+
+Pro více vstupů a výstupů: Paralelní struktura, Stromová (řešení omezeného množství vstupů AND), Maticová.
+
+Použití pro generování logických funkcí: $X,Y,Z \to DC \to OR \to f(X,Y,Z)$
+
+\subsection{Dekodér BCD}
+
+Převod binárního čísla BCD na danou reprezentaci Dekodér 1 z 10.
+
+\subsection{Dekodér pro 7segmentový displej}
+
+Dekodér 1 z 7. 
+
+\section{Multiplexor}
+
+\begin{description}
+	\item[S] N adresových vstupů
+	\item[D] $2^N$ datových vstupů
+	\item[Y] 1 datový výstup
+\end{description}
+
+MX, MUX. Opak demultiplexoru. Na základ binární kombinace na S přivede na Y jeden z vstupů na D.
+
+Realizace log. funkcí: Proměnné na S, Na D přivést $V_{CC}$, nebo $GND$.
+
+\section{Kodér}
+
+\begin{description}
+	\item[X] $2^N$ datových vstupů
+	\item[A] N výstupů
+\end{description}
+
+Výstupem je binární reprezentace pořadí aktivního vstupu. Nedefinované chování při více aktivních vstupech.
+
+\section{Prioritní kodér}
+
+Výstupem navíc GS, které říká, zda je vybraný alespoň jeden vstup a má definované chování i pro více aktivních vstupů.
+
+\section{Binární sčítačka poloviční (Half Adder)}
+
+Nemá vstup carry (přenos z nižšího řádu)
+
+\begin{description}
+	\item[Vstup] X, Y
+	\item[C] Carry, $ c = x \cdot y$
+	\item[S] Suma, $ s = y \oplus x$
+\end{description}
+
+\begin{tabular}{ |c | c | c | c |}
+ \hline
+ x & y & c & s \\ \hline
+ 0 & 0 & 0 & 0 \\
+ 0 & 1 & 0 & 1 \\
+ 1 & 0 & 0 & 1 \\
+ 1 & 1 & 1 & 0 \\ \hline
+\end{tabular}
+
+\section{Binární sčítačka úplná (Full Adder}
+
+\begin{description}
+	\item[Vstup] $x_i$, $y_i$
+	\item[$c_{i-1}$] Vstup carry z nižšího řádu
+	\item[$c_i$] Carry, $ c_i = x_i \cdot y_i + x_i \cdot c_{i-1} + y_i \cdot c_{i-1}$
+	\item[$s_i$] Suma, $ s_i = x_i \oplus y_i \oplus c_{i-1}$
+\end{description}
+
+Vícebitová - zřetězení - levné a pomalé (přenos carry přes celou kaskádu). Zrychlení paralelní strukturou, nebo Carry lookahead.
+
+\section{Další}
+
+Test na shodu, Test na nulu, Komparátor, Válcový posouvač.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Sekvenční logické obvody } \label{cha:3}
+
+2. semestr, INC, 4 - 6. přednáška
+
+(klopné obvody, čítače, registry, stavové automaty – reprezentace a implementace)
+
+\begin{description}
+	\item[Kombinační obvody] Výstup závislý pouze na hodnotách vstupního vektoru
+	\item[Sekvenční obvody] Hodnoty výstupního vektoru jsou funkcí současných i minulých hodnot vstupního vektoru
+\end{description}
+
+\begin{description}
+	\item[Synchronní] jednoduchý návrh, KO pro paměť stavu, synchronizováno hodinovým isgnálem, Vzorkování vstupů.
+	\item[Asynchronní] složitý návrh
+	\begin{description}
+		\item[Fundamentální režim činnosti] Vstup musí být stabilní, než se obvod ustálí, jednom okamžiku lze provést pouze jednu změnu vstupů a čekat na ustálení. Paměť = zpoždění.
+		\item[Pulsní režim činnosti] Vstup je aktivní pouze v určitou dobu = pulzy, pouze jeden pulz může být aplikován na vstup.
+	\end{description}
+\end{description}
+
+
+\subsection{Paměť}
+Pamatuje si vektor vnitřního (současného) stavu.
+
+\section{Model - reprezentace}
+
+Modelujeme jako sekvenční automaty - šestice $A = (X, Y, Q, q_0, P, V)$
+\begin{description}
+	\item[$X$] Vstupní abeceda
+	\item[$Y$] Výstupní abeceda
+	\item[$Q$] Vnitřní abeceda (stavy)
+	\item[$q_0$] Počáteční stav
+	\item[$P$] Přechodová funkce, která některým $X \times Q$ přiřazuje prvek z $Q$
+	\item[$V$] Výstupní funkce, která některým $X \times Q$ přiřazuje prvek z $Y$
+\end{description}
+
+\subsection{Výstupní funkce}
+\begin{description}
+	\item[Maelyho automat] $y_i = V(x_i, q_i)$ Vstupem funkce je stav a vstup
+	\item[Mooreův automat] $y_i = V(q_i)$ Vstupem je pouze aktuální stav
+\end{description}
+
+Přechodová funkce na základě vstupu a aktuálního stavu generuje hodnotu následujícího stavu.
+
+\subsection{Graf přechodů}
+
+\begin{itemize}
+	\item Stav = Uzel
+	\item Přechod = Orientovaná hrana
+	\item Vstupy = ohodnocení hrany
+	\item Výstupy = K hraně za lomítko (Mealy), nebo k uzlu za lomítko (Moore)
+\end{itemize}
+
+\subsection{Tabulka přechodů}
+
+\begin{itemize}
+	\item Řádky - stavy a Moorovy výstupy
+	\item Sloupce - vstupy
+	\item Průsečíky - následující stavy a Mealyho výstupy
+\end{itemize}
+
+Paměť -- volatilní -- informace lze číst a ukládat dle potřeby. Nevolatilní -- čtení podle potřeby, zápis jednorázový nebo pomalý (FLASH). Nejčastěji klopné obvody -- rychlé, dva stavy 0 a 1. Bistabilní klopné obvody (KO).
+
+\subsection{Zpoždění signálů}
+
+\begin{description}
+	\item[Inerční zpoždění] Způsobené setrvačností, parazitními kapacitami. Pulz musí být minimální délky, aby obvodem prošel.
+	\item[Transportní zpoždění] Dáno rychlostí šíření signálu v daném médiu. Dříve využíváno jako paměti
+	\item[Zpožďovací linka] Informace vložená na začátku se na konci objeví až po určitém čase  (vhodné médium, např. rtuť).
+\end{description}
+
+\section{Klopné obvody}
+
+\subsection{RESET SET -- R-S KO}
+
+Sestavený z členů NOR. Hladinový -- RS Latch.
+
+Nejjednodušší, dva stavy, třetí nevalidní.
+
+\begin{description}
+	\item[R = 0, S = 1] SET Nastaví stav na 1
+	\item[R = 1, S = 0] RESET Nastaví stav na 0
+	\item[R = 0, S = 0] HOLD Drží poslední nastavený stav na výstupu
+	\item[R = 1, S = 1] Zakázaný vstup, nedefinovaný výstup
+\end{description}
+
+\subsection{RESET SET s povolovacím vstupem -- Gated R-S Latch}
+
+Nastavit a nulovat lze pouze s C=1 (controll, clock).
+
+\subsection{D KO s povolovacím vstupem -- Transparent D Latch}
+
+Spojení vstupů SET a RESET (přes invertor) na D.
+
+\begin{description}
+	\item[C = 1, D = X] STORE Nastaví do paměti hodnotu na vstupu D (Transparent mode)
+	\item[C = 0, D = X] HOLD Drží poslední nastavený stav na výstupu (Latch mode)
+\end{description}
+
+\subsection{J-K KO s povolovacím vstupem -- Gated J-K Latch}
+
+Zpětnou vazbou eliminuje zakázanou kombinaci. Nový stav TOGGLE.
+
+\begin{description}
+	\item[C = 0 nebo J=K=0] HOLD Drží poslední nastavený stav na výstupu
+	\item[C = 1, K = 1] RESET Nastaví do paměti 0
+	\item[C = 1, J = 1] SET Nastaví do paměti 1
+	\item[C = K = J = 1] TOGGLE Překlop stav v paměti
+\end{description}
+
+\subsection{T KO s povolovacím vstupem -- Gated T Latch}
+
+Spojení J a K do T. Pokud trvale C=T=1, neustále osciluje -- řešení Master-Slave, Edge-triggered KO.
+
+\begin{description}
+	\item[C = 0 nebo T=0] HOLD Drží poslední nastavený stav na výstupu
+	\item[C = T = 1] TOGGLE Překlop stav v paměti
+\end{description}
+
+\subsection{Dvoufázové KO}
+
+Realizace pomocí dvou KO s povolovacím vstupem přivedeném z CLK.
+
+Informace se při CLK=0 zapisuje do Mater KO, při CLK=1 do Slave KO, odkud je po celou dobu hodinového pulzu předávána na výstup (do změny stavu z Master).
+
+\begin{description}
+	\item[R-S KO] Master-Slave R-S Flip-Flop
+	\item[J-K KO] Master-Slave J-K Flip-Flop
+	\item[T KO] Master-Slave T Flip-Flop
+	\item[D KO] Master-Slave D Flip-Flop
+\end{description}
+
+\subsection{Derivační KO}
+
+Úmyslné generování log. hazardu (krátký impulz) pomocí nestejné délky logické větve -- zpoždění invertoru. Generováno s hranou hodinového signálu na povolovací vstup KO.
+
+Změna stavu může nastat pouze ve chvíli změny hrany hodin. signálu.
+
+\begin{description}
+	\item[R-S KO] Edge-Triggered R-S Flip-Flop
+	\item[J-K KO] Edge-Triggered J-K Flip-Flop
+	\item[T KO] Edge-Triggered T Flip-Flop
+	\item[D KO] Edge-Triggered D Flip-Flop
+\end{description}
+
+
+\section{Sekvenční logické obvody}
+	
+Kombinační log. síť --sdružuje přechodovou (NS = Next State) a výstupní funkcí (Mealy, Moore)
+
+Paměť -- pamatuje si vektor vnitřního (současného) stavu (PS = Present State). Realizováno pomocí registru z klopných obvodů, řízených hodinovým isgnálem CLK. Často inicializace (RST).
+
+\begin{description}
+	\item[+] Stačí dodržet časy Thold, Tsetup definované pro jednotlivé KO
+	\item[+] Jednoduchá automatická syntéza
+	\item[-] Přizpůsobení nejpomalejšímu KO (lze omezit vhodným návrhem)
+	\item[-] Vyžadován stabilní CLK (malý jitter a malé zpoždění (skew) mezi jednotlivými KO
+\end{description}
+
+Tabulka přechodů KO (opak k pravdivostní tabulce).
+
+\begin{tabular}{| *{2}{c} | *{2}{c} | *{2}{c} | c | c |}
+	\hline
+	$Q_t$ & $Q_{t+1}$ & $S$ & $R$ & $J$ & $K$ & $D$ & $T$ \\ \hline
+	0 & 0 & 0 & X & 0 & X & 0 & 0 \\
+	0 & 1 & 1 & 0 & 1 & X & 1 & 1 \\
+	1 & 0 & 1 & 1 & X & 1 & 0 & 1 \\
+	1 & 1 & X & 0 & X & 0 & 1 & 0 \\
+	\hline
+\end{tabular}
+
+
+Kódování stavů automatu -- každý stav musí mít unikátní kód:
+\begin{description}
+	\item[Binární] binární hodnota čísla stavu
+	\item[One-hot] Každý stav má k dispozici jeden KO
+	\item[Johnsonův, Grayův, Kompaktní] ...
+\end{description}
+
+\section{Asynchronní čítač (binární)}
+
+asynchronní = nemá centrální hodinový signál, který synchronizuje všechno KO současně.
+
+Tříbitový: 3 J-K KO zapojení jako T K. QN připojeno na C dalšího KO. Generuje posloupnost 0,1,2,3,4,5,6,7,0,1 ...
+
+Výstup platný až po ustálení všech výstupů.
+
+\subsection{Asynchronní čítač (mod 10) dekadický}
+
+Výstupy Q1 a Q3 (hodnota 10) přes NAND hradlo se provádí asynchronní nulování všech KO (= Nulovací pulz = Glitch. Velmi krátký).
+
+\subsection{Asynchronní čítač modulo 12}
+
+První dva KO počítají 0 -- 3. Další dva je třeba nulovat př přechodu na hodnotu 3.
+
+Standardní čítač 4bitový: IO 7493 - dva hodinové vstupy CLKA (první KO) a CLKB (ostatní KO), dva resety RO1, RO2.
+
+\section{Synchronní čítač}
+
+\begin{itemize}
+	\item Při aktivním CLK automat přechází ze stavu do stavu
+	\item Často více nastavení, směr počítání UP/DOWN
+	\item indikace přetečení Ripple Carry Output (Kaskádní - pomalejší ustálení, Paralelní - rychlejší, složitější)
+	\item Clock enable
+	\item Dělící poměr
+	\item Kaskáda -- RCO připojit na vstup CE dalšího
+\end{itemize}
+
+Například pro generování Grayova kódu.
+
+Použití jako dělička kmitočtu (synchronní i asynchronní). Při zapojení v kaskádě se dělící poměry násobí.
+
+Například digitální hodiny: $60Hz => DIV 10 => DIV 6 => (1 Hz) => sekundy => DIV 60 => minuty => DIV 60 => hodiny$
+
+Převod paralelní posloupnosti na sériovou: CTR DIV 8 jako data select MUX. Paralelní data o šířce 8 bitů. Výstup sériová linka.
+
+\section{Posuvné registry}
+
+synchronní, sestavené z KO. Sériové/paralelní vstupy/výstupy, shift/rotate left/right
+
+Použité například jako kruhový čítač.
+
+Univerzální posuvný registr.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Hierarchie paměti v počítači} \label{cha:4}
+
+5. semestr, IPZ, ?. přednáška
+
+(typy a principy pamětí, princip lokality, organizace rychlé vyrovnávací paměti)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Vestavěné systémy} \label{cha:5}
+
+?. semestr, ??, ?. přednáška
+
+(mikrokontrolér, periferie, rozhraní, převodníky)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Principy řízení a připojování periferních zařízení} \label{cha:6}
+
+5. semestr, IPZ, 1. - 4. přednáška ??
+
+(přerušení, programová obsluha, přímý přístup do paměti, sběrnice)
+
+\paragraph{Periferní operace} komunikace na které se podílejí:
+
+Počítač (procesor) -- systémová sběrnice -- adaptér (řadič) PZ -- V/V (I/O) sběrnice -- PZ
+
+\subsection{Zahájení periferní operace}
+
+\begin{itemize}
+	\item V ASM nastavený bit \uv{start operace} = 1, součástí stavového registru
+	\item V řadiči řídící a stavový registr. Řadič pozná, že je adresován, vloží obsah datové části sběrnice do adresového registru. V odpovědi vloží obsah adresovaného registru na datovou sběrnici. Signály řízení jsou generovány instrukcemi vstupu a výstupu.
+\end{itemize}
+
+\subsection{Komunikace mezi procesorem a  řadičem PZ}
+
+Komunikace s registry řadiče (R/W) - před zahájením a po dokončení PO:
+\begin{description}
+	\item[Izolovaný vstupy a výstupy] Instrukce IN a OUT -- dekodér, datová sběrnice přivedena na všechny vstupy, pouze na jeden povolení na základě komparátoru požadované části adresy. \uv{Zápis do registru}
+	\item[Adresy registrů mapovány do adresového prostoru OP] \uv{Zápis do paměti} odvozen od instrukce pro práci s pamětí.
+	
+	Nepřímá adresace: Registr (nebo paměť) adresován obsahem registru, nikoliv obsahem adresové části sběrnice. Adresu je potřeba do registru nejprve vložit (OUT).
+\end{description}
+
+
+Mezi univerzálním registrem procesoru a registry řadiče.
+
+Nelze mezi pamětí a registrem řadiče, protože by v jednu chvíli musel být adresy obou na sběrnici.
+
+DMA -- přímý přístup do paměti bez účasti procesoru -- řízeno řadičem DMA, který v tu chvíli ovládá sběrnici.
+
+\section{Systémová sběrnice}
+
+ISA, EISA, PCI -- postupné zvyšování rychlosti a šířky.
+
+PIO (Programmed Input/Output) a DMA (Direct Memory Access). Různé rychlosti, potřeba vyvíjet výkon obou dvou.
+
+Rychlost závisí na:
+\begin{itemize}
+	\item kmitočtu synchronizace [MHz],
+	\item šířce sběrnice,
+	\item technologii (paralelní / sériová).
+\end{itemize}
+
+Typy informací přenášené po sběrnici:
+\begin{itemize}
+	\item data,
+	\item adresy,
+	\item příkazy,
+	\item stavové informace.
+\end{itemize}
+
+Nejprve jsou vystavena data, poté je generován řídící signál. Ten určuje platnost dat. Následuje vložení informace z datové sběrnice do registru (řízeno hodinami).
+
+\subsection{Nesdílená sběrnice}
+(ISA) -- data, adresy, příkazy a stav -- každý typ informace je vystaven na samostatné sadě vodičů
+
+\subsection{Sdílená sběrnice}
+(PCI) všechny typy signálů na stejná sadě vodičů. Rozšířeno o identifikační signály, které rozlišují typ informace v každém okamžiku nebo je význam zajištěn pomocí časového multiplexu -- přenášení informace ve vymezených časových intervalech.
+
+\paragraph{Konstrukce} Rozvody na systémové desce, konektory pro komunikaci s řadiči PZ.
+
+\paragraph{Služby} Přenos dat, adresy, řízení (přenos informace, inicializace a realizace DMA, přerušení), stavové informace
+
+\subsection{Signál o shodě adres}
+Interní signál řadiče ISA, nebo signálem sběrnice (DEVSEL) u PCI.
+
+Problém s různými rychlostmi -- řešení dedikovaná sběrnice (AGP)
+
+\begin{description}
+	\item[Tradiční architektura (ISA)] Rychlá paměť, ostatní jsou pomalé
+	
+	Local Bus -- Procesor a cache
+	
+	System Bus -- Paměť
+	
+	Expansion Bus -- Síť, SCSI, modem, serial
+	
+	\item[Vyšší typy PC] každý ze segmentů je na jiné frekvenci
+	
+	Procesor -- Local Bus -- Cache -- System Bus -- Memory
+	
+	Cache -- High Speed Bus -- Graphics, LAN, Video, SCSI
+	
+	High Speed Bus -- Expansion Bus -- Serial, Modem, FAX
+	
+	\item[PCI]
+	
+	norhtbridge -- transformace sběrnice procesoru na sběrnici PCI
+	
+	southbridge -- transformace PCI sběrnice na rozhraní PZ
+\end{description}
+
+\subsection{V/V procesor}
+
+Procesor nemá přístup k registrům řadičů, procesor komunikuje s řadiči jednotným způsobem -- signální sledy.
+
+Snaha o sjednocení konstrukce řadičů -- V/V procesor v řadiči PZ -- jednotná komunikace s PZ přes V/V procesor, jednotně konstruované ovladače
+
+V/V procesor -- Univerzální přenosový procesor -- UPPR -- obsahuje mikroprogram.
+
+\subsection{SCSI}
+host adapter na straně procesoru, řadič SCSI a řadiče PZ na straně PZ, ovládání pomocí signálových sledů.
+
+\subsection{UNIBUS}
+všechny prvky na sběrnici stejné úrovně, umějí řídit sběrnici a komunikovat mezi sebou (např. disk -- tiskárna)
+
+\subsection{PZ u počítačů 3. generace}
+kanálová koncepce -- IBM. PZ a řadiče jsou jeden celek, komunikace pomocí signálových sledů. Kanál = program/počítač
+
+\begin{description}
+	\item[Multiplexní kanál] Pro pomalá PZ (tiskárny)
+	\item[Selekční kanál] Pro rychlá PZ (disky)
+\end{description}
+
+Podobné jako DMA, ale data procházela přes kanál.
+
+\subsection{Princip přidělování sběrnice}
+
+Rozhodnutí se, ze kterého zařízení na sběrnici se bude vysílat.
+
+\begin{description}
+	\item[Centralizované] Řídící prvek -- Arbitr, rozhoduje podle priorit (u PCI northbridge). V řídící části sběrnice probíhají signály pro přidělení datové.
+	\item[Distribuované] Prvky na sběrnici se musí \uv{domluvit}
+\end{description}
+
+\paragraph{Centrálně řízená sběrnice na výzvy}
+Žádost je poslána po společném vodiči, Arbirt vyvolává čísla, PZ se \uv{pozná}, nastaví obsazení sběrnice a přenáší data.
+
+\paragraph{Centrálně řízená postupná obsluha sběrnice}
+Žádost na společném vodiči, informace \uv{sběrnice volná} přeposílána  z jednoho zařízení na druhé až tomu, které žádost poslalo. To přeposílání zablokuje a obsadí sběrnici.
+
+\paragraph{Decentralizované přidělování sběrnice}
+Stejně jako minulé, ale bez arbitra -- žádost připojena na vstup zařízení, která si signál předávají dále, dokud se nedojde k odesílateli. Například SCSI -- pro každé zařízení jeden bit.
+
+\section{Principy konstrukce Systémové sběrnice}
+
+Řízení, adresa, data. Propojení dvou a více zařízení, vysílá jedno zařízení, přijímat mohou všechny. 
+
+\subsection{Adresová část}
+Jak adresovat dvě zařízení (zdroj, cíl)?
+\begin{itemize}
+	\item Implicitně -- univerzální registr procesoru
+	\item jinak -- při DMA
+\end{itemize}
+
+Standardně část adresuje konkrétní PZ a další část konkrétní registr zařízení nebo buňku paměti. Nebo využití signálu pro přidělení sběrnice pro adresaci druhého prvku (např. ISA).
+
+DMA -- řadič PZ, řadič DMA, paměť, systémová 
+
+\subsection{Řídící část}
+
+Signály:
+\begin{description}
+	\item[Memory Read/Write] Datová část $\to$ paměť
+	\item[I/O Read/Write] Datová část $\to$ registr
+	\item[Transfer ACK] Potvrzení příjmu
+	\item[Bus Request/Grant] Přidělní sběrnice
+	\item[Interrupt Request/ACK] přerušení
+	\item[Clock, Reset] Synchronizace a nulování
+\end{description}
+
+\subsection{Fyzická realizace} rozvody na systémové desce a konektory. V moderních je vše na systémové desce, včetně řadičů PZ -- výhoda: konektor omezuje maximální frekvence/rychlosti.
+
+\paragraph{Synchronní sběrnice}
+Operace odvozeny od jedná z hran synchronizačního pulzu -- s hranou kontrola připravenosti obou zařízení.
+
+Hodinový, nebo sběrnicový cyklus -- mezi dvěma sousedními nástupnými hranami.
+
+\paragraph{Asynchronní sběrnice}
+Nejsou synchronizační signály, generování signálu vázáno na předchozí události (Read $\to$ ACK, Write $\to$ ACK -- Handshake / Dotaz -- Odpověď).
+
+\paragraph{Sdílená sběrnice (multiplexed)} (PCI)
+Časový multiplex, sada signálů postupně využívána pro různé typy informací.
+
+\paragraph{Nesdílená sběrnice (dedicated)} (ISA)
+Sada vodičů vyhrazená pro přesný typ informace.
+
+\paragraph{Dedikovaná sběrnice}
+Sběrnice vyhrazená pro propojení dvou zařízení.
+
+
+
+
+\section{Řadič PZ (adaptér)}
+
+Princip komunikace s procesorem přes systémovou sběrnici, komunikace s PZ přes V/V sběrnici
+
+Autonomně řídí PZ, zjišťuje stav, předává data, přenáší do procesoru a zpět.
+
+PO
+\begin{itemize}
+	\item Řídit po celou dobu provádění řadičem (typické signály pro PZ)
+	\item Autonomní provádění (kontrola stavu, zahájení PO zápisem do registru PZ, autonomní provádění, uvědomění řadiče a procesory o dokončení (přerušení)
+\end{itemize}
+
+\subsection{Kontrola chyb}
+\begin{description}	
+	\item Stavová slabika (status byte) obsahuje bit značící chybu (any error)
+	\item Slabiky závad (sense byte) obsahují pro každý typ chyby PZ jeden bit -- řadič zjistí typ a řeší opravení/opakování atd
+\end{description}
+
+Konstrukce: Informace uložená v registrech (datový, řídící), sekvenční automat řídí PO.
+
+\subsection{Vyrovnávací paměť}
+Vyrovnává rozdíly v rychlosti zařízení komunikujících mezi sebou. Může být v řadiči, nebo v PZ (tiskárna -- v PZ, řádek nebo stránka, disková paměť -- řadič, sektor, nebo více). Souvisí s potřebou realizovat PO autonomně. 
+
+\subsection{Princip provedení PO}
+\begin{enumerate}
+	\item Procesor vloží do vyrovnávací paměti data.
+	\item Procesor vloží do registrů parametry PO.
+	\item Procesor nastaví bit \uv{start operace}.
+	\item Sekvenční automat zjistí bit \uv{start operace} a zahájí PO.
+	\item Provede autonomně PO bez účasti procesoru.
+	\item Řadič generuje žádost o přerušení.
+	\item Procesor přečte obsah stavového registru.
+	\item Pokud chyba, přečte slabiku závad.
+\end{enumerate}
+
+\section{V/V sběrnice}
+
+Komunikace mezi zařízeními na V/V sběrnici podílejících se na PO a řadičem PZ. Často kabel.
+
+Může být pro konkrétní typ PZ (IDE -- disky), nebo pro různé typy (SCSI -- tiskárny, CD, disky -- vyšší úroveň řízení PZ).
+
+\begin{description}
+	\item[Blokový režim] přenáší se souvislé bloky dat.
+	\item[Slabikový režim] přenáší se po slabikách.
+\end{description}
+
+\section{Periferní zařízení}
+
+\paragraph{Autonomní periferní operace}
+PZ jsou elektromechanická zařízení, realizace je časově náročná, proto jsou operace procesorem zahájeny a dále jsou řízeny řadičem.
+
+Výstupní periferní operace
+\begin{enumerate}
+	\item Přenos data z OP do řadiče PZ.
+	\item Přenos dat do PZ.
+	\item Zahájení PO -- klopný obvod \uv{start operace}.
+	\item Autonomní provedení.
+	\item Hlášení o dokončení operace.
+	\item Analýza stavové informace PO procesorem.
+\end{enumerate}
+
+\section{Přerušení}
+
+Po ukončení PO je potřeba synchronně informovat procesor (\uv{požadavek na přerušení}). Jedná se o rozšíření systémové sběrnice, každý řadič PZ může generovat požadavek.
+
+
+\begin{description}
+	\item[Spouštěné hranou] každý řadič má na sběrnici jednu pozici.
+	\item[Spouštěné úrovní] více přerušení sdruženo do jednoho signálu.
+\end{description}
+
+\subsection{Řadič přerušení}
+
+Sdružuje přerušení (redukce počtu signálů s procesorem -- žádost + potvrzení), řeší priority, předává požadavek procesoru. Posílá také odkaz do tabulky přerušení (vektor přerušení, v PC 255 adres).
+
+\begin{description}
+	\item[Vnitřní přerušení] generováno periferiemi na čipu procesoru
+	\item[Vnější přerušení] generováno periferiemi na systémové sběrnici
+	\item[Programové] generované instrukcí INT x
+	\item[Nemaskovatelné] vysoká priorita
+\end{description}
+
+\subsection{Přenos dat s využitím DMA -- řadič DMA}
+Přenos dat z datového registru (řadič PZ, například disk) přes sběrnici do OP. Řízeno řadičem DMA -- automat, který generuje signály, kterými řídí sběrnici, stejně jako řadič sběrnice. Na dobu přenosu se stává BUS MASTER.
+
+\section{PIO}
+Programmed Input/Output -- programové řízení vstupu/výstupu dat -- polling
+
+V řadiči registr, do kterého se z PZ přenese slovo dat a nastaví se bit \uv{konec operace} ve stavovém registru.
+
+Procesor průběžně testuje stavový registr na bit \uv{konec operace}. Jakmile je nastaven, přenese se obsah do některého univerzálního registru a potom do paměti. Obdobné řešení opačným směrem.
+
+Testování přenosem z řadiče do GP registru a tam testování, nebo je součástí speciálně testovatelný bit -- jednodušší operace, náročnější na HW konstrukci.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{7}
+\chapter{Minimalizace logických výrazů} \label{cha:8}
+
+2. semestr, INC, 2. přednáška
+
+(algebraické metody, Karnaughova mapa, Quine McCluskey)
+
+\subsection{Kritéria}
+\begin{itemize}
+	\item Velikost obvodu (počet hradel, plocha na čipu)
+	\item Zpoždění obvodu (rychlost, výkonnost)
+	\item Počet proměnných, vodičů
+	\item Příkon
+\end{itemize}
+
+\subsection{Reprezentace}
+
+\begin{description}
+	\item[Výraz] 
+		$ F(x,y,z) = \overline{x} \cdot \overline{y} \cdot z + \overline{x} \cdot y \cdot z + x \cdot y \cdot \overline{z}$
+	\item[Graf] N-rozměrná jednotková krychle - neorientovaný graf, použitelné max do 4 proměnných. $2^N$ uzlů, kde $N$ je počet proměnných. Barevné zvýraznění hodnot funkce ve vrcholech
+	\item[Mapa] Logická mapa (Svobodova, Karnaughova). Sousedná políčka obsahují sousedné kombinace. Do 4 proměnných. V buňkách pod pruhem je log. 1.
+	\item[Vennův diagram]
+	\item[Tabulka]
+		\begin{tabular}{| c | c | c | c | c | }
+			\hline
+			\multirow{3}{*}{Stavový index s}	& \multicolumn{3}{|c|}{Vstupní stav} & pravdivostní hodnoty \\ \hline
+				& 4 & 2 & 1 & F(x,y,z) \\ \hline
+				& x & y & z & 	\\ \hline
+			0   & 0 & 0 & 0 & 0 \\ \hline
+			1   & 0 & 0 & 1 & 1 \\ \hline
+			2   & 0 & 1 & 0 & 0 \\ \hline
+			3   & 0 & 1 & 1 & 1 \\ \hline
+			4   & 1 & 0 & 0 & 0 \\ \hline
+			5   & 1 & 0 & 1 & X \\ \hline
+			6   & 1 & 1 & 0 & 1 \\ \hline
+			7   & 1 & 1 & 1 & X \\ \hline
+		\end{tabular}
+		
+\end{description}
+
+\subsection{Metody}
+
+\begin{description}
+	\item[Algebraické] postupnou aplikací axiomů a theorémů booleovy algebry (viz otázka č. \ref{cha:19})
+	\item[Grafické] Jednotková krychle, Vennův diagram, Mapy (Svobodova, Karnaughova)
+	\item[Algoritmické] Quine-McCluskey, Espresso
+\end{description}
+
+\subsection{Hodnocení kvality}
+\begin{itemize}
+	\item Počet logických členů AND, OR, NOT
+	\item V průmysly většinou počet členů NAND (převedených z ostatních)
+	\item Počet spojů (vodičů)
+	\item Zpoždění
+	\item Příkon
+\end{itemize}
+
+\subsection{Metriky}
+\begin{description}
+	\item[P] Počet log. členů
+	\item[S] Počet spojů (počet vstupů log. členů + počet výstupů obvodu)
+	\item[T] Zpoždění obvodu (součet nejdelší cesty [dt])
+\end{description}
+
+\subsection{Hazardy}
+Různé délky logických větví, různé zpoždění vodičů a log. členů.
+
+\begin{description}
+	\item[Staticky 1 hazard] z log. 1 do 0 a zpět
+	\item[Staticky 0 hazard] z log. 0 do 1 a zpět
+	\item[Dynamické] více než jeden pulz na výstupu. Více různě dlouhých cest.
+\end{description}
+
+Eliminace vzorkováním do registrů. Nebo odstraněním kombinací, které se liší v jedné proměnné a zároveň produkují stejné hodnoty výstupu log. funkce. V Karnaughově mapě jsou to buňky ležící vedle sebe. Řešení - překrytí pomocí přídavných členů (ale už není minimální).
+
+U obvodů s více výstupy lze sdílet části obvodu. Nelze jednoznačně určit (NP-úplný problém).
+
+\subsection{Normální formy}
+
+\begin{description}
+	\item[Term] uspořádaná skupina proměnných a operátorů
+	\item[ÚNDF] Úplná normální disjunktní forma - suma součinů. Seznam, kde je funkce rovna 1
+	\item[ZNDF] Zkrácená normální disjunktní forma - částečně minimalizovaná
+	\item[MNDF] Minimální normální disjunktní forma
+	\item[ÚNKF] Úplná normální konjunktní forma - součin sum. Seznam, kde je funkce rovna 0, proměnné zapisujeme komplementárně!
+	\item[ZNKF] Zkrácená normální konjunktní forma - částečně minimalizovaná
+	\item[MNKF] Minimální normální konjunktní forma
+\end{description}
+
+Zkrácené zápisy ÚNDF (tam, kde nabývá log. 1):
+$$ F(x,y,z) = \lor(0,2,4,6) = 1(0,2,4,6) = \sum{}m(0,2,4,6)$$
+
+Zkrácené zápisy ÚNKF (tam jde nabývá log. 0):
+$$ F(x,y,z) = \land(1,3,5,7) = \&(1,3,5,7) = \prod{}M(1,3,5,7)$$
+
+\paragraph{Neúplně definovaná funckce}
+Neurčený stav - X - Don't care
+$$ F(w,x,y,z) = \lor(2,3,4,6,8,9,13) + x(7,12,14) = \land(0,1,5,10,11,15) \cdot X(7,12,14)$$
+
+
+\section{Karnaughova mapa}
+
+\begin{enumerate}
+	\item Hledáme sousední buňky ve kterých nabývá funkce hodnotu log. 1
+	\item Sdružením těchto buněk eliminujeme proměnnou, ve které se proměnná mění.
+\end{enumerate}
+
+\section{Jednotková krychle}
+
+\begin{enumerate}
+	\item Hledáme stavy, které se liší v jedné proměnné (jsou spojeny hranou)
+	\item Lze eliminovat proměnnou, která je rovna rozdílu hodnot příslušných stavů
+\end{enumerate}
+
+\section{Quine-McCluskey}
+
+Tabulární metoda, použitelné i pro více než 5 proměnných, na rozdíl od KM a ostatních. Minimální pokrytí hledáme pomocí Petrickovy funkce.
+
+\subsection{Terminologie}
+\begin{description}
+	\item[Úplný implikant] term ÚNDF, který obsahuje všechny proměnné
+	\item[Pokrácený (částečně zkrácený) implikát] některé proměnné eliminovány
+	\item[Zkrácený implikant] má všechny sousední proměnné eliminované. Obvod sestavený ze zkrácených implikátů nemá hazardy.
+	\item[] Množina minimálních implikátů obsahuje zkrácené implikáty
+	\item[Nesporný implikant] Zkrácený implikant, která bude vždy součástí minimálního řešení.
+	\item[Volitelný implikant] Zkrácený implikant, který nemusí být součástí min. řešení, pokud lze použít jiný zkrácený implikant
+\end{description}
+
+$$F(w,x,y,z) = 1(2,4,6,8,9,10,12,13,15)$$
+\begin{tabular}{ | c | c | c |}
+	\hline
+	Implikant & w.x.y.z & Skupina jedniček \\ \hline
+	2	& 0010	& 1 \\ \hline
+	4	& 0100	& 1 \\ \hline
+	8	& 1000	& 1 \\ \hline
+	6	& 0110	& 2 \\ \hline
+	9	& 1001	& 2 \\ \hline
+	10	& 1010	& 2 \\ \hline
+	12	& 1100	& 2 \\ \hline
+	13	& 1101	& 3 \\ \hline
+	15	& 1111	& 4 \\ \hline
+\end{tabular}
+
+\begin{enumerate}
+	\item Seřaď do řádků tabulky jednotlivé implikanty v pořadí podle počtu jedniček a podle jejich binárních vah -- skupiny sousedných implikantů
+	\item Sepiš do skupin všechny sousedné impikanty, mezi jednotlivými skupinami v tabulce. Eliminovanou proměnnou označ pomlčkou. Opakuj dokud existuje další sousednost. Implikanty, které jsou pokryty jinými, označíme.
+	\item Pokud některý implikant nemá další sousedné termy, říkáme mu zkrácený implikant
+	\item Hledej minimální řešení, například pomocí Petrickovy funkce, nebo Mřížky implikátů
+\end{enumerate}
+
+\subsection{Mřížka implikátů}
+
+\begin{tabular}{| c || c | c | c | c | c | c | c | c | c |}
+	\hline
+		& 2 & 4 & 6 & 8 & 9 & 10 & 12 & 13 & 15 \\ \hline \hline
+	PI1	&   &   &   & x & \textbf{x} &    & x  & x  &    \\ \hline
+	PI2	& x &   & x &   &   &    &    &    &    \\ \hline
+	PI3	& x &   &   &   &   & x  &    &    &    \\ \hline
+	PI4	&   & x & x &   &   &    &    &    &    \\ \hline
+	PI5	&   & x &   &   &   &    & x  &    &    \\ \hline
+	PI6	&   &   &   & x &   & x  &    &    &    \\ \hline
+	PI7	&   &   &   &   &   &    &    & x  & \textbf{x}  \\ \hline
+\end{tabular}
+
+PI jsou zkrácení implikanty. Nejprve je třeba najít nesporné implikanty, které pokrývají jako jediné daný vrchol (zde vrcholy 9 a 15 zobrazené tučně). Nesporné implikanty jsou PI1 a PI7.
+
+\section{Petrickova funkce}
+
+\begin{enumerate}
+	\item Najdi všechny zkrácené implikanty (Karnaughova mapa nebo Quine-McCluskey)
+	\item Pomocí mřížky implikantů nalézt všechny nesporné implikanty.
+	\item Z ostatních napsat logický výraz - pro každý nepokrytý implikant sumu zkrácených implikantů, které jej pokrývají.
+	\item Výsledné sumy sepsat jako součin (Konjunktní forma)
+	\item Vzniklý zápis přepsat do Disjunktní formy roznásobením, poté zjednodušit
+	\item Kařdý vzniklý term představuje jedno možné pokrytí
+	\item Vyber pokrytí s nejnižší cenou podle vlastních požadavků
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{8}
+\chapter{Reprezentace čísel a základní dvojkové aritmetické operace v počítači} \label{cha:9}
+
+2. semestr, INC, 1. přednáška,\\
+1. semestr, IAS, 1. a 11. přednáška
+
+(doplňkové kódy, sčítání, odčítání, násobení, pevná a plovoucí řádová čárka, standard IEEE 754)
+
+\section{Reprezentace čísel v počítači}
+
+\subsection{Přirozený / přímý kód}
+
+MSB obsahuje znaménko. Kód obsahuje dvě nuly -- kladnou a zápornou.
+
+\subsection{Doplněk číselné soustavy o základy r}
+
+$$ [N]_r = r^n - (N)_r $$
+
+Rozsah: $ -r^{n-1} \dots r^{n-1} - 1 $. Pouze jedna nula
+
+\subsection{Doplněk číselné soustavy o základy r snížený o 1}
+
+$$ [N]_r = ((r^n -1) - (N)_r)+1$$
+
+Stále dvě nuly. Mezioperace při výpočtu doplňku přičtením jedničky.
+
+\subsection{Konkrétní reprezentace}
+\begin{description}
+	\item[Jedničkový doplněk] Negace bitů daného čísla.
+	\item[Dvojkový doplněk] jedničkový doplněk + přičtení jedničky. Základ aritmetiky počítačů.
+\end{description}
+
+\section{Sčítání binárních čísel}
+
+\begin{tabular}{ r | r r}
+	+ & 0 & 1 \\ \hline
+	0 & 0 & 1 \\
+	1 & 1 & (1)0 \\
+\end{tabular}
+
+\subsection{Bez znaménka}
+
+Neřešíme přenosy
+
+\subsection{Se znaménkem}
+
+\begin{description}
+	\item[Neomezený rozsah] Pouze MSB je vždy znaménko
+	\item[Omezený]	Sledovat přetečení do nejvyššího bitu
+\end{description}
+
+Přetečení může nastat při sčítání dvou kladných nebo záporných čísel. Detekce speciálním obvodem.
+
+Odečítání bývá často převedeno na sčítání.
+
+\section{Násobení binárních čísel}
+
+\begin{tabular}{ r | r r}
+	$\cdot$ & 0 & 1 \\ \hline
+	0 & 0 & 0 \\
+	1 & 0 & 1 \\
+\end{tabular}
+
+\subsection{Bez znaménka}
+
+Neřešíme znaménkový bit a přenosy do něj. Výsledek zobrazený na dvojnásobném počtu bitů.
+
+\begin{tabular}{r}
+\ttfamily      1011 \\
+\ttfamily   $*$1101 \\ \hline
+\ttfamily      1011 \\
+\ttfamily     00000 \\
+\ttfamily    101100 \\ 
+\ttfamily  +1011000 \\ \hline
+\ttfamily 100001111
+\end{tabular}
+
+\subsection{Se znaménkem ve dvojkovém doplňku}
+
+Kladné číslo záporným -- standardně.
+
+Při násobení znaménkovými bitem -- korekce výsledku přičtením dvojkového doplňku násobitele.
+
+Je třeba šířit znaménku doleva v případě násobení záporného čísla.
+
+\section{Pevná řádová čárka}
+
+číslo má $k$ bitů, $n$ vlevo a $m$ vpravo od řádové čárky (může být i záporné), $m+n = k$.
+
+\begin{description}
+	\item[Rozsah zobrazení] Interval ohraničený zleva nejmenším zobrazitelným číslem a zprava největším zobrazitelným číslem
+	\item[Rozlišitelnost zobrazení] Nejmenší (kladné) zobrazitelné číslo
+	\item[Přesnost zobrazení] Počet platných dekadických číslic, které je možná zobrazit v daném paměťovém prostoru.
+\end{description}
+
+\subsection{Bez znaménka}
+
+\begin{description}
+	\item[Rozsah zobrazení] $< 0, (2^n - n^m) >$
+	\item[Rozlišitelnost zobrazení] $2^m$
+	\item[Přesnost zobrazení] $k \log_{10}(2)$
+\end{description}
+
+Dnes používáno pouze pro celá čísla (m = 0, n = k). Rozlišitelnost zobrazení = 1, rozsah $<0, (2^n-1)>$
+
+\subsection{Se znaménkem}
+
+Kódy:
+\begin{description}
+	\item[Přímý] použité pro mantisy reálných čísel (znaménko v samostatném nezávislém bitu)
+	\item[Doplňkový] použitý pro celá čísla se znaménkem
+	\item[Kód transformované nuly] exponenty reálných čísel. Od doplňkového kódu invertovaný znaménkový bit $X = 128 + x$
+\end{description}
+
+Overflow = přenos do zn. bitu $\neq$ přenos nad rozsah.
+
+\section{Pohyblivá řádová čárka}
+
+S | exponent e | mantisa m = $\pm mantisa 2^{exponent}$ 
+
+Dle IEEE 754:
+\subsection{Single precission}
+32 bit, float
+
+\begin{tabular}{| c | c | c |}
+	\hline
+	31 & 30 .. 23 & 22 .. 0 \\ \hline
+	Sign S  & Exponent e (8b) & Mantisa m (23b) \\ \hline
+\end{tabular}
+
+\begin{tabular}{| c | c | l |}
+	\hline
+	e & f & význam \\ \hline
+	$0<e<255$ & * & normalizované číslo, $(-1)^S 2^{(e-127)} 1.f$  \\ \hline
+	0 & $f \neq 0$ & nenormalizované číslo, $(-1)^S 2^{-126} 0.f$  \\ \hline
+	255 & 0 & $\inf$ \\ \hline
+	255 & $f \neq 0$ & NaN \\ \hline
+\end{tabular}
+
+\begin{description}
+	\item[Rozsah zobrazení] $< -2^{127}, 2^{127} >$
+	\item[Rozlišitelnost zobrazení] $2^127$
+	\item[Přesnost zobrazení] asi 7 dekadických číslic
+\end{description}
+
+\subsection{Double precission}
+64 bit, double
+
+\begin{tabular}{| c | c | c |}
+	\hline
+	63 & 62 .. 52 & 51 .. 0 \\ \hline
+	Sign S  & Exponent e (11b) & Mantisa m (52b) \\ \hline
+\end{tabular}
+
+\begin{description}
+	\item[Rozsah zobrazení] $< -2^{1023}, 2^{1023} >$
+	\item[Rozlišitelnost zobrazení] $2^1023$
+	\item[Přesnost zobrazení] asi 16 dekadických číslic
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{9}
+\chapter{Principy VHDL} \label{cha:10}
+
+2. semestr, INC, 7. přednáška
+
+(entita, architektura, proces, příklady kombinačních a sekvenčních obvodů)
+
+Jak popsat číslicový obvod?
+\begin{description}
+	\item[Slovně] přirozené, ale pro počítač nepoužitelné
+	\item[Matematicky] Stále nelze automaticky implementovat
+	\item[Graficky] Pomocí schématu -- Funkční bloky, propojení. Pro velké sítě nepřehledné
+	\item[Programovacím jazykem] Popis chování. HDL jazyky -- VHDL (EU), Verilog (USA). Popis funkce obvodu $\to$ modelování, simulace, syntéza do HW.
+\end{description}
+
+\section{Entita}
+
+Definuje rozhraní komponenty - signály, generické parametry. Vstupní, výstupní, obousměrné.
+
+\section{Architektura}
+
+Popisuje funkci a chování komponenty.
+
+Jedna entita může mít více architektur. Architektura vždy svázána s konkrétní entitou.
+
+Popis může být na úrovni struktury, chování, nebo data-flow popisu.
+
+\begin{description}
+	\item[Behaviorální popis] Složení z jednoho nebo více procesů. Jak se mění vstupy v závislosti na výstupech. Nemusí být zřejmé implementace.
+	\item[Strukturální popis] Obsahuje pouze instance komponent a jejich vzájemné propojení
+\end{description}
+
+Často kombinované i v rámci jedné komponenty.
+
+\section{Proces}
+
+Obsahuje Sensitivity list -- sledování změn na vstupu pro přepočet výstupů
+
+Může popisovat chování celé komponenty, nebo její části.
+
+Architektura může obsahovat více procesů komunikujících vzájemně pomocí signálů.
+
+Proces nemůže být nikdy ukončen! Pouze pozastaven (WAIT FOR čas, WAIT ON sensitivity list, WAIT UNTIL podmínka). Nelze kombinovat se sensitivity listem.
+
+Může obsahovat běžné řídící struktury:\\
+\verb|if then elsif else|\\
+\verb|case exp is when val => statement|\\
+\verb|while do| \\
+\verb|for loop| \\
+
+\lstset{caption=Jednoduchý příklad procesu}
+\begin{lstlisting}
+process (bus_in) --sensitivity list
+	variable count: stc_logic_vector(3 downto 0);
+begin
+	count := "0000";
+	for i in 0 to 15 loop
+		if bus_in(i) = '1' then
+			count := count + 1;
+		end if;
+	end loop;
+	N_ONE <= count;
+end process;
+\end{lstlisting}
+
+\lstset{caption={Více procesů (NAND), komunikace pomocí signálu ab\_and}}
+\begin{lstlisting}
+architecture behav of NAND is
+	signal ab_and : std_logic_vector(7 downto 0);
+begin
+	and_proc : process (A, B)
+	begin
+		ab_and <= A and B;
+	end process and_proc;
+	
+	not_proc : process(ab_and)
+	begin
+		Y <= not ab_and;
+	end process not_proc;
+end behav;
+\end{lstlisting}
+
+\subsection{Dataflow popis architektury}
+
+popis datových závislostí na úrovni architektury.
+
+\lstset{caption={Dataflow}}
+\begin{lstlisting}
+architecture dataflow of NAND is
+begin
+	Y <= not (A AND B);
+end dataflow;
+\end{lstlisting}
+
+\subsection{Strukturální popis}
+
+\lstset{caption={Strukturální popis}}
+\begin{lstlisting}
+architecture struct of CNT1ZN is
+signal cnt_bin : std_logic_vector(7 downto 0);
+begin
+	cnt_i : entity work.cnt
+	port map (CLK => CLK, RST => RST, CE => CE, DOUT => cnt_bin);
+	dec1n : entity work.dec1n
+	port map (addr +> cnt_bin, y => DO);
+end struct;
+\end{lstlisting}
+
+\subsection{Signály}
+
+komunikace mezi komponentami a procesy
+
+\begin{description}
+	\item[Vodič] std\_logic
+	\item[Sběrnice] std\_logic\_vector(7 downto 0). 7 = MSB
+\end{description}
+
+\paragraph{Atributy signálů}
+
+\verb|<signal>'<atribut>|
+
+\begin{description}
+	\item[event] Nastala změna signálu -- například náběžná hrana hodin
+	\item[last\_value] Předchozí hodnota
+	\item[transaction] Nad signálem je aktivována transakce (naplánována změna na určitý čas)
+\end{description}
+
+\subsection{Proměnné}
+
+V procesu. hodnota přiřazená okamžitě, zachována i při opětovném spuštění procesu.
+
+\lstset{caption={}}
+\begin{lstlisting}
+	variable a: integer := 3;
+begin
+	a := a + 2;
+...
+\end{lstlisting}
+
+\begin{description}
+	\item[Komentář] \verb|--|
+	\item[Znak / bit] \verb|'1'|
+	\item[Řetězec / bit. vektor] \verb|"0000"|
+	\item[Identifikátor] Písmena a čísla, začíná písmenem
+	\item[Výčtový typ]
+	\item[Pole] \verb|IS ARRAY|
+	\item[Konkatenace bitů] \verb|c <= a & b|
+	\item[Posuny] \verb|b <= b(2 downto 0) & '0'|
+	\item[Agregace] \verb|a <= ('0', '1', others => '0')|
+\end{description}
+
+\lstset{caption={Příklad výčtového typu}}
+\begin{lstlisting}
+TYPE mup_typ IS (reset, idle, rw, io)l
+signal muj_typ: stav;
+stav <= reset; -- nelze stav <= "00"
+\end{lstlisting}
+
+\subsection{Textbench}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{15}
+\chapter{Množiny, relace a zobrazení} \label{cha:16}
+
+1. semestr, IDA
+
+\section{Intuitivní pojem množiny}
+
+Každé shrnutí určitých navzájem různých předmětů našeho nazírání do jediného celku. Může být vymezená:
+\begin{itemize}
+	\item Výčtem prvků: $\{0, 1, 2, 3, 4\}$.
+	\item Predikátem (charakterizací): $\{x | x \in N, 0 \leq x \leq 4\}$.
+\end{itemize}
+
+Je li S množina, jejíž prvky jsou opět množiny, nazýváme ji zpravidla \emph{systémem množin}.
+
+\subsection{Russellův paradox}
+
+Pokud je množina $S = \{ X | X \notin X\}$ všech množin, které nejsou svým vlastním prvkem, potom obě tvrzení $ S \in S $ a $ S \notin S$ vedou ke sporu:
+\begin{itemize}
+	\item Pokud S není svým vlastním prvkem, měla by do S podle definice patřit;
+	\item pokud však je S svým vlastním prvkem, pak by do S patřit neměla.
+\end{itemize}
+
+\subsection{Velikost a porovnávání množin}
+
+Množiny A, B, C, $B \subseteq C $, vzájemně jednoznační přiřazení $f: A  \to B$, potom množiny A a B mají stejnou mohutnost, a množina C je alespoň tak mohutná, jako množina A. Zapisujeme $|A| = |B|$, $|A| \leq |C|$.
+
+S jsou sudá čísla, N přirozená, $F(n) = 2n$ vzájemně jednoznačné přiřazení, pak $|S| = |N|$, stejně jako pro lichá čísla. Všechny tyto množiny jsou stejně mohutné.
+
+\subsection{Spočetná množina}
+Množina stejné mohutnosti, jakou má množina přirozených čísel se nazývá spočetná (existuje bijekce $F: N \to A$). Množina která není spočetná je \emph{nespočetná}.
+
+\subsection{Operace s množinami}
+
+\begin{description}
+	\item[rovnost množin] $A = B \iff \forall x (x \in A \iff x \in B)$
+	\item[podmnožina] $ A \subset B \iff \forall x (x \in A \Rightarrow x \in B)$
+	\item[sjednocení] $ \forall x (x \in A \cup B \iff x \in A \lor x \in B)$
+	\item[průnik] $ \forall x ( x \in A \cap B \iff x \in A \land x \in B)$
+	\item[rozdíl] $ \forall x ( x \in A \setminus B \iff x \in A \land x \notin B)$
+	\item[symetrická diference (XOR)] $X \div Y$ 
+\end{description}
+
+Komutativní, asociativní, distributivní a DeMorganovy zákony platí na množinových operacích.
+
+\section{Binární relace}
+
+X, Y jsou množiny, kartézský součin $X \times Y = \{(x,y) | x \in X, y \in Y\}$. Binární relace je libovolná podmnožina $R \subseteq X \times Y$ \emph{kartézského součinu}. Pokud $Y = X$, jedná se o binární relaci na množině X.
+
+$\Delta{}X = {(x,x) | x \in X}$ je diagonální relace na X
+
+$R \subseteq X \times Y$:
+\begin{description}
+	\item[Dom R] definiční obor $Dom R = \{x | \exists y  \in Y, (x,y) \in R\}$
+	\item[Im R] Obor hodnot (Image) $Im R = \{y | \exists x  \in Y, (x,y) \in R\}$
+\end{description}
+
+\subsection{Zobrazení}
+$f \subseteq X \times Y$ -- pokud každému x z Dom $f \subseteq X$ existuje právě jeden prvek $y \in Y$, že $(x,y) \in f$, říkáme, že f je \emph{zobrazení X do Y}, $f: X \to Y$.
+
+\begin{description}
+	\item[Prosté = injektivní] Každý obraz má nejvýše jeden vzor, $\forall x_1, x_2$ platí $x_1 \neq x_2 \Rightarrow f(x_1) \neq f(x_2)$ 
+	\item[Na = surjektivní] Každý prvek z Y má nějaký vzor v X $\forall y \in Y \exists x \in X: y = F(x)$
+	\item[Vzájemně jednoznačné = bijektivní] 1:1. Současně surjektivní a injektivní.
+\end{description}
+
+$id_X: X \to X: id_X(x) = x$ -- identita na X = diagonální relace
+
+\subsection{Inverzní relace k R}
+
+$R^{-1} = \{ (y,x) | \exists (x,y) \in R\}$
+
+Jsou-li navíc $R$ a $R^{-1}$ zobrazení, $R^{-1}$ se nazývá \emph{inverzní zobrazení}.
+
+\section{Relace na množině}
+
+$R \subset A \times A$, $(x,y) \in R$, $xRy$, $R(x,y)$.
+
+\begin{description}
+	\item[reflexivní] $(x,x) \in R$ pro každé $x \in X$
+	\item[symetrická] $(x,y) \in R \Rightarrow (y,x) \in R$
+	\item[antisymetrická] $\{(x,y) \in R \land (y,x) \in R\} \Rightarrow x = y$
+	\item[tranzitivní] $\{(x,y) \in R \land (y,z) \in R\} \Rightarrow (x,z) \in R$
+\end{description}
+
+\begin{description}
+	\item[Ekvivalence] reflexivní, symetrická a tranzitivní relace
+	\item[(Částečné) uspořádání] reflexivní, antisymetrická a tranzitivní
+	\item[Kvaziuspořádání] reflexivní a tranzitivní
+\end{description}
+
+\subsection{Třídy rozkladu}
+
+Systém $A$ neprázdných podmnožin množiny $M$ se nazývá rozklad množiny $M$, jestliže platí $\bigcup_i M_i = M$ pro $M_i$, $M_j \in A$, $i \neq j$ je $A_i \cap A_j = \emptyset$
+
+Množiny systému $A$ se nazývají třídy rozkladu.
+
+\subsection{Uspořádání}
+
+X je množina, $R \subseteq X \times X$ relace uspořádání na X, (X, R) uspořádaná množina
+
+\paragraph{Lineární uspořádání}
+
+$\forall x,y \in Y$ platí $x \leq y$ nebo $y \leq x$
+
+Na množině $R$ čísel uspořádány hustě -- mezi každými dvěma čísly je další.
+
+$A = \{1,2,3\}, X = 2^A = \{\emptyset, \{1\}, \{2\}, \{3\}, \{1, 2\}, \{1, 3\}, \{2, 3\}, \{1, 2, 3\} \}$. Množina $(X, \subseteq)$ uspořádána, ale ne lineárně.
+
+\paragraph{Pokrytí prvků množiny}
+$(X, \leq), a,b \in X$. b pokývá a, pokud $a < b$ a neexistuje $x \in X$ takové, aby platilo $a < x < b$. Z toho vyplývá Hasseův diagram -- prvky množiny jsou spojeny čárami s prvky, které pokrývají.
+
+\paragraph{horní, dolní závora}
+$(X, \leq)$ je uspořádaná množina, $A \subseteq X$ je podmnožina, $a \in X$ je \emph{horní (resp. dolní) závorou množiny $A$}, jestliže pro všechna $x \in A$ je $x \leq a$ (resp. $x \geq a$).
+
+\paragraph{suprémum, infimum množiny}
+Existuje-li mezi všemi horními závorami nejmenší, říkáme mu \emph{suprémum} množiny A (sup A), existuje-li mezi všemi dolními závorami největší, říkáme mu \emph{infimum} množiny A (inf A). Nemusí být v A!
+
+\paragraph{maximální, minimální prvek}
+$(X, \leq)$ je uspořádaná množina, prvek $m \in X$ je \emph{maximální (minimální)}, jestliže v $X$ neexistuje prvek větší (menší) než on.
+
+V $R$ má každá shora omezená množina suprémum a každá zdola omezená množina infimum.
+
+\paragraph{Duální uspořádání}
+$R \subseteq X \times X$ uspořádání na X, $R^{-1}$ je uspořádání na X, které je \emph{duální} k $\leq$ a označujeme jej $\geq$.
+
+\paragraph{Svaz}
+$(X, \leq)$ je uspořádaná množina -- \emph{svazově uspořádaná} (svaz), pokud každé dva prvky množiny X mají v X suprémum i infímum.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{17}
+\chapter{Číselné soustavy a převody mezi nimi} \label{cha:18}
+
+1. semestr, IAS, 1. přednáška
+2. semestr, INC, ???
+
+\paragraph{$z$} Základ číselné soustavy -- přirozené číslo $ > 1$. Báze, Radix
+
+\paragraph{$a_i$} Číslice dané soustavy $ 0 \le a_i < z$
+
+$$a_{n-1}z^{n-1} + a_{n-2} z^{n-2} + \dots + a_0 z^0 + a_{-1} z^{-1} + a_{-2} z^{-2} + \dots =$$
+
+$$ = (a_{n-1} a_{n-2}  \dots a_0 a_{-1} a_{-2} \dots)_z$$
+
+\section{Používané číselné soustavy}
+
+\begin{description}
+	\item[binární]
+	\item[oktalová]
+	\item[desítková]
+	\item[hexadecimální]
+\end{description}
+
+\subsection{Možné zápisy}
+\begin{description}
+	\item[Poziční] $(3,14)_{10}$
+	\item[Polynomiální] $N =  \sum_{i=-l}^{k-1} n_i z^i$
+\end{description}
+
+\section{Převody mezi soustavami}
+
+\subsection{Substituční metoda}
+
+\begin{enumerate}
+	\item Číslo zapiš polynomem  v soustavě A
+	\item Výpočet proveď v soustavě B
+\end{enumerate}
+
+
+Velmi jednoduché pro převod do desítkové soustavy. Pro člověka nepřirozené do jiných soustav.
+
+\subsection{Metoda dělení základem (pro celá čísla)}
+
+Jednoduché pro převod z desítkové soustavy do soustavy o základu z.
+
+\lstset{caption={Metoda dělení základem},language=C}
+\begin{lstlisting}
+	while( cislo != 0 ){
+		a[i] = cislo mod z;
+		cislo = cislo div z;
+		i++;
+	}
+	n = i; //pocet platnych mist
+\end{lstlisting}
+
+\subsection{Metoda násobení základem (pro necelá čísla)}
+
+Jednoduché pro převod z desítkové soustavy do soustavy o základu z.
+
+\lstset{caption={Metoda násobení základem},language=C}
+\begin{lstlisting}
+	while( cislo != 0 || i < limit){
+		pom = cislo * z;
+		a[i] = celacast(cislo);
+		cislo = pom - a[i];
+		i++;
+	}
+	m = i; //pocet platnych mist
+\end{lstlisting}
+
+Převod končí, když je výsledek násobení roven 0 nebo když je dosaženo požadované přesnosti.
+
+\subsection{Kombinace}
+
+Pro člověka ideální kombinace těchto dvou: Převést číslo ze soustavy a do desítkové pomocí metody substituční a z desítkové do soustavy B pomocí metody dělení/násobení základem.
+
+Speciálně lze převádět mezi soustavami, které jsou mocninami (2 => 4 => 8 => 16 a zpět), protože můžeme převádět samostatné číslice.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{18}
+\chapter{Boolovy algebry} \label{cha:19}
+
+2. semestr, INC, 2. přednáška
+
+\section{Historie}
+\begin{description}
+	\item[George Boole, 1854] Matematický aparát
+	\item[E. V. Huntington, 1905] Boolova algebra
+	\item[C. E. Shanon, 1938] Popis chování logických obvodů (Switching algebra)
+\end{description}
+
+Algebra: definuje množinu prvků, množinu operátorů, axiomy (postuláty) a theorémy (věty).
+
+\section{Boolovy algebry}
+
+\begin{description}
+	\item[Obecná Booleova algebra] Šestice $(B, +, ., ', 0, 1)$ (Huntington)\\
+		Axiomy:\\
+		\begin{tabular}{l l l}
+			Uzavřenost: 			&$a+b \in B$		&$a.b \in B$	\\
+			Neutralita 0 a 1: 		&$a+0 = a$			&$a.1 = a$		\\
+			Komutativita: 			&$a+b = b+a$		&$a.b = b.a$	\\
+			Distibutivita:	 		&$a+b.c = a+b.a+c$	&$a.(b+c) = (a.b)+(a.c)$\\
+			Existence komplementu: 	&$a.a' = 0$			&$a+a' = 1$		\\
+			\multicolumn{3}{l}{V množině B existují alespoň 2 různé prvky}
+		\end{tabular}
+		Teorémy (odvozeny na základě axiomů. Definují další užitečné vlastnosti):\\
+		\begin{tabular}{l l l}
+			Idempotence: 			&$a+a = a$			&$a.a = a$		\\
+			Agresivita 0 a 1: 		&$a.0 = 0$			&$a+1 = 1$		\\
+			Absorpce: 				&$a+a.b = a$		&$a.(a+b) = a$	\\
+			\multicolumn{3}{l}{Existence jediného komplementu}			\\
+			DeMorganovy zákony		&$(a+b)' = a'.b'$	&$(a.b)' = a'+b'$\\
+			Asociativita			&$(a+b)+c = a+(b+c)$&$(a.b).c = a.(b.c)$\\
+		\end{tabular}
+		
+		Princip duality\\
+			Pokud platí nějaké tvrzení, tak platí i duální tvrzení, které vznikne vzájemnou záměnou operací + a . a prvků 0 a 1.
+
+			Důsledek: Umožňuje realizovat jakýkoliv logický obvod s použitím pouze jediné operace a komplementů jednotlivých proměnných.
+	\item[Dvouhodnotová Booleova algebra] Proměnné moho nabývat pouze hodnot 0 a 1. Realizace pomocí relé, dnes tranzistory (C. E. Shannon, 1938)\\
+		Logické proměnné\\
+		Logické funkce\\
+		Logický výraz\\
+		Logické operace: AND, OR, NOT, NOR, NAND, XOR, XNOR, Implikace, Inhibice (negace implikace), Kontradikce (0), Tautologie (1)
+	\item[Switching albegra] Proměnné reprezentují spínače, X=0 značí sepnutý spínač, OR je sériové zapojení, AND je paralelní
+	\item[Shefferova algebra] Realizace všech logických funkcí pomocí logické funkce NAND. Platí komutativita, neplatí asociativita
+		\begin{itemize}
+			\item $(a.a)' = a'$
+			\item $(a.0)' = 1$
+			\item $(a.1)' = a'$
+			\item $(a.b)'.1 = ((a.b)')' = a . b$
+			\item $((a.a)'.(b.b)')' = (a'.b')' = a + b$
+		\end{itemize}
+	\item[Piercova algebra] Realizace všech logických funkcí pomocí logické funkce NOR. Platí komutativita, neplatí asociativita
+		\begin{itemize}
+			\item $(a+a)' = a'$
+			\item $(a+0)' = a'$
+			\item $(a+1)' = 0$
+			\item $(a+b)'+0 = ((a+b)')' = a + b$
+			\item $((a+a)'+(b+b)')' = (a'+b')' = a . b$
+		\end{itemize}
+\end{description}
+
+
+Vizualizace: Vennovy diagramy
+\begin{description}
+	\item[Logický součet] Sjednocení
+	\item[Logický součin] Průnik
+\end{description}
+
+Zjednodušování logikcých výrazů za účelem minimalizace ceny, příkonu, maximalizace rychlosti za pomocí Booleovy algebry. Viz otázka č. \ref{cha:8}.
+\begin{itemize}
+	\item algebraické metody
+	\item Karnaughova mapa
+	\item Quine McCluskey
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Regulární jazyky a jejich modely} \label{cha:20}
+
+3. semestr, IFJ, opora, 3. a 4. přednáška (omáčka 1. a druhá přednáška)
+
+(konečné automaty, regulární výrazy)
+
+\begin{description}
+	\item[Abeceda] Libovolná neprázdná konečná množina. Prvky abecedy nazýváme symboly, například $\{0, 1\}$ -- binární abeceda.
+	\item[Slovo] Buď V abeceda, Slovo nad V je konečná posloupnost symbolů z V. Prázdnou posloupností je prázdné slovo - $\varepsilon$.
+	\item[Délka slova] $a_1 a_2 \dots a_n$, $|a| = n$, $|\varepsilon| = 0$.
+	\item[Zřetězení slov] a,b slova, $ab$ zřetězení.
+	\item[Mocnina slova] $a^i = \varepsilon$ pro i = 0; $a^i = a a^{i-1}$ pro $i \geq 1$. $|a^i| = i |a|$.
+	\item[Prefix slova] V je abeceda, x,y jsou slova, x je prefix (sufix) slova y, jestliže existuje slovo z na V tak, že platí $xz = y$ ($zx = y$). Pokud $x \neq y \neq \varepsilon$ potom se jedná o vlastní prefix (sufix).
+	\item[Reverze slova] $x^R = x$ pro $x = \varepsilon$; $x^R = y^Ra$ pro $x = ay$.
+\end{description}
+
+\subsection{Jazyk}
+
+V je abeceda, $L \subseteq V^*$, pak L je jazyk nad abecedou V. $\{\varepsilon\}, \emptyset$ jsou jazyky nad každou abecedou.
+
+\paragraph{Konečný jazyk}
+Jazyk je \emph{konečný}, obsahuje-li konečný počet slov. Jinak je nekonečný.
+
+S jazyky (množiny slov) lze provádět množinové operace.
+
+\paragraph{Iterace jazyka}
+Iterace jazyka $L^* = \bigcup^\infty_{i=0} L_i$
+
+\section{Chomského klasifikace gramatik}
+
+Generativní gramatika $G = (N,T,P,S)$.
+\begin{itemize}
+	\item $N$ abeceda neterminálů
+	\item $T$ abeceda terminálů
+	\item $P \subseteq (N \cup T)^* N (N \cup T)^* \times (N \cup T)^*$ konečná množina pravidel. Zapisujeme $ x \to y $
+	\item $S \in N$ Počáteční symbol gramatiky
+\end{itemize}
+
+\subsection{Derivace}
+Slova v, w. Říkáme, že v přímo derivuje w (v gramatice G), což zapisjujeme  $v \Rightarrow w$, jestliže existují slova $z_1, z_2, x, y \in (N \cup T)^*$ taková, že pro $v = z_1 x z_2$ a $w = z_1 y z_2$ existuje $x \to y \in P$.	
+
+Říkáme, že slovo v derivuje w, symbolicky $v \Rightarrow^* w$, právě tehdy když existuje posloupnost $v_1, v_2 \dots v_n$, kde $n \geq 1$ slov nad $(N \cup T)^*$ tak, že $v = v_1 \Rightarrow v_2 \Rightarrow \dots \Rightarrow v_n = w$.
+
+Jazyk generovaný gramatikou G označujeme $L(G) = \{u: u \in T^*, s \Rightarrow^* u\}$.
+
+Každé slovo, které lze odvodit z počátačního symbolu dané gramatiky nazýváme větná forma.
+
+\subsection{Dělení gramatik}
+
+\begin{itemize}
+	\item Gramatiky typu 0 -- výše zmíněné
+	\item Gramatiky typu 1 (Kontextová gramatika) -- pro každé pravidlo $v \to w$ platí $|v| \leq |w|$
+	\item Gramatiky typu 2 (Bezkontextová gramatika) -- pro každé pravidlo z P: $v \to w \Rightarrow v \in N$
+	\item Gramatiky typu 3 (Regulární gramatika) -- každé pravidlo tvaru $A \to xB$ nebo $A \to x$, kde $A,B \in N, x \in T^*$
+\end{itemize}
+
+Gramatiky typu $i$ generuje jazyk typu $i$.
+
+Bezkontextový jazyk lze definovat vhodným zásobníkovým automatem, regulární jazyk lze definovat vhodným konečným automatem.
+
+Automaty nebo gramatiky názýváme \emph{ekvivalentní}, když definují stejný jazyk.
+
+\section{Konečné automaty}
+
+Lexikální analýza.
+
+\subsection{Nedeterministický konečný automat}
+pětice $A = \{Q, T, \delta, s, F\}$
+\begin{itemize}
+	\item $Q$ abeceda stavů
+	\item $T$ abeceda vstupnách symbolů
+	\item $\delta$ přechodová funkce ve tvaru $Q \times (T \cup \varepsilon) \to 2^Q$
+	\item $s$ počáteční stav $s \in Q$
+	\item $F$ množina koncových stavů $F \subseteq Q$
+\end{itemize}
+
+\paragraph{Konfigurace automatu}
+ $(q,x), q \in Q, x \in T^*$
+
+Buď $(p,x)$ a $(q,y)$ dvě konfigurace automatu, říkáme, že automat přímo přejde z konfigurace $(p,x)$ do konfigurace $(q,y)$, symbolicky $(p,x) \vdash (q,y)$. Relaci $\vdash$ nazýváme takt, nebo přechod.
+
+Jazyk akceptovaný automatem A je $L(A) = \{x: x \in T^*, (s,x) \vdash^* (r, \varepsilon), r \in F\}$.
+
+Graficky lze reprezentovat pomocí stavového diagramu. Lze reprezentovat také tabulkou (řádky = stavy, sloupce = vstupní abeceda, průsečíky = přechod do stavu).
+
+Dva modely pro popis formálních jazyků jsou ekvivalentní, pokud specifikují tentýž jazyk.
+
+\paragraph{Odstranění $\varepsilon$ přechodů}
+\emph{Konečný automat bez $\varepsilon$-přechodů} K, pro každé pravidlo $pa \to q$ platí, že $a \in T (a \neq \varepsilon)$.
+
+\paragraph{Odstranění nedeterminismu}
+Nechť M je konečný automat bez $\varepsilon$ přechodů. M je \emph{deterministický konečný automat}, pokud pro každé $pa \to q \in \delta$ platí, že množina $\delta - \{pa \to q\}$ neobsahuje žádné pravidlo s levou stranou $pa$.
+
+\paragraph{$\varepsilon$-uzávěr}
+Pro každý stav $p \in Q$ je definován $\epsilon$-uzávěr$(p) = \{ q: q \in Q, p \vdash^* q\}$.
+
+\paragraph{Dostupné stavy}
+Stav $q \in Q$ je dostupný, pokud existuje $w \in T^*$, pro který platí $sw \vdash^* q$. Jinak je q nedostupný.
+
+\paragraph{Ukončující stavy}
+Stav $q \in Q$ je ukončující, pokud existuje řetězec $w \in T^*$, pro který platí $qw \vdash^* f$, $f \in F$. Jinak je stav q neukončující. 
+
+
+\subsection{Deterministický konečný automat}
+
+pro libovolné $a \in T$, $q \in Q$ existuje nejvýše jeden stav $p \in Q$ tak, že $p \in \delta(q,a)$. Libovolný KO lze převést na deterministický. Jednodušší realizace.
+
+Třída jazyků akceptovaná konečnými automaty je uzavřena vůci sjednocení, zřetězení a iteraci.
+
+\subsection{Úplný DKA}
+
+$M = (Q, \Sigma, R, s, F)$ je DKA. M je úplný, pokud pro libovolné $p \in Q, a \in \Sigma$ existuje právě jedno pravidlo $pa \to q \in R$ pro nějaké $q \in R$. Jinak je M neúplný.
+
+Nemůže se zaseknout. Spočívá v přidání tzv. trap stavu, který je neukončující a kam řetězec \uv{spadne}, pokud nevyhovuje řetězci jazyka.
+
+\subsection{Dobře specifikovaný KO}
+
+KO, který nemá nedostupné stavy a který má max. jeden neukončující stav (trap z minulého bodu).
+
+Pro každý KO existuje ekvivalentní dobře specifikovaný KO.
+
+\paragraph{Rozlišitelné stavy}
+Dva stavy jsou rozlišitelné, pokud existuje řetězec $w \in T^*$ takový, že $pw \vdash^* p'$ a $qw \vdash^* q'$, kde $p', q' \in Q$ a $((p' \in F \land q \notin F) \lor (p' \notin F \land q \in F))$. Jinak jsou stavy nerozlišitelné.
+
+\paragraph{Minimální konečný automat}
+Nechť M je DSKA. Potom je minimální KO, pokud obsahuje pouze rozlišitelné stavy.
+
+
+
+\section{Regulární výrazy}
+
+\subsection{Regulární množiny}
+V je abeceda. Regulární množina nad V jedefinována rekurzivně:
+\begin{enumerate}
+	\item $\emptyset$ je regulární množina nad V
+	\item $\{ \varepsilon \}$ je regulární množina nad V
+	\item jestliže $a \in V$, pak $\{a\}$ je regulární množina nad V
+	\item jestliže $L_1$ a $L_2$ jsou regulární množiny nad V, pak
+	\begin{itemize}
+		\item $L_1 \cup L_2$
+		\item $L_1 L_2$
+		\item $L_1^*$
+	\end{itemize}
+	jsou regulární množiny nad V
+	\item Žádná další regulární množina než vytvořené podle předchozích pravidel neexistuje
+\end{enumerate}
+
+\subsection{Regulární výrazy}
+V je abeceda, Regulární výraz nad V je definován rekurzivně:
+\begin{enumerate}
+	\item $\emptyset$ je regulární výraz označující regulární množinu $\emptyset$, prázdnou množinu (prázdný jazyk)
+	\item $\varepsilon$ je regulární výraz označující množinu $\varepsilon$, jazyk $\{ \varepsilon \}$
+	\item jestliže $a \in V$, pak $a$ je regulární výraz označující regulární množinu $\{a\}$, jazyk $\{ a \}$
+	\item jestliže $R_1$ a $R_2$ jsou výrazy označující regulární množiny $L_1$ a $L_2$, jazyky $L_1$ a $L_2$, pak
+	\begin{itemize}
+		\item $(R_1 + R_2)$ je regulární výraz označující regulární množinu na $L_1 \cup L_2$ \\
+		$(R_1 + R_2)$ je RV značící jazyk $L_1 \cup L_2$
+		\item $(R_1 R_2)$ je regulární výraz označující regulární množinu  $L_1 L_2$ \\
+		$(R_1 . R_2)$ je RV značící jazyk $L_1 L_2$
+		\item $R_1^*$ je regulární výraz označující regulární množinu $L_1^*$ \\
+		$(R_1^*)$ je RV značící jazyk $L_1^*$
+	\end{itemize}
+	\item Žádné další regulární výrazy, než vytvořené podle předchozích pravidel nad abecedou V neexistují
+\end{enumerate}
+
+RV zjednodušíme zavedením priorit ($* > . > +$), ve výrazu $r.s$ lze vynechat znak konkatenace, $rr^*$ a $r^*r$ lze zapsat jako $r^+$
+
+Pro každou regulární množinu lze nalézt odpovídající regulární výraz a naopak.
+
+Jazyk je akceptovaný konečným automatem, právě když jej lze reprezentovat regulárním výrazem.
+
+\paragraph{Regulární jazyk}
+Nechť L je jazyk, L je regulární jazyk, pokud existuje regulární výraz r, který tento jazyk značí.
+
+\subsection{Regulární gramatiky}
+Pro každou regulární gramatiku G existuje nedeterministický automat A tak, že $L(G) = L(A)$ a naopak. Libovolný nedeterministický konečný automat lze převést na ekvivalentní deterministický.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Bezkontextové jazyky a jejich modely} \label{cha:21}
+
+3. semestr, IFJ, opora, 6. přednáška
+
+(zásobníkové automaty, bezkontextové gramatiky)
+
+
+\section{Bezkontextová gramatika}
+
+BKG je čtveřice $G = \{N, T, P, S\}$, kde
+\begin{itemize}
+	\item $N$ je abeceda neterminálů
+	\item $T$ je abeceda terminálů
+	\item $P$ je konečná množina pravidel tvaru $A \to x$, kde $A \in N$, $x \in (N \cup T)^*$
+	\item $S$ je počáteční symbol gramatiky
+\end{itemize}
+
+\subsection{Derivační strom}
+
+Orientovaný graf (strom), který je názorným prostředkem pro zobrazení struktury derivace v bezkontextové gramatice. Kořen je ohodnocen symbolem S, uzel s alespoň jedním následovníkem je ohodnocen symbolem z N, listy jsou označeny symbolem z T.
+
+
+\subsection{Derivační krok}
+Nechť G je BKG, $u,v \in (N \cup T)^*$ a $p = A \to x \in P$. Potom uAv přímo derivuje uxv za použití p v G, zapsáno $uAv \Rightarrow uxv [p]$, nebo zjednodušeně $uAv \Rightarrow uxv$.
+
+Sekvence derivačních kroků.
+
+Nechť G je BKG. Jazyk generovaný G, $L(G) = \{ w: w \in T^*, S \Rightarrow^* w\}$. Bezkontextový jazyk.
+
+\paragraph{Nejlevější derivace}
+Nechť G je BKG, nechť $u \in T^*$, $v \in (N \cup T)^*$, $p = A \to x \in P$ je pravidlo. Pak $uAv$ přímo derivuje $uxv$ za pomocí nejlevější derivace užitím pravidla p v G, zapsáno jako: $uAv \Rightarrow_{lm} uxv [p]$.
+
+\paragraph{Nejpravější derivace}
+Nechť G je BKG, nechť $u \in (N \cup T)^*$, $v \in T^*$, $p = A \to x \in P$ je pravidlo. Pak $uAv$ přímo derivuje $uxv$ za pomocí nejpravější derivace užitím pravidla p v G, zapsáno jako: $uAv \Rightarrow_{rm} uxv [p]$.
+
+V každém kroku nahrazujeme nejpravější/nejlevější neterminál.
+
+\subsection{Gramatická nejednoznačnost}
+
+Nechť G je BKG. Pokud existuje řetězec $x \in L(G)$ s více jak jedním derivačním stromem, potom G je nejednoznačná. Jinak je G jednoznačná.
+
+Bezkontextový jazyk L je vnitřně nejednoznačný, pokud není generován žádnou jednoznačnou BKG.
+
+\subsection{Transformace gramatik}
+
+\begin{description}
+	\item[Redukovaná BKG] odstraněny zbytečné neterminály.
+
+	\item[Bez $\varepsilon$-pravidel] neobsahuje žádné pravidlo $X \to \varepsilon$, nebo obsahuje jediné pravidlo $S \to \varepsilon$.
+
+	\item[Bez cyklů] není možná derivace $ A \Rightarrow^+ A $.
+
+	\item[Vlastní] bez cyklů a $\varepsilon$-pravidel.
+
+	\item[Chomského normální forma] každé pravidlo v P je v jednom z těchto tvarů: $A \to BC$, $A \to a$, $S \to \varepsilon$ (pro $\varepsilon \in L(G)$), kde $A,B,C \in N$, $a \in T$.
+\end{description}
+
+\section{Zásobníkové automaty}
+
+Zásobníkový automat je sedmice $M = (Q, \Sigma, \Gamma, R, s, S, F)$, kde
+\begin{itemize}
+	\item $Q$ je konečná množina stavů
+	\item $\Sigma$ je vstupní abeceda
+	\item $\Gamma$ je zásobníková abeceda
+	\item $R$ je konečná množina pravidel tvaru $Apa \to wq$ (zásobník, stav, vstup $\to$ zásobník, stav), kde $A \in \Gamma, p,q \in Q, a \in \Sigma \cup \{ \varepsilon \}, w \in \Gamma^*$
+	\item $s \in Q$ počáteční symbol
+	\item $S \in Gamma$ počáteční symbol na zásobníku
+	\item $F \subseteq Q$ je množina koncových stavů
+\end{itemize}
+
+\subsection{Konfigurace zásobníkového automatu}
+
+$M = (Q, \Sigma, \Gamma, R, s, S, F)$ je zásobníkový automat. Konfigurace ZA je řetězec $\chi = \Gamma^* Q \Sigma^*$.
+
+\subsection{Přechod zásobníkového automatu}
+
+Nechť $xApay$ a $xwqy$ jsou dvě konfigurace ZA M, kde $x, w \in \Gamma^*$, $A \in \Gamma$, $p, q \in Q$, $a \in \Sigma \cup \{ \varepsilon \}$ a $y \in \Sigma^*$. Nechť $r = Apa \to wq \in R$ je pravidlo. Potom M může provést přechod z $xApay$ do $xwqy$ za použití $r$, zapsáno $xApay \vdash xwqy [r]$, nebo zjednodušeně $xApay \vdash xwqy$.
+
+\paragraph{Sekvence přechodů}
+
+Nechť $\chi$ je konfigurace. M provede nula přechodů z $\chi$ do $\chi$; zapisujeme $\chi \vdash^0 \chi [\varepsilon]$ nebo zjednodušeně $\chi \vdash^0 \chi$
+
+Nechť $\chi_0, \chi_1, \dots, \chi_n$ je sekvence přechodů konfigurací pro $n \geq 1$ a $\chi_{i-1} \vdash \chi_i [r_i]$, $r_1 \in R$ pro všechna $i = 1, \dots, n$, což znamená $\chi_0 \vdash \chi_1 [r_1] \vdash \chi_2 [r_2] \dots \vdash \chi_n [r_n]$
+
+Pak M provede n-přechodů z $\chi_0$ do $\chi_n$; zapisujeme $\chi_0 \vdash^n \chi_n [r_1 \dots r_n]$, nebo zjednodušeně $\chi_0 \vdash^n \chi_n$
+
+\subsection{Přijímané jazyky}
+
+Zásobníkový automat $M = (Q, \Sigma, \Gamma, R, s, S, F)$.
+
+\begin{description}
+	\item[Přechodem do koncového stavu] \hfill \\
+	$L(M)_f = \{w: w \in \Sigma^*, Ssw \vdash^* zf, z \in \Gamma^*, f \in F  \}$
+	
+	\item[Vyprázdněním zásobníku] \hfill \\
+	$L(M)_{\varepsilon} = \{ w: w \in \Sigma^*, Ssw \vdash^* zd, z = \varepsilon, f \in Q \}$
+	
+	\item[Přechodem do koncového stavu a vyprázdněním zásobníku] \hfill \\
+	$L(M)_{f \varepsilon} = \{ w: w \in \Sigma^*, Ssw \vdash^* zf, z = \varepsilon, f \in F \}$
+\end{description}
+
+Existují algoritmy pro převody mezi nimi.
+
+\subsection{Deterministický ZA}
+
+Zásobníkový automat $M = (Q, \Sigma, \Gamma, R, s, S, F)$ je deterministický, pokud por každé pravidlo tvaru $Apa \to wq \in R$ platí, že množina $R - \{ Apa \to wq \}$ neobsahuje žádná pravidlo s levou stranou $Apa$ nebo $Ap$.
+
+ZA jsou silnější než DZA -- například $L = \{ xy: x,y \in \Sigma^*, y = reversal(x) \}$ nelze popsat DZA.
+
+\subsection{Rozšířený ZA -- RZA}
+
+(z vrcholu zásobníku lze číst celý řetězec)
+
+Definovány stejně jako ZA, ale $R$ je konečná množina pravidel tvaru $vpa \to wq$, kde $v,w \in \Gamma^*$, $p,q \in Q$, $a \in \Sigma \cup \{\varepsilon\}$
+
+Tři typy jazyků přijímaných RZA.
+
+Jazyky přijímané RZA a ZA jsou ekvivalentní.
+
+\subsection{ZA a RZA pro syntaktickou analýzu}
+
+\begin{description}
+	\item[Shora dolů] Od $S$ směrem ke vstupnímu řetězci
+	\begin{itemize}
+		\item Porovnávací pravidla pro porovnáni symbolu na vrcholu zásobníku a aktuálního symbolu na vstupní pásce: $asa \to s$ pro každé $a \in \Sigma$
+		\item Expanzní pravidla, která simulují gramatická pravidla: $As \to a_n \dots a_1s$ pro každé $A \to a_1 \dots a_n \in P$ v BKG (pozpátku)
+	\end{itemize}
+	\item[Zdola nahoru] Ze vstupního řetězce směrem k S
+	\begin{itemize}
+		\item Shiftovací pravidla přesouvají vstupní symboly na zásobník: $sa \to as \in R$, pro každé $a \in \Sigma$
+		\item Redukční pravidla simulují aplikaci gramatických pravidel pozpátku: pro každé $A \to x \in P$ v BKG přidej $xs \to As$ do R
+		\item Speciální pravidlo pro přechod do koncového stavu: $\#Ss \to f$
+	\end{itemize}
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Struktura překladače a charakteristika fází překladu} \label{cha:22}
+
+3. semestr, IFJ, opora, 1., 5., 7. přednáška
+
+(lexikální analýza, deterministická syntaktická analýza a generování kódu)
+
+
+\section{Kompilátor}
+Program, který na vstupu přijímá zdrojový program zapsaný ve zdrojovém jazyce, aby k němu na výstupu generoval funkčně ekvivalentní cílový program v cílovém jazyce. Proces se nazývá \emph{překlad}.
+
+\begin{description}
+	\item[Lexikální analýza] Lexikální analyzátor, Zdrojový program $\to$ Řetězec tokenů. 
+	
+	Rozpoznání Lexikálních symbolů (Lexémů) ve vstupním řetězci, převod na tokeny (mohou mít atributy)
+	\item[Syntaktická analýza] Syntaktický analyzátor, tokeny $\to$ derivační strom (bývá pouze simulovaný)
+	
+	Na základě derivačních pravidel. Buď shora dolů, nebo zdola nahoru. Řetěz tokenů patřících do jazyka.
+	\item[Sémantická analýza] Sémantický analyzátor, Derivační strom $\to$ Abstraktní syntaktický strom (ASS)
+	
+	význam řetězů -- kontrola typů, implicitní konverze, deklarace proměnných.
+	\item[Generování vnitřní formy programu], Abstraktní syntaktický strom $\to$ Vnitřní kód
+	
+	většinou tříadresný kód 3AK -- jednotnost, jednoduchost optimalizace
+	\item[Optimalizace] Vnitřní kód $\to$ Optimalizovaný vnitřní kód
+	
+	Např. Eliminace mrtvého kódu, šíření konstanty, šíření kopírováním
+	\item[Generování cílového programu] Optimalizovaný vnitřní kód $\to$ Cílový program v cílovém jazyce. Většinou strojový kód, asembler.
+\end{description}
+
+\section{Lexikální analýza}
+
+\begin{enumerate}
+	\item Rozpoznání a klasifikace lexémů -- Deterministický konečný automat (Regulární výraz)
+	\item Reprezentace Lexémů pomocí tokenů
+	\item Komunikace s tabulkou symbolů (TS)
+\end{enumerate}
+
+\subsection{Konečný automat}
+Každý koncový stav -- jeden lexém, přeskakování komentářů a přebytečných bílých znaků.
+
+\lstset{language=sh,caption={Algoritmus lexikální analýzy}}
+\begin{lstlisting}
+while a je dalsi znak zdrojoveho textu
+	and M muze udelat prechod se znakem a do:
+		precti a;
+		udelej prechod pro symbol a;
+if M je v koncovem stavu then
+	urci lexem
+else
+	lexikalni chyba
+\end{lstlisting}
+
+Atributy Tokenů mohou mít různý typ (ukazatel, celé číslo, nic) -- reprezentace jako ukazatele do tabulek podle typů.
+
+Rozpoznání identifikátoru od klíčového slova pomocí tabulky klíčových slov až po načtení.
+
+\paragraph{Tabulka symbolů}
+
+\begin{itemize}
+	\item Proměnná -- jméno, typ, délka
+	\item Konstanta -- typ, hodnota
+	\item Procedura -- počet a typ parametrů
+\end{itemize}
+
+Zásobníková struktura v závislosti na zanoření do podprogramů -- hledání proměnných od vrcholu dolů.
+
+\paragraph{LEX} Převod RV $\to$ Lexikální analyzátor
+
+
+\section{Syntaktická analýza shora dolů}
+
+\subsection{LL-gramatika bez $\varepsilon$-pravidel}
+Výběr pravidla pomocí tabulky $N \times T$
+
+\paragraph{First(X)}
+$X \in N \cup T: a \in First(a) \forall a \in T$ \\
+if $A \to X_1 X_2 \dots X_n \in P$ then přidej $First(X_1)$ do First(A)
+
+\paragraph{LL-tabulka}
+\begin{tabular}{c | c c c}
+		& $T_1$	& $T_2$	& $\cdots$ \\ \hline
+$N_1$	& 		&		&	\\
+$N_2$	& 		&		&	\\
+\vdots	& \multicolumn{3}{c}{číslo pravidla, pro které je $T_i \in First(N_j)$}	\\
+\end{tabular}
+
+Obecně slabší, než BKG. Některé mohou být převedeny na LL
+\begin{itemize}
+	\item Faktorizace -- změnit pravidla, která mají stejné First množiny (vytýkání)
+	\item Odstranit levou rekurzi ($A \to Ax, A \in N, x \in (T \cup N)$ převodem na pravou rekurzi
+\end{itemize}
+
+\subsection{LL-gramatika s $\varepsilon$-pravidly}
+
+Potřebujeme zakončovací znak (\$), použitelné jako gramatika pro aritmetické výrazy.
+
+\begin{description}
+	\item[Empty(X)] Obsahuje $\varepsilon$, pokud X derivuje $\varepsilon$
+	\item[First(X)] Obsahuje terminály, na které může být neterminál převeden s ohledem na Empty(X)
+	\item[Empty($X_1, X_2, \dots X_n$)]
+	\item[First($X_1, X_2, \dots X_n$)]
+	\item[Follow(A)] Množina terminálů, které se mohou vyskytovat napravo od A ve větné formě
+	\item[Predict($A \to X$] Množina terminálů, které mohou být nejlevěji vygenerovány použitím daného pravidla 
+\end{description}
+
+\paragraph{LL-tabulka}
+\begin{tabular}{c | c c c}
+		& $T_1$	& $T_2$	& $\cdots$ \\ \hline
+$N_1$	& 		&		&	\\
+$N_2$	& 		&		&	\\
+\vdots	& \multicolumn{3}{c}{číslo pravidla, pro které je $T_i \in Predict(N_j \to X)$}	\\
+\end{tabular}
+
+Nechť $G = (N, T, P, S)$ je BKG. G je LL-gramatika, pokud pro každé $a \in T$ a každé $A \in N$ existuje maximálně jedno pravidlo $A \to X_1 X_2 \dots X_n \in P$ a platí $a \in Predict(A \to X_1 X_2 \dots X_n)$.
+
+\subsection{Implementace}
+\begin{description}
+	\item[Rekurzivní sestup] Každý neterminál je reprezentován procedurou, která řídí SA a zanořování (zásobník je zásobník volání)
+	\item[Prediktivní syntaktická analýza] zásobník explicitní -- příkazy pop, push, záměna levé strany pravidla (A) za pravou v opačném pořadí. Řízené LL tabulkou.
+\end{description}
+
+\section{Syntaktická analýza zdola nahoru}
+
+Problém, pokud dvě pravidla mají stejnou pravou stran, nebo pokud používáme nejednoznačné gramatiky
+
+\subsection{Precedenční syntaktická analýza}
+
+Gramatika nesmí obsahovat více pravidel se stejnou pravou stranou a $\varepsilon$-pravidla
+
+\paragraph{Precedenční tabulka}
+tabulka $[ a_i, a_j ] = {<, >, =, nic}, a \in T$
+
+Pravý rozbor -- rezervovaná posloupnost pravidel, která je použita v nejpravější derivaci
+
+\lstset{language=pascal,caption={Algoritmus precedenční syntaktické analýzy}}
+\begin{lstlisting}
+repeat
+	a; // znak na vstupu
+	b; // terminal nejblize vrcholu na zasobniku
+	case tab[b,a] of
+		= : push(a) & read next a;
+		< : zamen b za b< & push(a) & read next a;
+		> : if <y na vrcholu zasobniku and r: A -> y in P then
+				zamen <y za A & vypis r;
+				else chyba
+		nic: chyba
+until a = $ and b = $
+success
+\end{lstlisting}
+
+Konstrukce precedenční tabulky:
+\begin{itemize}
+	\item Priorita operátorů $ * > +$
+	\item Asociativita operátorů $ + > + $
+	\item Identifikátory: můžou být hned před/hned za
+	\item Závorky $ ( = ) $ atd
+	\item Ukončovací řetězce $\$ < op$, $ op > \$$
+\end{itemize}
+
+\subsection{LR syntaktický analyzátor}
+
+složitější, pracuje se dvěmi tabulkami -- akční a přechodovou.
+
+\section{Sémantické akce}
+
+Bývají přiřazeny syntaktickým pravidlům (blízké spojení se syntaktickým analyzátorem).
+
+
+\paragraph{Tříadresný kód}
+3AK (operátor, operand1, operand2, výsledek) -- 3 adresy
+
+Možnost generování přímo, nebo přes postfixovou notaci, nebo přes abstraktní syntaktický strom (ASS)
+
+\paragraph{Postfixová notace}
+Operátory se vyskytují až za operandy (postorder průchod ASS)
+
+\paragraph{Přechodové gramatiky} převod vstupního řetězce na výstupní.
+\begin{itemize}
+	\item Dvě gramatiky -- mezivýsledkem je levý rozbor
+	\item Jedna gramatika -- pravidla se dvěma pravými stranami
+\end{itemize}
+
+\section{Generování cílového kódu}
+
+\begin{description}
+	\item[Slepé] pro každou 3AK existuje procedura, které ji převede na výsledný kód (neřeší se kontext, můžou vznikat zbytečná čtení a zápisy do paměti).
+	\item[Kontextové] redukce nepotřebných načítání a ukládání proměnných. V tabulce symbolů informace (živá/mrtvá, další použití). Zpětné procházení instrukcí. Dále tabulky registrů, adres.
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{33}
+\chapter{Principy a struktury správy souborů a správy paměti} \label{cha:34}
+
+2. semestr, IOS, 4. a 7. přednáška
+
+\section{Pevný disk}
+
+kruhové plotny. Data v jednotlivých kruhových stopách, čtecí hlavy.
+
+Dělení do sektorů, typicky 512b.
+
+Cylindr - stopa, která se nachází na všech plotnách nad sebou.
+
+\subsection{Adresace}
+\begin{description}
+	\item[CHS] Cylinder -- Head -- Sector
+	\item[LBA] Logical Block Addressing
+\end{description}
+
+Prokládání -- používalo se dříve. Řešení pomalého řadiče.
+
+Typy rozhraní: ATA (IDE), SATA, SCSI, SAS, USB, FireWire, Fibre. Liší se rychlostí, maximálním počtem zařízení, maximální délkou kabelu.
+
+Hierarchie pamětí (viz \ref{cha:4}):
+\begin{description}
+	\item[Primární] RAM (nad tím jsou ještě registry a cache)
+	\item[Sekundární] Pevné disky
+	\item[Terciální] Pásky, CD, DVD
+\end{description}
+
+Přístupová doba = vystavení hlav + rotační zpoždění
+
+Kapacita, otáčky, rychlost přenosu.
+
+SSD - nevolatilní typ paměti NAND, rychlejší, tišší, odolnější, dražší, omezený počet přepisů.
+
+Zabezpečení -- ECC - Error correction code - redundantní data pro opravu chyb
+
+S.M.A.R.T. -- monitoring, statistiky disku
+
+\subsection{Disková pole RAID}
+ = Redundant Array of Inexpensive Disks
+
+\begin{description}
+	\item[RAID 0] Rozmístění bloků na více discích - vyšší výkonnost
+	\item[RAID 1] Zrcadlení (všechna data na dvou discích) - záloha a výkonnost
+	\item[RAID 2] Data rozdělena po bitech, \emph{zabezpečení} hummingovým kódem (3 zabezpečení, 4 datové)
+	\item[RAID 3] Po bajtech na různé disky, jeden disk pro paritu
+	\item[RAID 4] Bloky na různých discích, parita na zvláštním (příliš vytížený)
+	\item[RAID 5] Bloky po discích, parita se střídá na všech discích - rovnoměrné vytížení
+	\item[RAID 6] Parita je na dvou discích (vyrovná se se ztrátou dvou disků).
+\end{description}
+
+\subsection{Uložení souboru na disk}
+
+Alokační blok -- $2^n$ sektorů -- nejmenší jednotka diskového prostoru, se kterou OS umožňuje uživatelům pracovat. Většinou 4KB.
+
+\subsection{Fragmentace}
+\begin{description}
+	\item[Externí fragmentace] Související sektory nenásledují za sebou, mohou být promíchány. Mohou vznikat příliš malá, nevyužitá místa.
+	\item[Interní fragmentace] OS alokuje místo na disku, které zůstává nevyužité. Místo na konci posledního alokačního bloku.
+\end{description}
+
+Plánování přístupu na disk -- výtahový algoritmus.
+
+Logický disk -- MBR -- 1-4 primárních diskových oblastí.
+
+\subsection{Souborové systémy}
+\begin{itemize}
+	\item FS, ext3, FAT, NTFS
+	\item VFS -- virtuální, transparentní práce se souborovým systémem nezávisle na architekruře nebo lokalitě připojení.
+	\item NFS -- síťový souborový systém (RPC)
+	\item tmpfs -- prostor v RAM pro dočasná data
+\end{itemize} 
+
+\subsection{Žurnálování}
+
+Záznam dat před jejich zápisem na disk. Cyklicky přepisovaný buffer.
+
+Operace s diskem musí být atomické, aby byl stále v konzistentním stavu.
+
+Alternativou: COPY-ON-WRITE (COW) -- Nejprve se zapíší data, potom se zpřístupní. Několik verzí stromů a záznamů.
+
+\subsection{FS - UNIXový filesystem}
+Logický disk: Boot block, Super block, Tabulka i-uzlů, datové bloky. Tabulka pro lepší výkonnost bývá rozdělena na více částí (lepší lokalita).
+
+\paragraph{i-uzel}
+
+Obsahuje metadata, 10 přímých odkazů, 1 nepřímý první úrovně (odkaz na tabulku odkazů), 1 nepřímý druhé úrovně, 1 nepřímý třetí úrovně.
+
+Teoretický limit velikosti souboru: $(10 D + N D + N^2 D + N^3 D)$, kde D je velikost bloku v bajtech (4096 B) a N je D/4 počet odkazů (4B) v bloku.
+
+Snaha o minimalizaci režie při:
+\begin{itemize}
+	\item Průchodu souboru, zvětšení, zmenšení.
+	\item Vyhledání prvního bloku souboru
+	\item Přidání/ubrání dalšího bloku
+	\item Snadnost alokace/dealokace
+\end{itemize}
+
+Většinou výhodné pro malé soubory (například data přímo v i-uzlu -- fast symlinks)
+
+Kontinuální uložení -- nepoužívá se.
+
+Zřetězené seznamy bloků -- při rozpojení hrozí ztráta velkého množství dat.
+
+FAT -- tabulka integerů, položka pro každý blok -- označení o zřetězení, volné nebo chybné.
+
+\subsection{B+ stromy}
+
+Při vkládání může nastat rozštěpení uzlu, při odstranění sloučení. Jsou zřetězené a lze je jednoduše přecházet.
+
+podobné jsou stromu extentů (ext3, ext4) a AVL stromy.
+
+\subsection{Reprezentace adresáře}
+
+Soubor obsahující seznam dvojic -- \uv{hard links} (jméno, číslo uzlu).
+
+Přístupová práva -- Access Controll List (ACL), Speciální soubory (blokový, znakový), Pojmenovaná roura, socket.
+
+\subsection{Vstup/Výstup soubory v UNIXu}
+
+I/O Buffering -- minimalizace počtu poamlých diskových operací.
+
+Buffer pool -- vyrovnávací paměť.
+
+\paragraph{Čtení}
+\begin{enumerate}
+	\item Přidělení VP, načtení bloku
+	\item Kopie požadovaných dat procesu
+\end{enumerate}
+Při dalším čtení pouze 2.
+
+\paragraph{Zápis}
+\begin{enumerate}
+	\item Přidělení VP, načtení bloku
+	\item Zápis do VP, nastavení dirty bit -- příznak modifikace
+	\item Zpožděný zápis na disk (lze vynutit okamžitý)
+\end{enumerate}
+
+\subsection{Otevření souboru}
+
+\begin{itemize}
+	\item Vyhodnocení cesty a nalezení i-uzlu
+	\item V systémové tabulce i-uzlů vytvoří novou položku, načte i-uzel, vznikne rozšířený v-uzel
+	\item Systémová tabulka otevřených souborů
+	\item Pole deskriptorů souborů procesu
+\end{itemize}
+
+Disk -- V-node table, -- open-file table -- file descriptor table
+
+\paragraph{Spooling} vyrovnávací paměť pro zařízení (tiskárna), které neumožňují prokládané zpracování dat více procesů.
+
+
+\section{Správa paměti}
+
+Aby program mohl být proveden, musí nad ním bát vytvořen proces, musí mu být přidělen procesor a musí mu být předělena paměť (+ další zdroje).
+
+\subsection{LAP}
+Logický adresový prostor -- virtuální, pro každý proces vlastní. Pracuje s ním procesor při provádění kódu.
+
+\subsection{FAP}
+Fyzický adresový prostor -- fyzické adresy, společný pro všechny procesy.
+
+\subsection{MMU}
+Memory Management Unit. překlad logických adres na fyzické (dnes součást čipu procesoru).
+
+\subsection{Přidělování paměti}
+Na nejnižší úrovni: přidělení FAP pro mapování do LAP, konzistentní se způsobem překladu LAP na FAP. Spojité bloky, segmenty, stránky a kombinace všeho.
+
+Na vyšší úrovni: Přidělování LAP pro pro potřeby procesů uživatele (malloc a jeho alternativy).
+
+\subsection{Contignous Memory Allocation}
+
+Přiděleny spojité bloky. Projevuje se externí fragmentace, nemusí způsobovat interní. Jednoduchá implementace.
+
+CPU -- LA -- kontrola limitu -- realokační registr -- FA -- Paměť
+
+\subsection{Segmentace paměti}
+
+LAP rozděle na segmenty, ty jsou přidělovány částem procesu. Každý segment má číslo a velikost.
+
+Logická adresa je složena z čísla segmentu a posunu v něm.
+
+Segmenty mohou být jen pročtení, sdílené. Jednoduchá implementace. Zmírnění dopadu externí fragmentace.
+
+\subsection{Stránkování}
+
+LAP je rozdělen na stránky (pages). FAP rozdělen na rámce (frames).
+
+Paměť přidělována po rámcích, neviditelné pro procesy, minimalizována externí fragmentace, jemná kontrola odkládání, přístupu, ochrany. Složitější implementace, interní fragmentace.
+
+\paragraph{Jednoúrovňové tabulky stránek}
+LA = číslo stránky + posuv
+
+Tabulka stránek pro každý proces v RAM. Obsahuje mapování LAT do FAP, příznaky, přístup.
+
+Každý odkaz na data/instrukci v paměti vyžaduje dva přístupy do paměti. Speciální registr obsahuje adresu začátku tabulky stránek pro aktuální proces (CR3 u x86).
+
+Urychlení pomocí TLB (Translation Look-aside Buffer).
+
+\subsection{TLB: Translation Look-aside Buffer}
+
+Obsahuje číslo stránky, číslo rámce + příznaky.
+
+\paragraph{TLB miss}
+tabulka neobsahuje záznam pro danou stránku. Hledá se paralelně. Může nastat i několikrát během vykonávání instrukce (instrukce, operandy). Násobně větší režie.
+
+Efektivita stránkování závisí na úspěšnosti TLB: efektivní přístupová doba: $(\tau + \varepsilon)\alpha + (2\tau + \varepsilon)(1-\alpha)$, kde $\tau$ je vybavovací doba RAM, $\varepsilon$ je vybavovací doba TLB, $\alpha$ je TLB hit ratio.
+
+Tabulky stránek rozsáhlé, proto jsou často hierarchické.
+
+\subsection{Hierarchické tabulky stránek}
+
+Tabulky tabulek stránek. 386: 2 úrovně, x86-64: 4 úrovně.
+\begin{itemize}
+	\item 10bit -- Page directory
+	\item 10bit -- Page tables
+	\item 12bit -- Offset
+\end{itemize}
+
+Možno pracovat s různými velikostmi stránek pomocí příznaků v adrese.
+
+\subsection{Hashové tabulky stránek}
+
+Každý proces má hash tabulku
+
+\subsection{Invertovaná tabulka stránek}
+
+Jediná tabulka. Udává pro každý rámec, který proces má do něj namapovánu kterou stránku.
+
+Problematické sdílení stránek. Používá se v kombinaci s hashováním.
+
+\subsection{Virtualizace paměti}
+
+Využitý adresový prosto nemusí být ve fyzické paměti (odkládá se na disk).
+
+\subsection{Stránkování na žádost}
+
+Stránky jsou zaváděny, jsou-li zapotřebí. Pokud není stránce přiřazena rámec -- \emph{page fault} -- přerušení MMU.
+
+Obsluha page fault
+\begin{enumerate}
+	\item Kontrola zda jsme v přiděleném rámci
+	\item Alokace rámce -- pokud není volný, uvolnění
+	\item Inicializace stránky
+	\begin{itemize}
+		\item Kód, konstantní data -- načtení z programu
+		\item Ostatní -- poprvé vynulovat (bezpečnost). Jinak načíst uložené z disku
+	\end{itemize}
+	\item Úprava tabulek stránek
+	\item Opakování instrukce
+\end{enumerate}
+
+\subsection{Výkonnost}
+
+Efektivní doba přístupu do paměti: $(1-p)T + pD$, kde p = page fault rate, T je doba přístupu bez výpadku, D  je doba přístupu s výpadkem.
+
+Výpadek pro instrukci, operandy i více úrovní stránek. 
+
+\subsection{Odkládání stránek}
+
+\begin{itemize}
+	\item Lokální -- v rámci procesu
+	\item Globální -- jakýkoliv proces
+\end{itemize}
+
+V případě že počet volných rámců klesne pod určitou mez, spustí se Page Daemon (zloděj stránek).
+
+\subsection{Algoritmy výběru}
+
+\begin{description}
+	\item[FIFO] odkládá stránky na začátek fronty, odebírá z konce oběti.
+	\item[LRU] odkládá nejdéle nepoužitou stránku, problematická implementace. Používají se aproximace.
+	\item[Aproximace LRU pomocí omezeného historie referenčního bitu stránek] Historie přístupů, posouvá se doprava po určitém čase. Při přístupu se nastavuje na 1. Oběť je vybrána jako stránka s nejmenší číselnou hodnotou.
+	\item[Aproximace LRU algoritmem druhé šance (Clock algoritmus)] Rotuje seznam stránek a nuluje referenční bit. Ta která již referenční bit má v 0 je oběť. Modifikace: Upřednostňování nemodifikovaných stránek, dva ukazatele v nějakém rozsahu (jeden nuluje, druhý uvolňuje).
+\end{description}
+
+Thrashing -- Systém tráví více času hledáním volných stránek než užitečným výpočtem (od určité úrovně zaplnění paměti). Lze pozastavit, nebo zabít celé procesy.
+
+Prepageing
+
+Zamykání stránek -- zabraňujeme odložení -- IO, jádro, soft realtime
+
+Sdílení stránek -- IPC, sdílené knihovny.
+
+Fork -- copy-on-write -- paměť se kopíruje až při změně, ne ihned při forku.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Plánování a synchronizace procesů, transakce)} \label{cha:35}
+
+2. semestr, IOS, 5. a 6. přednáška
+
+\section{Správa procesů}
+
+\begin{description}
+	\item[Plánovač (Scheduler)]přiděluje procesor
+	\item[Správa paměti] přidělení paměti
+	\item[Podpora meziprocesorové komunikace IPC] - signály, RPC
+\end{description}
+
+\subsection{Proces}
+Běžící program (program -- statická entita, které obsahuje předpis pro provedení určité činnosti).
+
+Definován v OS pomocí:
+\begin{itemize}
+	\item PID
+	\item stav plánování:
+	\begin{itemize}
+		\item New (čeká na přidělení zdrojů)
+		\item Ready (čeká na přidělení procesoru)
+		\item Running (běžící, lze přerušit)
+		\item Waiting (čekající na IO událost, nebo jinou, poté zpět do ready)
+		\item Terminated (ukončený)
+		\item Suspended (Linux, SIGSTOP, SIGCONT)
+	\end{itemize}
+
+	\item obsah registrů
+	\item data v zásobníku
+	\item dalšími objekty v OS (např. otevřené soubory)
+\end{itemize}
+
+Proces v OS reprezentován pomocí \emph{PCB} -- Process Controll Block. Obsahuje identifikaci, stav plánování, obsah registrů, plánovací informace (priorita), informace o paměti (tabulky stránek), účtování (spotřeba procesoru), využití IO.
+
+\subsection{Části procesu v UNIXu}
+
+\begin{itemize}
+	\item Uživatelský adresový prostor (kód, data, zásobník, soukromá data sdílených knihoven, sdílené knihovny, sdílená paměť.
+	\item Uživatelská oblast přístupná pouze jádru -- část PCB, která je potřeba při běhu procesu
+	\item Záznam v tabulce procesů -- informace z PCB, které jsou potřeba i když proces neběží
+	\item Tabulka paměťových regionů procesu
+\end{itemize}
+
+\subsection{Kontext procesu v UNIXu}
+Stav -- uživatelský, registrový, a systémový kontext.
+
+\begin{description}
+	\item[PID] Identifikace procesu
+	\item[PPID] Identifikace předka procesu
+	\item[UID, GUID] Identifikace uživatele a skupiny, který proces spustil
+	\item[EUID, EGID] Efektivní uživatel
+	\item[uložená EUID a EGID] snížená oprávnění
+	\item[FSUID, FSGID] pro přístup k souborům se zvýšenými privilegii
+	\item[PGID, SID] Identifikace skupiny procesů a sezení
+\end{description}
+
+\subsection{Systémová volání nad procesy v UNIXu}
+
+\paragraph{Vytvoření procesu: fork}
+
+potomek: pid = 0\\
+chyba: pid = -1\\
+rodič: jinak (pid - PID potomka)
+
+Hierarchie procesů: INIT pid=0 -- po skončení procesu vzniká zombie a čeká až rodič převezme návratový kód (wait)
+
+\paragraph{Změna programu: exec}
+
+\verb|$ exec("/bin/ls", "ls", "-l", NULL)|
+
+\subsection{Start systému}
+\begin{enumerate}
+	\item BIOS - základní testování a inicializace HW
+	\item zavaděč - MBR a další části disku
+	\item inicializační funkce jádra
+	\item Vytvoření procesu Swapper (inicializace procesu INIT a swapování)
+	\item Init načítá konfigurace a spouští démony a procesy.
+	\begin{itemize}
+		\item V jednu chvíli také GDM/KDM - přihlášneí
+		\item getty -- login -- shell -- gettty (po ukončení)
+	\end{itemize}
+\end{enumerate}
+
+\subsection{Úrovně běhu}
+\begin{itemize}
+	\item 0: halt
+	\item 1 -- 5: single user, bez grafického rozhraní atd. (záleží na distribuci)
+	\item 6: reboot
+\end{itemize}
+
+V \verb|/etc/rcX.d| konfigurace pro příslušné úrovně.
+
+\section{Plánování procesů}
+
+Plánovač rozhoduje o tom, který proces poběží a případně jak dlouho.
+
+\subsection{Preemptivní plánování}
+
+Ke změně běžícího procesu může dojít bez přičinění procesu (typicky přerušení časovače)
+
+\subsection{Nepreemptivní plánování}
+
+Ke změně může dojít pouze pokud proces předá řízení jádru (žádost o IO operaci, vzdání se procesu -- volání \verb|yield|).
+
+O vlastní přepnutí kontextu se stará dispečer (plánovač pouze rozhoduje, nemusí běžet v režimu jádra). Přepínání kontextu může být ovlivněno swapováním (přidělení paměti) a systémem spouštění nových procesů.
+
+\begin{description}
+	\item[Střednědobé plánování] Rozhodování o procesech, které mají být odstraněny z paměti, nebo navráceny zpět
+	\item[Dlouhodobé plánován] Rozhodování o spuštění nových procesů (jestli ihned, nebo se zpožděním)
+\end{description}
+
+\subsection{Přepnutí kontextu}
+
+Dispečer odebere procesor procesu A a přidělí jej procesu B. Uschová stav procesu A do \emph{PCB} a obnoví stav procesu B.
+
+Trvá několik stovek až tisíc instrukcí! Stačí ale uložit ukazatele na tabulku stránek, není potřena celý obsah.
+
+\section{Plánovací algoritmy}
+
+\subsection{FCFC}
+First come, first server -- procesy čekají na přidělení procesoru ve FIFO frontě. Nové procesy se zařazují na konec fronty, procesor se přiděluje procesům na začátku fronty.
+
+Nepreemptivní -- přepnutí kontextu nastane pouze na žádost procesu. Jednoduchá implementace.
+
+\subsection{Round Robin}
+
+Preemptivní FCFS -- každý proces má přiděleno časové kvantum, po jehož vypršení je procesor odebrána  proces zařazen na konec fronty.
+
+\subsection{SJF}
+
+Shortest Job First -- přiděluje procesor procesu, který požaduje nejkratší čas.
+
+Nepreemptivní -- nepřerušuje běžící procesy.
+
+Využívané ve speciálních dávkovách systémech, kde je známá předpokládaná délka trvání procesu. Zvyšuje propustnost systému, ale hrozí riziko hladovění.
+
+\subsection{SRT}
+
+Shortest Remaining Time -- obdoba SJF, ale spouštíme podle zbývajícího času.
+
+\subsection{Víceúrovňové plánování}
+
+Procesy rozděleny do skupin (většinou podle priority). V rámci každé skupiny se může použít jiný plánovací algoritmus. Dále obsahuje algoritmus výběru skupiny, ze které se má proces spustit (často pouze priorita).
+
+Hrozí vyhladovění nízko-prioritních procesů.
+
+\subsection{Víceúrovňové plánování se zpětnou vazbou}
+
+Nový proces je zažazen do nejvyšší priority a ta postupně klesá. Na nejnižší prioritě plánování pomocí Round Robin.
+
+Variantou je, že priorita může stoupat, pokud proces spotřebovává málo času a klesá když spotřebovává více času.
+
+Umožňuje rychlou reakci interaktivních procesů.
+
+\subsection{Linux 2.6}
+
+100 statických úrovní, 1-99 pro realtime, plánováno pomocí FCFS nebo Round Robin. 0 pro běžné procesy, plánované pomocí O(1) nebo CFS.
+
+Dynamické úrovně -20 až +19 -- ovlivnitelné pomocí nice, renice. Snižování/zvyšování na základě spotřeby CPU.
+
+\subsection{O(1) plánovač}
+Víceúrovňové plánování se zpětnou vazbou (starší jádra v 2.6). Statické priority modifikovatelné pomocí spotřeby CPU, časová kvanta ovlivněna prioritou pro každý proces. 2 sady plánovacích front (předcházení hladovění) -- aktivní a expirovaná.
+
+Round Robin na dané úrovni, potom postup do nižší úrovně. Po vypršení časového kvanta přesun do expirované fronty. Až jsou aktivní prázdné, výměna a znovu.
+
+\subsection{CFS}
+
+Completely Fair Scheduler -- jednodušší implementace (novější jádra 2.6).
+
+Každému procesu přiděleno odpovídající procento strojového času. U každého procesu tento údaj sleduje. Minimální čas dává novým procesům.
+
+Vybírá proces s nejmenším časem ke spuštění, nechává běžet po dobu přiděleného kvanta na základě priorit.
+
+Má podporu pro skupinové plánování.
+
+\subsection{Windows NT a novější}
+
+32 úrovní --\\
+0: nulování volných stránek
+1 -- 15: Běžné procesy
+16 -- 31: Realtime procesy
+
+Dynamicky je priorita ovlivňována: Okno na popředí, okno se vstupními zprávami, procesy, které byly právě uvolněny z čekání. Snižuje se po každém vyčerpání kvanta.
+
+\section{Problém inverze priorit}
+
+\begin{itemize}
+	\item Nízko prioritní proces alokuje zdroj
+	\item Vysoce prioritní jej potřebují a tak jsou zablokovány
+	\item Středně prioritní procesy získají maximální prioritu
+\end{itemize}
+
+Může být problém, pokud jsou blokovány procesy reálného času. Zvyšuje se odezva systému.
+
+\subsection{Řešení}
+\begin{description}
+	\item[Priority Ceiling] Procesy v kritické sekci získávají maximální prioritu
+	\item[Priority Inheritance] Proces v kritické sekci blokující prioritnější proces získává jeho prioritu
+	\item[Zákaz přerušení v průběhu vykonávání kritické sekce] (absolutně nejvyšší priorita)
+\end{description}
+
+\section{Další termíny}
+\begin{description}
+	\item[Vlákno] LWP -- Light Weight Process. Několik vláken sdílí data, kód a soubory. Mají vlastní registry, zásobník. Vyšší rychlost spouštění a přepínání procesů
+	\item[Úloha (job)] V BASHi, skupina paralelně běžících procesů, spuštěných jedním příkazem a napojených do kolony (pipe)
+	\item[Skupina procesů] Množina procesů, se kterou lze pracovat pohromadě (poslat signál, čekat na dokončení). Může mít vedoucího. \verb|getpgit|, \verb|setpgid|
+	\item[Session] Skupina procesů v jednom sezení. Můžou mít vedoucího. \verb|sessid|
+\end{description}
+
+\subsection{Komunikace procesů}
+IPC -- Inter-Process Communication
+\begin{description}
+	\item[Signály] kill, signal
+	\item[Roury] pipe, mknod
+	\item[Zprávy] msgget, msgset, msgrecv, mvgcnt
+	\item[Sdílená paměť] shmget, shmad
+	\item[Sockety] socket
+	\item[RPC] Remote Procedure Call
+\end{description}
+
+\subsection{Signály}
+
+Číslo (int) zaslané procesu přes speciální rozhraní. Při chybách, externích událostech, na žádost procesu. Asynchronní, pečlivě zvažovat obsluhu.
+
+Implicitní zpracování obsahuje ukončení, ignorování nebo pozastavení. Lze předefinovat mimo SIGKILL a SIGSTOP.
+
+Signály lze blokovat (mimo SIGKILL, SIGSTOP, SIGCONT). Nastavení se dědí do potomků procesů!
+
+Zaslání signálu: \verb|kill(pid, sig)| -- kladní číslo PID, záporné číslo GID, 0: všem procesům mimo INIT. Posílání pouze procesům, ke kterým má proces oprávnění (souhlasí UID, EUID, saved EUID), nebo pokud má EUID=0 nebo CAP\_KILL (privilegia). 
+
+\section{Synchronizace procesů}
+
+Současný přístup několika procesů ke sdíleným zdrojům. Může vznikat časově závislá chyba (různé pořadí provedení akcí). Je potřeba synchronizace.
+
+\begin{description}
+	\item[Kritická sekce] Úseky programu, jejichž provádění jedním procesem vylučuje provádění současně procesem jiným. Je třeba zajistit vzájemné vyloučení a dostupnost kritické sekce, pokud je volná
+	\item[Uváznutí (deadlock)] Každý ze skupiny procesů je pozastaven a čeká na uvolnění zdroje vlastněného jiným procesem.
+	\item[Blokování (blocking)] Žádá o vstup do kkritické sekce, ale musí čekat i přestože je KS volná a nikdo o ni nežádá
+	\item[Stárnutí (hladovění, starvation)] Čekání na podmínku, která nemusí nastat
+	\item[Livelock] Procesy skupiny běží, ale provádějí pouze část kódu, ve které žádají o zdroj, který vlastní někdo jiný, kdo jej nemůže uvolnit
+\end{description}
+
+\subsection{Petersonův algoritmus}
+
+\lstset{caption={Petersonův algoritmus},language=C}
+\begin{lstlisting}
+bool flag[2] = {false, false}; // priznaky zadosti
+int turn = 0;
+
+do { // process i
+	flag[i] = true; // mam zajem o vstup
+	turn = 1-i; // dam prednost druhemu procesu
+	while(flag[1-i] && turn !=i); // aktivni cekani
+	// KS
+	flag[i] = false;
+} while(1);
+\end{lstlisting}
+
+\subsection{Bakery algoritmus}
+
+Proces získá lístek, přednost má proces s nejmenším číslem a PID.
+
+\subsection{Podpora Hardware}
+
+\paragraph{Atomická instrukce TestAndSet} (LOCK BITS)
+
+\lstset{caption={TestAndSet}}
+\begin{lstlisting}
+bool TestAndSet( bool & target ){
+	bool rv = target;
+	target = true;
+	return rv;
+}
+
+bool lock = false;
+while( TestAndSet(lock) );
+// KS
+lock = false;
+\end{lstlisting}
+
+\paragraph{Swap -- atomická instrukace} (LOCK XCHG)
+
+\lstset{caption={Swap}}
+\begin{lstlisting}
+void Swap( bool & a, bool & b ){
+	bool temp = a;
+	a = b;
+	b = temp;
+}
+
+bool lock = false;
+bool key = true;
+while(key  == true )
+	swap(lock, key);
+// KS
+lock = false;
+\end{lstlisting}
+
+\subsection{Aktivní čekání}
+spinlock. Výše uvedené. Použitelné na krátkých kritických sekcích bez preempce.
+
+Problematický opakovaný zápis paměťového místa (zajištění konzistence cache v multiprocesorových systémech -- řešení -- lze číst).
+
+\lstset{caption={}}
+\begin{lstlisting}
+while(TestAndSet(lock))
+	while(lock);
+\end{lstlisting}
+Nevylučuje možnost stárnutí, ale bývá tolerováno.
+
+\section{Semafory}
+
+Celočíselná proměnná, přístupná dvěma operacemi:
+\begin{description}
+	\item[lock] nebo také P, down
+	\item[unlock] nebo také V, up
+\end{description}
+
+\begin{description}
+	\item[S $>$ 0] odemknuto, obecně lze do kritické sekce propustit více procesů
+	\item[S $\leq$ 0] zamknuto, někdy stále v nule, někdy jde do záporných (počet procesů ve frontě)
+\end{description}
+
+\lstset{caption={}}
+\begin{lstlisting}
+semaphore mutex;
+init(mutex, 1);
+lock(mutex);
+// KS
+unlock(mutex);
+
+typedef struct{
+	int value;
+	process_queue *queue;
+} semaphore;
+
+void lock(S){
+	S.value--;
+	if( S.value < 0 ){
+		C = get(ready_queue);
+		append(S.queue, C);
+		switch(); // vzdani se procesoru
+	}
+}
+
+void unlock(S){
+	S.value++;
+	if( S.value == 0 ){
+		P = get(S.queue);
+		append(ready_queue);
+	}
+}
+\end{lstlisting}
+
+Tělo těchto funkcí je také kritickou sekcí -- lze řešit zákazem přerušení, nebo vzájemným vyloučení atomickou instrukcí (čeká se pouze na vstup do funkce, která se vykoná rychle).
+
+Podobné: RW zámky -- možné vícenásobné zamčení pro čtení, mutexy -- binární, optimalizované.
+
+
+\subsection{Implementace semaforů}
+
+\paragraph{POSIX}
+\begin{description}
+	\item[System V] semget, smop, semctl 
+	\item[novější] sem\_init, sem\_open, sem\_post, sem\_wait, sem\_getvalue, sem\_close, sem\_unlink, sem\_destroy
+	\item[POSIX vlákna] pthread\_mutex\_lock, pthread\_mutex\_unlock
+\end{description}
+
+\subsection{Linux -- futex}
+
+Fast User-space locks -- sdílená celočíselná hodnota inkrementována/dekrementována atomicky na úrovni asembleru. Při detekci konfliktu voláno jádro. Při malém počtu konfliktů vyšší rychlost.
+
+\section{Monitory}
+
+Vysokoúrovňové synchronizační prostředky. Zapouzdřená data, jen jeden proces může provádět operaci nad chráněnými daty.
+
+Uvnitř monitoru podmínky, nad kterými je možní provádět operace -- wait (decrement) a signal nebo notify (increment).
+
+Implementace možná pomocí semaforů. Java: klíčové slovo synchronized. POSIX: pthread\_cond\_t.
+
+\section{Synchronizační problémy}
+
+\subsection{Producent a konzument}
+
+\lstset{caption={Producent a konzument}}
+\begin{lstlisting}
+semaphore full, empty, mutex;
+init(full, 0);
+init(empty, N);
+init(mutex, 1);
+
+// producent
+do{
+	// produce
+	lock(empty); // mame misto ve sklade?
+	lock(mutex);
+	// zapis do KS
+	unlock(mutex);
+	unlock(full); // oznameni konzumentovi o nove polozce
+} while(1);
+
+// konzument
+do {
+	lock(full); // mame co konzumovat?
+	lock(mutex);
+	// cteni z KS
+	unlock(mutex);
+	unlock(empty); // oznameni producentovi o novem miste ve sklade
+	// consume
+} while(1);
+\end{lstlisting}
+
+\subsection{Čtenáři a písaři}
+
+\lstset{caption={Čtenáři a písaři}}
+\begin{lstlisting}
+int readcount;
+semaphore mutex, wrt;
+readcount = 0;
+init(mutex, 1);
+init(wrt, 1);
+
+// pisar
+do{
+	lock(wrt);
+	// write
+	unlock(mutex);
+} while(1);
+
+// ctenar
+do {
+	lock(mutex);
+	readcount++;
+	if( readcount == 1 ) lock(wrt);
+	unlock(mutex);
+	// read
+	lock(mutex);
+	readcount--;
+	if( readcount == 0) unlock(wrt);
+	unlock(mutex);
+} while(1);
+\end{lstlisting}
+
+Hrozí vyhladovění písařů. Potřeba přidat prioritu zápisu, pokud má nějaký písař zájem zapisovat.
+
+\subsection{Problém večeřících filozofů}
+
+\lstset{caption={Problém večeřících filozofů}}
+\begin{lstlisting}
+semaphore chopstick[5];
+for( int i = 0; i < 5; i++)
+	init(chopstick[i], 1);
+
+
+// philosopher i
+do{
+	lock(chopstick[i]);
+	lock(chopstick[(i+1)%5]);
+	// eat
+	unlock(chopstick[i]);
+	unlock(chopstick[(i+1)%5]);
+	// think
+} while(1);
+
+\end{lstlisting}
+
+Hrozí uváznutí, pokud si každý vezme levou a bude čekat na pravou. Řešením je vzít obě hůlky zároveň, nebo získávat hůlky asymetricky.
+
+\section{Modelování -- Petriho sítě}
+
+Bipartitní graf -- místa $\bigcirc$ (stavy procesů a proměnných) a přechody $\mid$ (možné akce z daného stavu), tečky $\odot$ (stavy procesů a proměnných).
+
+Provedení přechodu -- přesun značek ze všech vstupních do všech výstupních míst.
+
+\section{Uváznutí}
+dva sdílené zdroje zamykané v jiném pořadí
+
+Podmínky pro vznik uváznutí:
+\begin{itemize}
+	\item Vzájemné vyloučení při použití sdílených prostředků
+	\item Vlastnictví alespoň jednoho zdroje a čekání na další
+	\item Prostředky nemohou být odebrány
+	\item Cyklická závislost na sebe čekajících procesů
+\end{itemize}
+
+Řešení: Prevence a vyhýbání se uváznutí, detekce a zotavení.
+
+\begin{description}
+	\item[Prevence uváznutí] zrušení alespoň jedné z podmínek.
+	\begin{itemize}
+		\item Nepoužívat sdílené prostředky, nebo se vyhnout vzájemnému vyloučení
+		\item Povolení žádat o zdroje, pouze pokud žádné nevlastní
+		\item Pokud nemůže získat všechny zdroje které potřebuje, ostatní jsou odebrány
+		\item Prostředky lze získávat pouze v přesně daném pořadí
+	\end{itemize}
+
+	\item[Vyhýbání se uváznutí] procesy předem deklarují zájem o sdílené požadavky. Rozhodování o tom, které zdroje přidělíme a které odmítneme. Nesmí vzniknout cyklus (graf aokace zdrojů).
+	\item[Detekce uváznutí a zotavení] Graf čekání procesů na zdroje. Pokud vznikne cyklus -- deadlock. Zotavení: Ukončení všech/zablokovaných procesů skupiny nebo odebrání zdrojů některým procesů a pozastavení. Pokračují později. Rollback, nebo akceptování částečné nekonzistence.
+\end{description}
+
+Hladovění -- procesy čekají na podmínku, u níž není zaručeno, že nastane.
+
+\section{Formální verifikace}
+Umožňuje nejen odhalit chybu, ale také dokázat správnost systému s ohledem na zadaná kritéria.
+
+Postup:
+\begin{enumerate}
+	\item Vytvoření modelu (pokud nepracujeme přímo se systémem).
+	\item Specifikace vlastností, které chceme ověřit (generické, specifické).
+	\item Automatická kontrola.
+\end{enumerate}
+
+\subsection{Metody}
+\begin{description}
+	\item[Theorem proving] poloautomatický dokazovací prostředek (vyžaduje vedení experta).
+	\item[Model checking] Generuje a prohledává všechny možné stavy procesu (stavový prostor).
+	\item[Static Analysis] Ověření vlastnost na základě popisu modelu či systému bez~provádění.
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{35}
+\chapter{Objektová orientace} \label{cha:36}
+
+4. semestr, IPP
+
+(základní koncepty, třídně a prototypově orientované jazyky, OO přístup k tvorbě SW)
+
+\section{OO návrh}
+
+OO Analýza $ \to $ OO Návrh $ \to $ OO Implementace
+
+Principy: Identifikace objektů, tříd a instancí. Rozdělení zodpovědnosti mezi objekty.
+
+\begin{description}
+	\item[Modelování] tvorba abstrakce reálného systému
+	\item[Abstrakce] Black-Box -- míra skrývání vnitřní struktury
+	\item[Objekty] data-centrické modelování
+\end{description}
+
+
+Kritéria dobrého návrhu:
+\begin{itemize}
+	\item Trasovatelnost vlastností
+	\item Robusnost a udržovatelnost
+	\item Splnění funkčních požadavků
+	\item Kvalita služeb
+\end{itemize}
+
+\subsection{UML}
+vizuální jazyk vhodný pro OO modelování. Diagramy, strukturální a behaviorální pohledy.
+
+Spoječný jazyk zákazníka, návrháře a programátora. Použitelné pro validaci a verifikaci.
+
+\begin{description}
+	\item[Diagram tříd/objektů] instance, dědičnost, násobnost vztahů mezi entitami (agregace, kompozice, závislost, dědičnost, ...)
+	\item[Sekvenční diagram] Procesy/objekty a jejich vzájemná komunikace v závislosti na čase
+	\item[Diagram případů užití] nejjednodušší reprezentace uživatelské interakce se systémem
+\end{description}
+
+Výhody/Nevýhody:
+\begin{itemize}
+	\item Jednoduché na pochopení (skutečný objekt $\to$ SW objekt)
+	\item Praktické ve skutečných aplikacích
+	\item Zlepšení produktivity (pro velké aplikace) -- znovupoužitelnost, SW inženýrství.
+	\item Stabilita (většinou lokální změny na úrovni objektu, třídy)
+	\item Delší učící křivka
+	\item Pomalejší kód (objektová režie)
+\end{itemize}
+
+\section{Objektová orientace}
+
+Položky (member fields):
+\begin{description}
+	\item[Atributy] Data (datové položky)
+	\item[Metody] Operace (členské funkce)
+\end{description}
+
+Objektový systém -- kolekce komunikujících objektů (zasílání zpráv).
+
+\subsection{Modely OOJ}
+pravidla pro tvorbu a propojování objektového systému, model výpočtu.
+
+\begin{description}
+	\item[Statické modely] překládané (C++), statická VMT, rychlejší
+	\item[Dynamické modely] interpretované (Java), jednoduchost a reflektivita
+\end{description}
+
+Každý jazyk má svůj model výpočtu.
+
+\subsection{Formální báze}
+
+\paragraph{UML}
+OO analýza, návrh a modelování.
+
+\subsection{$\varsigma$-kalkul}
+Minimální model OOP. Program je jediný výraz, lze dokázat korektnost.
+\begin{description}
+	\item[Proměnná] $x$
+	\item[Objekt] $[l_1 = \varsigma(x_1)e_1, l_2 = \varsigma(x_2)e_2]$ návěští, binder, hostující objekt, tělo metody
+	\item[Invokace metody] $e.l$
+	\item[Modifikace metody] $e.l \Leftarrow \varsigma(x)e'$
+	\item[Závorky]
+\end{description}
+
+Model výpočtu -- $\varsigma$-výraz pro invokaci nebo modifikaci metody redukuji ($\hookrightarrow$).
+
+\paragraph{Redukce}
+validní substituce = textová náhrada tak, že se žádná volná proměnná nestane vázanou.
+
+\paragraph{Vázaná proměnná}
+každý výskyt proměnné x, kteří je v metodě se $\varsigma$-parametrem x.
+
+\section{Syntaxe a sémantika složitějších OOJ}
+
+Syntaxe: (E)BNF, gramatiky, texty, příklady
+
+Sémantika: texty, příklady, diagramy
+
+Pouze pár nových klíčových slov, mnoho nových významových kombinací. Víceúrovňový popis.
+
+\section{OO Paradigmata, koncepty}
+
+Umožňují tvořit generická řešení (znovupoužitelnost).
+
+\subsection{Abstrakce} Objekt -- autonomní výpočetně úplná entita, nezávislá na architektuře
+
+\subsection{Zapouzdření}
+Modifikátory viditelnosti, přístup z venku přes veřejný protokol. Příjemce rozhoduje o odpovědi na zprávu. Může být invokace, nebo chyba.
+
+Při zaslání zprávy sám sobě, přístup přes interní protokol, rozšířený o přístup k atributům/vlastnostem.
+
+\subsection{Polymorfismus -- Mnohotvárnost}
+
+Stejnou zprávu lze zaslat různým objektům (může být omezeno typovým systémem). Individuální reakce na zprávu.
+
+\begin{description}
+	\item[Brzká vazba] Určení reakce objektu v době překladu
+	\item[Pozdní vazba] Určení reakce za běhu
+\end{description}
+
+Některé jazyky umožňují typ vazby změnit (C++ virtual, Java -- implicitní pozdní vazba neměnná).
+
+\subsection{Dědičnost}
+
+Sdílení a znovupoužití metod + předefinování specializovaných -- generalizace a specializace.
+
+\subsection{Vytváření nových objektů}
+\begin{description}
+	\item[Klonováním] prototypy. Nutnost existence praobjektu
+	\item[Podle šablony] Šablona = Třída. Vytvoření podle šablony a vyplnění atributů.
+\end{description}
+
+\begin{description}
+	\item[Třída = Class] Šablona pro vytváření nových objektů, tzv. instancí. Obsahuje seznam atributů v instancích, implementaci metod (sdílené instancemi).
+	\item[Instanciace] Vytvoření objektu + volání konstruktoru.
+	\item[Instance] Identita + Reference na třídu + data atributů
+	\item[Třídní model OOP] každý objekt má svoji třídu, třída je také objekt. Existují instantční a třídní položky.
+\end{description}
+
+\section{Klasifikace OOJ}
+\begin{description}
+	\item[Dle přístupu k vytváření objektů] \hfill
+	\begin{description}
+		\item[Beztřídní OOJ] prototype-based, class-less
+		\item[Třídní OOJ] class-based
+	\end{description}
+	\item[Dle čistoty objektového modelu] \hfill
+	\begin{description}
+		\item[Čisté] vše je objekt
+		\item[Hybridní] míchání s jinými paradigmaty
+	\end{description}
+	\item[Dle platformy pro běh OO programů] \hfill
+	\begin{description}
+		\item[Překládané] efektivita
+		\item[Interpretované] pomalejší, flexibilnější
+		\item[Částečně interpretované] mezikód, virtuální stroj (Java)
+	\end{description}
+	\item[Dle dědičnosti] \hfill
+	\begin{description}
+		\item[Jednoduchá a Vícenásobná] Vícenásobná problematická a často zbytečná
+		\item[Dle předmětu dědění] \hfill
+		\begin{description}
+			\item[Dědičnost implementace] Třídní (nadtřída/podtřída), Delegace
+			\item[Dědičnost rozhraní]
+		\end{description}
+	\end{description}
+	(nejen OOJ:)
+	\item[Dle způsobu určení typu] Beztypové, netypované a typované
+	\item[Dle důslednosti kontrol typů] \hfill
+	\begin{description}
+		\item[Silně typované] type-safe
+		\item[Slabě typované] implicitní konverze
+	\end{description}
+	\item[Dle doby kontroly typů] \hfill
+	\begin{description}
+		\item[Staticky] v době překladu
+		\item[dynamicky] v době běhu
+	\end{description}
+	
+	
+\end{description}
+
+\section{Třídní OOJ}
+
+\paragraph{Extent} kolekce všech instancí dané třídy
+
+\subsection{Podtřída / subclass} přímý potomek -- replikace a přidaní nových položek, redefinice zděděných metod.
+
+\paragraph{Relace dědičností} částečné uspořádání na množině tříd
+
+Objekt nebo třída musí být popsán před prvním použitím. 
+
+\subsection{Operace nad instancemi}
+Objekt jako chytrá datová struktura.
+\begin{itemize}
+	\item přístup k atributům
+	\item zaslání zprávy instanci (získání třídy, hledání metody ve třídě a nadtřídách -- super/base, invokace metody (skrytý self parametr -- chytrá funkce), návrat hodnoty výsledku odesílateli)
+	\item modifikátory přístupu (konfigurace zapouzdření) -- private, protected, internal, public
+\end{itemize}
+
+\subsection{Operace nad třídami}
+\begin{itemize}
+	\item Třída jako objekt první kategorie: Třída je objekt = analogický postup.
+	\item Třída jako speciální entita jazyk:
+	\begin{itemize}
+		\item Statické atributy -- deklarace a definice ve třídě
+		\item Statické metody -- typicky bez self parametru, klasická funkce ve jmenném prostory třídy.
+	\end{itemize}
+\end{itemize}
+
+Pro invokaci metody je potřeba hlídat kontext (self/this, super/base), zásobník kontextů.
+
+Implementace třídních OOJ:
+\begin{itemize}
+	\item Požadavky $\times$ Skutečnost
+	\item Objektová paměť (asociativní, heterogenní) $\times$ Počítačová (lineární, homogenní)
+	\item Model výpočtu: Zasílání zpráv $\times$ instrukce CALL, zásobník volání
+	\item Uložení instancí a přístup ke zděděným položkám
+	\item Vícenásobná dědičnost
+	\item Přístup k položkám instance -- nultý skrytý parametr
+	\item Rušení instancí objektů
+	\begin{description}
+		\item[Implicitní] Garbage collector
+		\item[Explicitní] Destruktur -- finalizační metoda
+	\end{description}
+	\item Třída jako typ: B podtřída A $\land$ $\beta$ instanceOf(B) $ \Rightarrow \beta $ instanceOf(A). Instanci lze využít všude, kde je vyžadována nadtřída A. 
+	\item Běhová prostředí
+	\begin{description}
+		\item[Kompilované] OS, CPU, Binární kód
+		\item[Interpretované] opakuje front-end analýzu zdroje
+		\item[Částečně interpretované] VM, Bajtkód, virtuální stroj
+	\end{description}
+\end{itemize}
+
+\subsection{Překladač}
+Modulární OOJ, složitější o kontrolo dodržování ABI (rozhraní mezi programem a OS), lokální tabulky symbolů.
+
+\emph{Lexikální a syntaktická analýza} podobná strukturovaným jazykům.
+
+\emph{Sémantická} je velmi náročná. Často více průchodů, komplikovanější typový systém (Explicitní přetypování).
+
+\emph{Interpret} mezikód a interpretace. Často existuje interaktivní konzole -- workplace -- mizí rozdíl mezi vývojovým a běhovým prostředím. Obsahuje čistý OO model, objektovou paměť, vnitřně může probíhat nějaká optimalizace.
+
+\subsection{Typy $\times$ Třídy}
+
+\emph{Typ} je množina validních hodnot a operací nad nimi (obecnější).
+
+\emph{Třída} je množina vnitřních stavů a operací nad nimi. Často určuje typ.
+
+Typ může být:
+\begin{itemize}
+	\item Daný jménem -- Vyžádaná dědičnost (např. dědičnost)
+	\item Daný výčtem položek -- skutečný (pod)typ
+	\item Kombinace -- např. vícenásobná dědičnost tříd nebo rozhraní (staticky), systémy s rolemi (dynamicky)
+\end{itemize}
+
+\subsection{Vícenásobná dědičnost (třídní)}
+
+Problémové, často není potřeba pro dobrý návrh. Většinou lze nahradit rozhraními.
+
+Problémy:
+\begin{itemize}
+	\item Obsahují stejně pojmenované položky stejného typu
+	\begin{itemize}
+		\item Metody -- Zakázat, skrýt, povinná redefinice
+		\item Atributy -- Zakázat, skrýt, sloučit
+	\end{itemize}
+	\item Obsahují stejně pojmenované položky různého typu
+	\begin{itemize}
+		\item Metody -- Zakázat, souběžná existence (další zátěž překladače)
+		\item Atributy -- Zakázat
+	\end{itemize}
+	\item Pořadí volání konstruktorů
+	\begin{itemize}
+		\item Implicitní -- pořadí zápisu a zanoření do nadtříd pomocí DFS -- acyklické pořadí
+		\item Explicitní -- nebezpečí uváznutí, nebo vynechání některého konstruktoru
+	\end{itemize}
+	\item Uložení instancí do paměťi -- za sebou?
+\end{itemize}
+
+\subsection{Rozhraní}
+
+Schéma deklarující seznam metod, které je třeba implementaovat. Často vícenásobné -- jednodušší. Využitelné pro polymorfismus (stačí vyžadovat rozhraní).
+
+\paragraph{Abstraktní třída}
+obsahuje minimálně jednu abstraktní metodu, kterou je třeba implementovat. Rozhraní s imlementací.
+
+\paragraph{Protokol}
+Množina všech zpráv, kterým objekt rozumí (postup hledání reakce na zprávu).
+
+\subsection{Systémy s rolemi}
+vícetypový objekt, více rolí, které může získávat a pozbývat (bind/unbind). Využití v OO databázích -- ACID vlastnosti. Interpretované systémy s objekty s dlouhou dobou života.
+
+\paragraph{Persistentní objekt}
+Přežívá dobu běhu aplikace. Po dalším spuštění je zase k dispozici. Není ukládání a načítání na aplikační úrovni! K slovo persistent -- buď jen hodnoty, nebo i ostatní položky (i třídy pro role). 
+
+\paragraph{Transcendentní (dynamický) objekt}
+Neperzistentní.
+
+\section{Beztřídní OOJ}
+
+Vytváření objektů klonováním prototypů. SELF, Slate, Lua, Javascript.
+
+\paragraph{Delegace} sdílení položek mezi objekty. Může být dynamická -- možnost měnit rodiče za běhu.
+
+Většinou interpretované systémy
+
+\subsection{SELF}
+
+Objekt je seznam položek, tzv. sloty.
+
+\paragraph{Slot} Jméno + odkaz na data/metody/rodičovský objekt.
+
+\begin{description}
+	\item[Data] seznam slotů bez kódu
+	\item[Metoda] Objekt metody s jejím kódem.
+	
+	Při invokaci se klonuje a vzniká aktivační objekt. Tvoří jmenný prostor (kontext). Sloty reprezentují parametry metody. Chybí klíčové slovo self, ale objekt obsahuje sloty pro delegaci
+	\item[Třída (rys)] objekt pouze se sdílenými metodami a rodičovskými sloty pro delegaci
+\end{description}
+
+\paragraph{Prototyp}
+Datové sloty pro atributy a jejich implicitní hodnoty. Deleguje na rysy (sdílené instanční metody).
+
+\paragraph{Instanciace -- vytvoření instance}
+Mělká kopie prototypu.
+
+
+\section{Ostatní (nejen) OOP koncepty}
+
+\subsection{Výjimky}
+Způsob ošetření neočekávaných chybových stavů mimo produkční kód. Objekt propagující informace o vzniklé chybě (kategorizace pomocí hierarchie tříd). Vyvolání throw/rise -- změna modelu výpočtu. Ošetření try -- catch -- finaly
+
+\subsection{Generický polymorfismus a šablony}
+\begin{description} 
+	\item[Statický] typový parametr, hodnotou typ. Šablony textové, Genericky řízeno implicitním přetypováním
+	\item[Dynamický] polymorfní metody, pozdní vazba
+	\item[Ad-Hoc] přetěžování operátorů
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Programování v jazyku symbolických instrukcí} \label{cha:37}
+
+1. semestr, IAS, celý rozsah
+
+(činnost počítače, strojový jazyk, symbolický jazyk, asembler)
+
+\section{Symbolický jazyk}
+
+Zápis algoritmu pomocí symbolických instrukcí čitelných pro lidi
+
+\section{Strojový jazyk}
+
+Přeložený symbolický jazyk do kódu, který může procesor přímo provádět
+
+\subsection{Programování v jazyky symbolických instrukcí}
+\begin{itemize}
+	\item Podrobně analyzovat zadaný problém
+	\item Naznačit řešení v notaci vyššího prog. jazyka
+	\item Strukturovat program (procedury, makra)
+	\item Podrobně komentovat
+\end{itemize}
+
+\subsection{Model počítače}
+CPU (Registry, řadič, ALU),Paměť a IO propojeny sběrnicí (Address, Controll, Data).
+
+Registry: Akumulátor A, Instrukční registr IR, Registr ukazatele instrukcí IP.
+
+Paměť -- nelze určit význam obsahu -- znak, číslo, instrukce. Musí znát program, CPU.
+
+Instrukce -- Operační kód (jednoznačné určení operace), adresy operandů, operandy
+
+\subsection{Typy instrukcí}
+Celočíselné:
+\begin{description}
+	\item[přenosové] MOV, XCHG, PUSH, POP, IN, OUT
+	\item[aritmetické] ADD, ADC, SUB, SBB
+	\item[logické] AND, OR, XOR, TEST, NOT
+	\item[posuvy a rotace] SAR, SHR, SHL, SAL, RL, ROR, RCL, RCR
+	\item[skokové instrukce] JMP, JCC, JCXZ, LLOP, CALL, RET, IRET
+	\item[řetězové] předponty REP, REPE, REPL, REPNE, REPNZ
+\end{description}
+FPU instrukce, MMX, systémové
+
+\subsection{Činnost počítače}
+\begin{enumerate}
+	\item Do IR se uloží obsah pěmati adresované registrem IP
+	\item Nastaví se IP na další instrukci
+	\item Dekódování obsahu IR
+	\item Provedení operace
+	\item Pokud nebyla instrukce HALT, skok na 1.
+\end{enumerate}
+
+\section{Intel}
+
+Registry 8 bit: AL, AH: byte\\
+Registry 16bit: AX: word\\
+Registry 32bit: EAX: double word
+
+Formát instrukce:
+
+\begin{tabular}{ *{5}{ | c} |}
+	\hline
+	prefixes 	& opcode	& r/w	& displ. & imm. op. \\
+	0-4 B		& 1-2 B	& 0-1 B & 0-2 B & 0-2 B \\
+	\hline
+\end{tabular}
+
+\subsection{Efektivní adresa EA}
+
+(v 16bit základním režimu)
+
+EA = báze + index + displacement
+
+fyzická adresa = segmentová adresa * 16 + offset
+
+instrukce: (Code segment) CS:IP (instruction pointer)
+zásobník: (Stack segment) SS:SP (stack pointer)
+
+\subsection{Výjimky, přerušení}
+
+Pro ošetření výjimečné situace (dělení nulou), nebo požadavek vnějšího zařízení.
+
+\begin{enumerate}
+	\item Vykonává se program
+	\item Požadavek na přerušení
+	\item Dokončí se instrukce, IP a Flags se umístí na zásobník
+	\item Z tabulky přerušení se přečte adresa ISR, umístí se do IP
+	\item Provádí se ISR
+	\item Po dokončení se načte IP a Flags ze zásbníku
+	\item Pokračuje původní program
+\end{enumerate}
+
+\subsection{Překlad}
+
+example.asm $=>$ nams.exe $=>$ example.obj, example.lst, example.com\\
+ (, protokol o překladu, spustitelný soubor)
+
+\subsection{Sestavení}
+
+example.obj $=>$ link.exe $=>$ example.map, example.com\\
+ (protokol o uložení, spustitelný soubor)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Služby aplikační vrstvy} \label{cha:38}
+
+5. semestr, ISA, 8., 11., 12. přednáška\\
+4. semestr, IPK, 2. přednáška
+
+(email, DNS, IP telefonie, správa SNMP, Netflow)
+
+\subsection{Architektury}
+\begin{itemize}
+	\item Klient/server
+	\begin{itemize}
+		\item Server -- pevná adresa (IP, DNS), zátěž možno rozložit na více strojů
+		\item Klient -- komunikace se serverem, připojení/odpojení. Nekomunikují mezi sebou, proměnná adresa. Iniciuje komunikaci
+	\end{itemize}
+	\item Peer-to-peer -- žádný vyhrazený server po dobu provozu. Vysoce škálovatelné, ale náročné na správu
+	\item Hybridní -- kombinace výše uvedeného (Skype, IM)
+\end{itemize}
+
+\paragraph{Adresování} IP adresa určuje počítač v síti, číslo portu určuje běžící proces.
+
+\subsection{Aplikační protokol}
+Proprietální $\times$ Public domain
+\begin{itemize}
+	\item Typy zpráv, které se vyměňují (např. dotaz/odpověď)
+	\item Syntax typů zpráv -- struktura zprávy, její položky
+	\item Sémantika jednotlivých položek
+	\item Pravidla kdy a jak se posílají zprávy
+\end{itemize}
+
+\paragraph{Požadavky na transportní vrstvu} Ztrátovost, propustnost, bezpečnost, zpoždění. TCP $\times$ UDP -- viz kapitola č. \ref{cha:39}
+
+\section{Web/HTTP}
+\begin{itemize}
+	\item klient/server
+	\item dotaz -- odpověď
+	\item TCP 80
+	\item nestavový ($\to$ cookies)
+\end{itemize}
+
+1.0 bez stálého spojení (nonpersistent)
+
+1.1 persistent -- přenos více objektů přes jedno spojení
+
+\section{FTP}
+přenos souborů, přistup do vzdáleného souborového systému
+
+\begin{itemize}
+	\item klient/server
+	\item TCP 21 řídící, 20 datové (aktivní a pasivní mód)
+	\item nestavový ($\to$ cookies)
+\end{itemize}
+
+\section{DNS}
+
+Mapuje doménová jména na adresy IP a obráceně. Distribuovaná databáze všech doménových jmen a adres IP.
+
+\paragraph{Architektura}
+Distribuovaná, hierarchie mnoha jmenných serverů rozdělených do zón (decentralizace).
+
+\paragraph{Aplikační protokol}
+Formát zpráv pro rezoluci DNS záznamu -- hierarchicky uspořádané záznamy.
+
+Dotaz a odpověď má stejná formát.
+
+\begin{itemize}
+	\item Kořen -- root -- ""
+	\item Doména -- podstrom v grafu
+	\item Doménové jméno -- cesta mezi vrcholem domény a kořenem (oddělené tečkami)
+	\item Listy stromu -- konkrétní síťová zařízení
+\end{itemize}
+
+\paragraph{Reverzní mapování}
+Záznamy DNS jsou indexovány podle IP adres, pod stromem ".arpa.in-addr"
+
+\paragraph{Registrátoři domén} ICANN, CZ-NIC, IP-RIPE NCC.
+
+\subsection{Druhy DNS serverů}
+\begin{description}
+	\item[Primární] úplné (autoritativní) záznamy o doménách, které spravuje. Provádí aktualizace
+	\item[Sekundární] Autoritativní kopie dat z primárního serveru
+	\item[Záložní] caching only -- přeposílá dotazy, vyrovnávací paměť, neautoritativní odpovědi.
+	\item[Kořenové NS] kontaktovány lokálními, pokud nevědí jak provést rezoluci
+\end{description}
+
+\paragraph{Resolver}
+klientský program, který získává informace od DNS serverů
+
+\paragraph{Rezoluce}
+Proces vyhledání odpovědi v DNS systému (stromová struktura).
+\begin{itemize}
+	\item Rekurzivní dotaz -- pokud server nezná odpověď, ptá se dále.
+	\item Iterativní dotaz -- server odpoví kde hledat dále.
+\end{itemize}
+
+Každý záznam má \emph{dobu platnosti}, po kterou je udržován v cache. Aktualizace po vypršení, nebo po explicitním DNSUPDATE.
+
+\subsection{Záznam}
+
+\verb|name   ttl   class (IN)   type   data|
+
+\paragraph{Typy záznamů}
+A, AAAA, CNAME, DNSKEY, DS, KEY, MX, NAPTR (sip), NS (autoritativní), NSEC, PTR (reverzní mapování), RRSIG, SOA (detaily zóny), SRV (lokalizace, rozložení zátěže), TXT
+
+\subsection{Bezpečnostní rizika}
+\begin{itemize}
+	\item Podvržení DNS odpovědi -- hádání 16bit. ID
+	\item Podvržení do cache -- zneužití sekce additionals v odpověďi cache serveru
+	\item DDos
+\end{itemize}
+
+
+\section{Email}
+
+\paragraph{Klient (UA -- User Agent)} vytváření a čtení zpráv. Protokoly SMTP, POP3, IMAP.
+
+\paragraph{Server (MTA -- Message Transfer Agent)} přenos zpráv ze zdrojového počítače na cílový (na pozadí, obálka). Protokol SMTP.
+
+\subsection{SMTP} Simple Mail Transfer Protokol
+
+Multimédia (přílohy, nestandardní kódování) popsána standardem MIME (SMTP standard pro 7bit. kódování).
+
+\paragraph{Struktura zprávy}
+\begin{itemize}
+	\item Obálka (po uložení na severu odstraněna)
+	\item Adresa odesílatele
+	\item Adresa příjemce / příjemců
+	\item Priorita
+\end{itemize}
+
+\paragraph{Zpráva}
+\begin{itemize}
+	\item Hlavička (Date, From, Sender (kdo skutečně), Message-ID, Cc, Bcc, Subject, In-Reply-To)
+	\item Tělo
+\end{itemize}
+
+\paragraph{MIME} reprezentace netextové informace v textovém protokolu. Kódování, možnost šifrování.
+\begin{itemize}
+	\item base64 -- převod 3 x 8 bitů na 4 x 6 bitů
+	\item quoted-printable -- převod znaků z horní poloviny ASCII na =xx, kde xx je jejich hodnota
+\end{itemize}
+
+25, textový, identifikace (HELO), přenos (MAIL FROM, DATA, CRLF.CRLF), ukončení (QUIT).
+
+\subsection{Čtení zpráv}
+
+manipulace, zobrazení, uložení na serveru. Formát daný aplikací, vhodný pro čtení, vyhledávání, přesouvání, mazání
+
+\paragraph{POPv3}
+TCP 110, jednoduchý, snadná implementace, načtená data kopíruje na lokální počítač, vyžaduje výlučný přístup ke schránce.
+
+Autorizace -- Transakce -- Ukončení (aktualizace).
+
+\paragraph{IMAPv4}
+TCP 143, práce s více schránkami, náročnější na implementaci a výkon.
+
+Umožňuje práci offline a následnou synchronizaci zpráv.
+
+
+\section{Hlasové služby}
+
+\paragraph{Voice over IP} integrace datových a hlasových služeb, rozšířené vlastnosti telefonů a ústředen VoIP, centrální správa systému, snížení nákladů za hovory, mobilita, integrace s PSTN (klasické telefonní sítě -- spolehlivé, kvalita zvuku, nezávislé napájení).
+
+\paragraph{PSTN} Edge device, lokální smyčka, PBX switch, Centrall Office, páteřní spoje. Signalizace kontrolní, adresová a informační. Lokální a síťová.
+
+\subsection{Funkce IP telefonie}
+\begin{itemize}
+	\item Převod hlasu na IP datagramy (IP telefon)
+	\item Řízení komunikace (ústředna) -- adresování, registrace, směrování
+	\item Připojení do klasické telefonní sítě (brána)
+	\item MCU -- Řízení komunikace více bodů zároveň -- konference
+\end{itemize}
+
+\paragraph{Protokoly}
+\begin{itemize}
+	\item Signalizační -- H.323, SIP
+	\item Transportní -- RTP, RTCP
+\end{itemize}
+
+\subsection{Digitalizace signálu}
+
+Vzorkování, kvantifikace, vzorků, kódování, komprese -- kodeky: např. G.712 (ITU), PCM, 64kb/s
+
+\emph{Zapouzdření} Ethernet (18B), IP (20B), UDP (8B), RTP (12 B), DATA (třeba 160 B).
+
+\paragraph{Kvalita} ozvěna, zpoždění, rozptyl (jitter), ztrátovost, kodek.
+
+\emph{Hodnocení kvality}
+\begin{itemize}
+	\item ACR -- stupnice MOS 1-5 subjektivní, nebo objektivní
+	\item E-mode -- R-faktor 0-100 podrobnější hodnocení (šum, pokles, zkreslení)
+\end{itemize}
+
+\subsection{SIP}
+Sessoin Initiation Protocol -- textový protokol, vytváří a udržuje relaci, adresace, registrace, směrování hovorů.
+
+\paragraph{UAS -- User Agent server}
+\begin{itemize}
+	\item Proxy -- analýza zpráv a směrování
+	\item Lokalizační -- umístění klientů
+	\item Směrování -- Další bod spojení u alternativních SIP serverů
+	\item Registrační -- přijímá žádosti a aktualizuje lokalizační servery
+\end{itemize}
+
+\paragraph{UAC -- User Agent Client}
+SIP telefon, PC s klientem.
+
+\paragraph{Struktura}
+Struktura UAC a UAS tvoří na L7 vlastní síť.
+\begin{itemize}
+	\item Adresování: \verb|sip:user@domain|
+	\item Směrování: Hlavičky SIP paketů -- Via, Route, Record-Route. Provádějí SIP servery na cestě.
+\end{itemize}
+
+\paragraph{Příkazy}
+\begin{itemize}
+	\item REGISTER: registr podobný autoritativnímu DNS server. UAC překládá ID zařízení na adresu zařízení. Register server $\to$ Localization Database
+	\item INVITE: Volající pošle volanému zprávu, pokud je připraven odpoví, potvrzení ACK a začátek komunikace.\\
+		Směrování: žádost (Route), odpověď (Via).\\
+		Komunikace nejdříve přes Proxy, po výměně kontaktů přímo.
+	\item ACK, CANCEL, BYE, OPTIONS (zjišťování možností přenosu)
+	\item INFO, MESSAGE, SUBSCRIBE, NOTIFY, PUBLISH
+\end{itemize}
+
+lokalizace NAPTR, SRV, A (DNS záznamy)
+
+\subsection{H.323}
+ITU-T, více protokolů
+
+terminál, brána, ústředna, MCU
+
+\begin{description}
+	\item[Signalizace volání] H.225.0 CS
+	\item[RAS] Registrace, Administrace, Správa: H.225.0 RAS
+	\item[Řídící kanál] H.245
+\end{description}
+
+Dva způsoby komunikace -- přímá, nebo s využitím ústředny.
+
+\paragraph{Fáze spojení}
+\begin{itemize}
+	\item Registrace
+	\item Kanál pro signalizaci
+	\item Řídící kanál
+	\item RTP kanál
+	\item ukončení spojení
+\end{itemize}
+
+\subsection{Bezpečnost}
+
+Odposlechy, Viry, DDoS, neautorizované užití linky.
+
+\paragraph{Zabezpečení}
+Přístup k síťovému médiu 802.1x autorizovat, oddělení hlasového provozu pomocí VLAN, zabezpečení IPSec, Secure RTP.
+
+\section{Správa počítačové sítě -- SNMP}
+
+\begin{itemize}
+	\item Monitorování \hfill
+	\begin{description}
+		\item[Aktivní] pravidelné testování přístupnosti prvků (ICMP, SNMP)
+		\item[Pasivní] syslog, SNMP traps, data NetFlow
+	\end{description}
+	\item Analýza provozu \hfill
+	\begin{description}
+		\item[Sledování v reálném čase] Wireshark na síťovém rozhraní
+		\item[Dlouhodobé statistiky] stavy linek, nejvíce komunikující uzly, protokoly.
+	\end{description}
+\end{itemize}
+
+\subsection{Na úrovni IP}
+ICMP -- Ping, Traceroute. Hrozí prohledávání sítě, podvržení implicitní brány (některé někdy blokovat)
+
+\subsection{N úrovni L3 -- L7}
+Monitorování dostupnosti, odezvy, sledování služeb, aplikací, topologie.
+
+IETF -- SNMP 1989
+
+\begin{description}
+	\item[Organizační model] \hfill
+	\begin{description}
+		\item[Manager] (NMS) Aplikace běžící na centrálním serveru, sbírá data od agentů, analyzuje a prezentuje data
+		\item[Agent] software běžící na monitorovaném zařízení, ukládá do lokální databáze, sleduje monitorované objekty a komunikuje s NMS
+		\item[Proxy agent] je u zařízení nepodporující SNMP, sbírá z něj data
+		\item[Sonda RMON] sbírá lokální statistiky, NMS je pravidelně čte
+	\end{description}
+	\item[Informační model] \hfill
+	\begin{description}
+		\item[Databáze MIB] Managment Information Base -- stromová struktura podle firmy, tématu
+		\item[struktura a sémantika SMI] Structure of Managment Information, datové typy ANS.1, identifikace OID, kódování BER (Basic encoding rules -- Type, Length, Value).
+	\end{description}
+	\item[Komunikační model] komunikace přes IP, příkazy getRequest, SetRequest, getResponse, Trap. Formátování dat.
+	
+	Polling: UDP 161, Traps: UDP 162
+	
+	\item[Funkční model] Vychází z OSI FCAPS -- Fail, Configuring, Accounting, Performance, Security.
+	
+	Umožňuje ověřit každou zprávu, zda nebyla změna, ověřit identitu uživatele, ochrana proti DoS
+\end{description}
+
+častá SNMP komunikace může ovlivnit výkon sítě.
+
+\subsection{Rozšíření RMON}
+Remote monitoring -- distibuované LAN, MIB-II, Token Ring. Získávám komplexní pohled na síť, ne jen na část.
+
+Možné nepřímé (offline) zpracování, potom teprve předat managerovi.
+
+\paragraph{Proaktivní logování} nepřetržitá diagnostika
+
+\section{NetFlow}
+měření provozu na síti. Wireshark měří data, NetFlow metadata (kolik a jakých typů, od koho, nezajímá nás obsah) = síťový tok.
+
+\subsection{Síťový tok}
+posloupnost paketů mající společnou vlastnost  a procházející bodem pozorování v určitý časový interval.
+\begin{itemize}
+	\item Zdrojová a cílová IP
+	\item Zdrojový a cílový port
+	\item Název logického rozhraní
+	\item Typ protokolu L3
+	\item Hodnota ToS
+\end{itemize}
+Pokud se shodují ve všem, je to jeden síťový tok.
+
+\subsection{Prvky}
+\begin{description}
+	\item[Exportér] sonda/router (SW/HW) pro získávání statistik -- Flow Records $\to$ Vytváří/nahrazuje záznamy ve Flow Cache
+	\item[Komunikační protokol NetFlow]
+	\item[Kolektor] (SW) Ukládání záznamů o tocích, agregace
+	\item[Nástroje pro reprezentaci dat] grafy, statistiky
+\end{description}
+
+\subsection{Export}
+\begin{itemize}
+	\item Detekce konce toku: FIN/RST u TCP
+	\item Neaktivita toku: neaktivní timer
+	\item Příliš dlouhý tok: aktivní timer
+	\item Zaplnění Flow Cache
+\end{itemize}
+
+\paragraph{Vzorkování}
+umožňuje snížit nároky na HW, může být u kolektoru i exportéru, deterministické/náhodné.
+
+Umožňuje zobrazení nextHop routeru pro kontrolu směrování, počet paketů/bajtů pro účtování, zákonné ukládání poskytovatelem, sledování aplikací a uživatelů, účtování, SLA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
