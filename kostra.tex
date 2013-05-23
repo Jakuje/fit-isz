@@ -2370,6 +2370,704 @@ Operátory se vyskytují až za operandy (postorder průchod ASS)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Numerické metody a matematická pravděpodobnost} \label{cha:23}
+
+3. semestr, INM, 
+
+(numerické řešení algebraických a obyčejných diferenciálních rovnic, rozložení pravděpodobnosti, generování pseudonáhodných čísel)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Řešení úloh} \label{cha:24}
+
+4. semestr, IZU, opora (první půlka)
+
+(prohledávání stavového prostoru, rozklad na podúlohy, metody hraní her)
+
+\paragraph{inteligence} složitá kongitivní vlastnost osobnosti, umožňuje poznávat svět a využívat získané poznatky.
+
+\paragraph{Umělá inteligence}
+
+Vlastnost vytvořeného systému, který má schopnost rozpoznávat předměty a jevy, analyzovat vztahy mezi nimi a tak si vytvářet modely světa, rozhodovat, předpovídat důsledky, řešit problémy a objevovat nové zákonitosti.
+
+\section{Metody řešení úloh}
+
+\subsection{UI úloha}
+Definována počátečním stavem, množinou cílových stavů a operátorů, které mohou tento stav měnit.
+\paragraph{Řešením} je nalezení pořadí aplikace operátorů pro přechod z výchozího stavu do některého cílového.
+
+Prostředí musí být deterministické, statické a diskrétní.
+
+\paragraph{Metody řešení}
+\begin{itemize}
+	\item Prohledávání stavového prostoru (State Space Search)
+	\item S omezujícími podmínkami
+	\item Metody založené na rozkladu úloh na podproblémy
+	\item Metody hraní her
+\end{itemize}
+
+\section{Prohledávání stavového prostoru}
+
+\paragraph{Stavový prostor}
+Množiny S (stavy) a O (operátory)
+
+\paragraph{Úloha}
+počáteční stav $s_0$, množina cílových stavů $G \in S$
+
+\paragraph{Řešení úlohy}
+posloupnost operátorů.
+
+Stavový prostor lze reprezentovat orientovaným grafem/stromem. Uzly jsou stavy, hrany jsou přechody mezi stavy. Řešením je cesta z počátečního stavy do některého cílového.
+
+Úkolem bývá minimalizovat cenu této cesty.
+
+\subsection{Typy úloh}
+\begin{description}
+	\item[Úloha dvou džbánů] 5litrový, 3litrový, cílem 4 litry vody. Operace naplnění, vyprázdnění, přelití.
+	\item[Hlavolam 8, Hlavolam 15] Posun prázdného políčka pro sestavení daného rozmístění (Množina stavů obsahuje dva disjunktní stavové prostory).
+	\item[Úloha N dam] Rozmístění N dam na šachovnici NxN, $N \geq 4$.
+	\item[Nalezení nejkratší cesty] mezi dvěma různými místy
+	\item[Úloha obchodního cestujícího, TSP]
+\end{description}
+
+Je potřeba vhodně definovat úlohu (primárně zvolit operátory).
+
+\subsection{Hodnotící kritéria}
+\begin{itemize}
+	\item Úplnost -- nalezne vždy řešení, pokud existuje
+	\item Časová a paměťová složitost
+	\item Optimálnost -- nalezne nejlepší řešení
+\end{itemize}
+
+\subsection{Metody}
+\begin{description}
+	\item[Neinformované (Slepé)] nemají informace, kterými by mohly hodnotit jednotlivé stavy
+	\begin{description}
+		\item[BFS] Breadth First Search -- prohledávání do šířky -- fronta -- úplná, optimální, exponenciální paměťová a časová složitost
+		\begin{enumerate}
+			\item fronta OPEN (uzly k expanzi), do ní se vloží počáteční uzel
+			\item vyber první uzel
+			\item je-li cílový, úspěch
+			\item expanze všech následovníků na konec fronty OPEN
+		\end{enumerate}
+		Problém s opakovaným generováním již expandovaných stavů -- fronta CLOSED (v~bodě 3 přidej, v~bodě 5 kontroluj)
+		
+		\item[UCS] Uniform Cost Search -- uvažuje navíc ceny přechodů -- úplná, optimální, exponenciální paměťová a časová složitost
+		\begin{enumerate}
+			\item seznamy OPEN, CLOSED, do OPEN počáteční stav
+			\item Je-li seznam OPEN prázdný, neúspěch
+			\item Vyber z OPEN stav s nejmenším ohodnocením, umísti do CLOSED
+			\item Je-li vybraný cílový, úspěch
+			\item Expanduj uzel, přidej následovníky, kteří nejsou v CLOSED, pokud jsou v OPEN, nech pouze s menším ohodnocením
+		\end{enumerate}
+		
+		\item[DFS] Depht First Search -- zásobník -- neúplná, neoptimální, složitost časová exponenciální, paměťová lineární
+		
+		Použit zásobník místo fronty -- může jednoduše cyklit. Optimalizace -- vkládat pouze ty stavy, které nejsou předky aktuálního.
+		
+		\item[DLS] Depth Limited Search -- podobné DFS, ale omezené hloubka hledání (např. počet stavů~-~1)
+		
+		\item[IDS] Iterative Deeping Search -- úplný, optimální, časová a paměťová složitost exponenciální
+		
+		\item[Backtracking] neúplná, neoptimální, časová složitost exponenciální, paměťová extrémně nízká
+		\begin{enumerate}
+			\item zásobník OPEN, umísti počáteční stav
+			\item je-li zásobník prázdný, úloha nemá řešení
+			\item jde-li na prvek v zásobníku aplikovat další/první operátor, aplikuj. Jinak uzel odstraň
+			\item Je-li nově generovaný prvek cílový, úspěch, jinak vlož na vrchol zásobníku
+		\end{enumerate}
+		Modifikace -- prvek vkládat pouze, pokud není v OPEN (předchůdce)
+		
+		\item[BS] Bidirectional Search -- úplná, optimální, časově exponenciální, paměťově poloviční BFS
+		
+		Použitelné u úloh s inverzními operátory -- lze jít hledat "naproti" od cílového uzlu
+	\end{description}
+	\item[Informované] stavy lze ohodnotit heuristickou funkcí
+	\begin{description}
+		\item[Best First Search] Velmi podobné UCS, přidána heuristika, pro určení zbývající ceny do cílového uzlu: $f(x) = g(x) + h(x)$, $h(x)$ je heuristika, $g(x)$ je cena cesty z počátečního uzlu.
+		
+		\begin{description}
+			\item[Greedy Search] $g(x) = 0$, obecně neúplná a neoptimální, heuristika může vylepšit
+			
+			\item[A*] Heuristika spodním odhadem skutečné ceny -- úplná, pro dobrou heuristiku optimální
+			
+			Příklad heuristiky pro Hlavolam 8: Počet kamenů na nesprávných pozicích, vzdálenost kamenů od správných pozic
+		\end{description}
+		\item[Lokální prohledávání] Nezajímá nás cesta, ale pouze cílový stav. Minimální paměťová složitost, přijatelné řešení v rozsáhlých (spojitých, nekonečných) stavových prostorech
+		\begin{description}
+			\item[Hill Climbing] používá pouze heuristiku $h(n)$ jako Greedy Search a ohodnocuje kvalitu řešení.
+			\begin{enumerate}
+				\item Vytvoř uzel Current, přiřaď mu počáteční stav
+				\item Expanduj uzel, ohodnoť bezprostřední následníky a vyber nejlépe hodnoceného jako Next
+				\item Je-li Current > Next ukonči a vrať Current
+				\item Ulož Next do Current a pokračuj od 2
+			\end{enumerate}
+			Problém lokálních extrémů -- Beams -- několik uzlů Current
+			
+			\item[Simulované žíhání] s cílem překonat lokální extrémy
+		\end{description}
+	\end{description}
+\end{description}
+
+\section{Úlohy s omezujícími podmínkami} Constraint Satisfaction Problems (CSP)
+
+Potřeba zkoumat vnitřní strukturu stavů. Definovány proměnné, jejich domény, podmínky pro splnění úlohy a operátory přiřazující hodnoty proměnným.
+
+Řešením je legální stav, ve kterém všechny proměnné mají hodnoty. V počátečním stavu jsou proměnné bez hodnot.
+
+Například úloha N dam, kryptoaritmetické hlavolamy.
+
+Řešit lze pomocí předchozích jmenovaných, nebo specializovaných.
+\begin{description}
+	\item[Backtracking for CSP] v každém kroku přiřazuje hodnotu proměnné. Pokud stav legální, zanořujeme do dalšího, jinak návrat a zkoušíme jinou hodnotu.
+	
+	\item[Forward checking] Rekurzivní, kontrola domén po přiřazení hodnoty proměnné. Pokud některá doména prázdná, návrat.
+	
+	\item[Min-conflict] Lokální algoritmus. Vychází z libovolného úplného stavu a snaží se zmenšovat počet konfliktů.
+	
+	Např. Konflikt = počet ohrožení dámy na dané pozici. Pokud více stejných, změna
+\end{description}
+
+\section{Rozklad úlohy na podúlohy}
+
+\subsection{AO algoritmus} může být do hloubky, nebo do šířky (FRONTA nebo ZÁSOBNÍK).
+
+(AND možnosti jsou spojeny čárou jako úhel)
+
+\begin{enumerate}
+	\item Prázdné seznamy OPEN, CLOSED, do OPEN přidej počáteční uzel
+	\item Vyjmi uzel X zleva seznamu OPEN
+	\item
+	\begin{enumerate}
+		\item Je-li uzel X řešitelný, přenes informaci o řešitelnosti jeho předchůdcům. Je-li počáteční, úspěch.
+		\item Není-li uzel řešitelný a nelze jej rozložit na podproblémy, přenos informace o neřešitelnosti jeho předchůdcům
+		\item Expanduj uzel X (rozlož uzel na podproblémy) a všechny následovníky ulož do OPEN
+	\end{enumerate}
+	\item Ulož X do CLOSED
+	\item Je-li OPEN prázdný, neúspěch, jinak 2
+\end{enumerate}
+
+\subsection{AO* algoritmus}
+Informovaný, heuristická funkce hodnotí problémy -- 0 triviální, FUTILITY neřešitelný
+
+\section{Metody hraní her}
+
+hry se dvěma hráči, kteří se pravidelně střídají po tazích, oba mají přehled o hře a oba si přejí vyhrát.
+
+\paragraph{Pro hráče A (na tahu)} je stav řešitelný, když alespoň jeden z jeho tahů vede k výhře (OR problém). V dalším tahu musí být stav pro B neřešitelný (ve všech možnostech -- AND problém).
+
+\subsection{Jednoduché hry}
+
+Lze v reálném čase prohledat celý AND/OR graf až ke úspěchu/neúspěchu. Řešení AO algoritmem.
+
+\paragraph{Hra se zápalkami}
+
+vyhrává ten kdo vezme poslední zápalku
+
+\subsection{Složité hry}
+
+neřešitelné prohledávat celý graf. Omezíme hloubku a ohodnotíme stavy: vítězství/prohra: -127 \dots +127. Hráč A hledá maximální ohodnocení, hráč B hledá minimální ohodnocení.
+
+\paragraph{MiniMax} pro počáteční stav vrací ohodnocení uzlu a nejvýhodnější stav
+\begin{enumerate}
+	\item Uzel X
+	\item Je-li X list (konečný stav, nebo maximální zanoření), vrať ohodnocení
+	\item Je-li na tahu A, tak pro všechny následovníky volej MiniMax a vrať maximální z nalezených hodnot.
+	\item Je-li na tahu B, tak pro všechny následovníky volej MiniMax a vrať minimální z nalezených hodnot.
+\end{enumerate}
+
+Například Tic-Tac-Toe -- hodnocení -- počet trojic, které může hráč A udělat - počet trojic, které může udělat hráč B.
+
+Některé uzly jsou vyšetřovány zbytečně:
+
+\paragraph{Alfa a Beta řezy}
+Přidáme ohodnocení $\alpha$ pro hráče A (maximum) a $\beta$ pro hráče B (minimum). Vycházíme z $\pm \infty$ a expandujeme dokud $ \alpha < \beta$.
+
+Dolů se $\alpha, \beta$ kopíruje, nahoru se kopíruje do opačné proměnné.
+
+\section{Hry s neurčitostí}
+
+Hráč na tahu právě hodil kostkou a hledá nejlepší tah.
+
+$expectimin(C_i) = \sum_k P( h_k) * min(D_{ijk})$
+
+pravděpodobnost daného výsledku hodu, ohodnocení výsledku daného hodu
+
+$expectimax(D_j) = \sum_k P( h_k) * min(C_{jki})$
+
+\begin{enumerate}
+	\item Vstupní uzel X
+	\item Na tahu hráč A: pro všechny následovníky volej ExpectiMiniMax a vrať maximální hodnotu z hodnot \emph{expectimin}
+	\item Na tahu hráč B: pro všechny následovníky volej ExpectiMiniMax a vrať minimální hodnotu z hodnot \emph{expectimax}
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Principy modelování a simulace systémů} \label{cha:25}
+
+5. semestr, IMS, slajdy
+
+(systémy, modely, simulace, algoritmy řízení simulace)
+
+\subsection{Modelování}
+vytváření modelů systémů
+
+\subsection{Simulace} metoda získávání nových znalostí o systému experimentováním s jeho modelem.
+
+Realita -- Znalosti -- Abstraktní model -- Simulační model -- Znalosti (experimentováním)
+
+Výhody: Cena, rychlost, bezpečnost
+
+Problémy: Validita modelů, náročnost tvorby a na výkon
+
+\section{Systém}
+Soubor elementárních částí (prvků systému), které mají mezi sebou určité vazby.
+
+Reálné $\times$ Fiktivní (nereálné)
+
+\paragraph{Definice}
+$S = (U, R)$ Universum U -- konečná množina prvků systému: $U = \{u_1, u_2, \dots \}$
+
+Prvek systému $u_i = (X_i, Y_i)$ X vstupní proměnné, Y výstupní proměnné.
+
+R -- charakteristika systému $R = \bigcup^N_{i,j = 1} R_{ij}, R_{ij} \subseteq Y_i \times X_i$ propojení prvků $u_i$ a $u_j$
+
+\emph{Vazby}: sériové, paralelní, zpětná vazba.
+
+\paragraph{Čas}
+\begin{itemize}
+	\item Reálný -- čas ve kterém probíhá skutečný děj
+	\item Modelový -- časová osa modelu (např. proměnná T)
+	\item Strojový -- čas spotřebovaný procesorem
+\end{itemize}
+
+\paragraph{Časová množina}
+Diskrétní -- Spojitá (na číslicových počítačích se diskretizuje).
+
+Množina všech časových okamžiků, na které jsou definovány hodnoty vstupních, stavových a výstupních proměnných.
+
+\paragraph{Chování systému}
+každému časovému průběhu vstupní veličiny přiřazuje časový průběh výstupní veličiny
+
+\paragraph{Ekvivalence chování systémů} stejné podněty vyvolají stejnou reakci
+
+\paragraph{Izomorfní systémy} 1:1 lze přiřadit prvky univerza U1 a U2. R1 a R2 mezi odpovídající dvojici U1 a U2
+
+\paragraph{Homomorfní systémy} prvkům U1 je možné přiřadit jednoznačně prvky U2 (N:1). Podobně s R. Princip modelování.
+
+\paragraph{Okolí systému} Co má na systém vliv a není v systému: Otevřený -- Uzavřený
+
+\paragraph{Klasifikace prvků systémů} Spojité -- Diskrétní -- Kombinované
+
+Deterministické -- Nedeterministické (Stochastické)
+
+\paragraph{Typy simulace} Spojitá -- Diskrétní -- Kombinovaná
+
+Kvalitativní -- Kvantitativní
+
+\paragraph{Verifikace} ověření korespondence AM a SM
+
+\paragraph{Validace} snaha dokázat, že pracujeme s modelem adekvátním modelovanému systému
+
+
+
+\section{Model}
+napodobenina systému jiným systémem (reprezentace znalostí)
+
+\subsection{Abstraktní model}
+Konečný automat, Petriho síť, Turingův stroj, Algebraické rovnice, Diferenciální rovnice, Defirenční rovnice, Markovské procesy
+
+Formulace zjednodušeného modelu abstraujícího se od všech nedůležitých skutečností vzhledem k cíli a účely
+
+MS $\to$ AS homomorfní stav
+
+\subsection{Cíle a účely modelů}
+Studium chování systémů pro určitá specifická kritéria, povahy, závislosti mezi parametry a odezvou
+
+Analýza citlivosti -- určení faktorů, které jsou pro činnost systému nejvýraznější
+
+Optimalizace -- nalezení kombinace parametrů, která vede k nejlepší odezvě systému.
+
+\subsection{Simulační model}
+
+Abstraktní model popsaný formou programu. Izomorfní vztah k abstraktnímu modelu
+
+Spojité -- Diskrétní -- Kombinované
+\begin{description}
+	\item[Konceptuální] komponenty zatím nebyly přesně popsány v teorii systémů (text, obrázky)
+	\item[Deklarativní] popis přechodů mezi stavy systému, stavu + události, diskrétní chování (KA, Petriho sítě)
+	\item[Funkcionální] grafy zobrazující funkce a proměnné (SHO, bloková schémata, grafy signálových toků)
+	\item[Popsané rovnicemi] Algebraické, diferenciální, elektrické schémata (například dravec-kořist)
+	\item[Prostorové (spatial)] rozdělení systému na podprostorově menší podsystémy -- parciální diferenciální rovnice, hra Life
+	\item[Multimodely] heterogenní modely složené z ostatních. Kombinované, fuzzy, HLA (=High Level Architecture)
+\end{description}
+
+\subsection{Simulační nástroje}
+\begin{itemize}
+	\item Obecné jazyky -- C, C++, Java
+	\item Simulační knihovny pro obecné jazyky -- SIMLIB/C++
+	\item Simulační jazyky -- Simula67, Modelica
+	\item Simulační systémy -- Dymola
+	\item propojení různých nástrojů -- HLA -- standard pro distribuovanou simulaci
+\end{itemize}
+výhodné použít OOP
+
+\section{Modelování náhodných procesů}
+
+Některé procesy nedokážeme popsat jinak, protože jsou příliš složité, ale vykazují jistou pravidelnost.
+
+Změříme dostatečný vzorek, aproximujeme pomocí vhodného rozložení, pseudonáhodný proces modelujeme generátorem pseudonáhodných čísel.
+
+\paragraph{Náhodná proměnná}
+veličina, které jako výsledek může nabývat nějakou hodnotu. Spojitá -- Diskrétní. Označujeme X, možnosti $x_1, x_2 \dots$
+
+\subsection{Diskrétní}
+
+\paragraph{Diskrétní rozložení pravděpodobnosti}
+vztah mezi možnými hodnotami náhodné veličiny $x_i$ a jim příslušejícím pravděpodobnostem $p_i = P(X = x_i)$, $\sum_{i = 1}^\infty p_i = 1$. Reprezentace tabulkou pro všechny možné hodnoty.
+
+\paragraph{Diskrétní distribuční funkce}
+$F(x) = P(X \leq x_i) = \sum_{x_i < x}$
+
+\subsection{Spojité}
+
+\paragraph{Spojitá distribuční funkce}
+$F(x) = P(X \leq x) = \int^x_{-\infty} f(x) dx$
+
+funkce hustoty pravděpodobnosti: $f(x) = \frac{dF(x)}{dx}$
+
+\paragraph{Histogram}
+Roztřídění souboru hodnot do k tříd podle vhodných intervalů -- blíží se funkci hustoty pravděpodobnosti.
+
+Charakteristiky: POlohy, Variability, Šikmosti a Špičatosti. Určuje se pomocí tzv. momentů.
+
+\subsection{Známá rozložení}
+\begin{description}
+	\item[Diskértní] \hfill
+	\begin{description}
+		\item[Poisonovo] počet událostí za jednotku času
+		\item[Binomické] gaussovo/normální v diskrétním prostoru
+	\end{description}
+	\item[Spojitá] \hfill
+	\begin{description}
+		\item[Rovnoměrné] $f(x) = \frac{1}{b-a}$ pro $x \in <a,b>$
+		\item[Exponenciální]
+		\item[Normální/Gaussovo]
+		\item[Pearsonovo]
+	\end{description}
+\end{description}
+
+Generátor rovnoměrného rozložení, transformace na jiné rozložení.
+
+Fyzikální -- Algoritmické -- Kongruentní generátory: $x_{n+1} = (ax_n+b)\pmod m$
+
+\paragraph{Transforamce}
+\begin{itemize}
+	\item Inverzní transforamce -- inverzní distribuční funkce
+	\item Vylučovací -- nevhodná pro neomezené. Určí náhodný bod a pokud je pod křivkou, vrátí výsledné X
+	\item Kompoziční -- složení pravděpodobnosti na různých intervalech
+\end{itemize}
+
+\subsection{Monte Carlo}
+
+experimentální numerická simulační metoda. Řeší úlohy experimentováním, pseudonáhodná čísla, není příliš přesná. Chyba: $err = \frac{1}{\sqrt{N}}$, kde $N$ je počet pokusů.
+
+Např. Vícerozměrné integrály, Directelova úloha -- náhodná procházka.
+
+\section{Diskrétní simulace}
+
+program, petriho sítě, automaty, $\pi$-kalkul
+
+\begin{description}
+	\item[Proces] posloupnost událostí
+	\item[Paralelní procesy] procesy prováděné souběžně
+	\item[Kvaziparalelismus] současné provádění procesů na jednoprocesorovém systému
+\end{description}
+
+\subsection{Petriho síť P/T}
+$\Sigma = (P, T, F, W, C, N_0)$, kde
+\begin{itemize}
+	\item $P$ množina míst
+	\item $T$ množina přechodů 
+	\item $F \subseteq (P \times T) \cup (T \times P)$ incidenční funkce -- orientované hrany mezi stavy a přechody a naopak
+	\item $W : F \to \{1, 2, \dots \}$ Váhová funkce
+	\item $C : P \to N$ Kapacity míst
+	\item $N_0: P \to N$ Počáteční značení míst
+\end{itemize}
+
+$N$ značí stav Petriho sítě.
+
+Přechod je proveditelný, když ve vstupních místech čeká dostatek procesů a současně ve výstupních místech je dostatečná volná kapacita
+
+\paragraph{Stochastické PN (SPN)} Mohou modelovat paralelizmus, komunikaci procesů, synchronizaci a nedeterminismus (priority, pravděpodobnosti, doby přechodů. Okamžitý přechod má prioritu před časovaným).
+
+\subsection{SHO -- Systémy hromadné obsluhy}
+
+systémy obsahující zařízení s frontami, ve kterých čekají transakce.
+
+transakce a popis jejich příchodu do systémy
+
+obslužné linky a popis jejich obsluhy.
+
+Cílem optimalizovat výkon, odhalit zdržení. 
+
+Stochastický proces příchodů -- intenzita příchodů požadavků -- Poissonovo rozdělení. Doba mezi příchody -- Exponenciální.
+
+\paragraph{Fronty} řazení, výběr procesu, maximální délka (FIFO, LIFO, SIRO), Možnost netrpělivých požadavků (time-out).
+
+Prioritní fronty
+\begin{itemize}
+	\item Slabá priorita -- započatá obsluha
+	\item Silná priorita -- obsluha se přeruší (porucha)
+	\item Požadavek si vybere frontu
+	\item Společná fronta pro více obslužných linek
+\end{itemize}
+
+Obslužná síť -- několik obslužných linek. Otevřená -- otevřená -- smíšená.
+
+Kendallova klasifikace SHO: X/Y/c
+\begin{itemize}
+	\item X -- typ stochastického procesu příchodu
+	\item Y -- zákon rozložení délky obsluhy
+	\item c -- počet dostupných linek
+\end{itemize}
+
+Typy obslužných linek: Sklad $>$ 1, Zařízení = 1
+
+\subsection{Algoritmus diskrétní simulace}
+
+Kalendář: uspořádaná datová struktura obsahující aktivační záznamy budoucích událostí (aktivační čas, priorita, událost
+
+\begin{enumerate}
+	\item Inicializace
+	\item dokud kalendář není prázdný
+	\begin{enumerate}
+		\item Vyjmi první záznam z kalendáře
+		\item if aktivační čas události $>$ čas konce then Ukonči simulaci
+		\item Nastav čas na aktivační čas události
+		\item Proveď popis chování události
+	\end{enumerate}
+\end{enumerate}
+
+\section{Spojitá simulace}
+
+Elektrické obvody, automatizace, fyzika, chemie
+
+Popis: Soustavy rovnic, bloková schémata, elektrická schémata.
+
+Rovnice vyšších řádů je třeba převést na nižší:
+\begin{itemize}
+	\item Snižování řádu derivace -- blokové schéma, počáteční podmínky
+	\item Postupná integrace
+\end{itemize}
+
+\subsection{Numerické metody}
+
+Řešení diferenciální rovnice prvního řádu: $y' = f(x,y)$ ve tvaru $y(T) = y_0 + \int_0^T f(t,y)dt$
+
+Integrační krok: $h$
+
+Metody: Jednokrokové $\times$ Vícekrokové (používají historii stavů), Explicitní $\times$ Implicitní
+\begin{description}
+	\item[Jednokrokové] \hfill
+	\begin{description}
+		\item[Eulerova metoda] = RK1
+		
+		$y(t+h) = y(t) + h f(x, y(t) )$
+		\item[Runge Kutta 2. řádu] \hfill
+
+		$k_1 = hf(t, y(t))$\\
+		$k_2 = hf(t + h/2, y(t) + k_1/2)$\\
+		$y(t+h) = y(t) + k_2$
+	\end{description}
+	\item[Vícekrokové metody] Uchovávají hodnoty z minulých kroků pro výpočet dalšího (Problém start metod)
+	\begin{description}
+		\item[Adams-Bashforth] prediktor, korektor. Vážený průměr minulých
+	\end{description}
+\end{description}
+
+\paragraph{Chyba}
+Lokální (zaokrouhlovací + aproximační) $\times$ Akumulovaná
+
+Stabilita, vliv velikosti kroku na přesnost, nespojitosti snižují efektivitu
+
+\emph{Tuhé systémy} -- velmi rozdílné časové konstanty
+
+Nejlepší bývá nějaká z RK, záleží na aplikaci.
+
+\subsection{Algoritmus spojité simulace}
+\begin{enumerate}
+	\item Inicializace
+	\item Dokud není konec simulace
+	\begin{enumerate}
+		\item Pokud vhodný čas, výstup
+		\item Vyhodnocení derivací a výpočet nového stavu
+		\item Posun modelovaného času
+	\end{enumerate}
+	\item Ukončení, výstup
+\end{enumerate}
+
+Funkční bloky by měly být v kódu řazeny pomocí topologického řazení.
+
+Rychlé smyčky v grafu je třeba rozpojit a řešit iteračně algebraické rovnice.
+
+Nástroje: Matlab, Dymola, Modelica
+
+\section{Kombinovaná simulace}
+spojitá + diskrétní + propojení
+
+\subsection{Stavové podmínky}
+Při dosažení zadané hodnoty spojité veličiny je vyvolána stavová událost -- hledání např. pomocí regula falsi, nebo Newtonovy metody -- např. dopad míčku na zem.
+
+\subsection{Algoritmus}
+\lstset{caption={Algoritmus kombinované simulace}}
+\begin{lstlisting}
+Inicializace stavu a podminek
+while cas < konec  do
+	uloz stav a cas
+	krok numericke integrace a posun casu
+	vyhodnoceni podminek
+	if podminka zmenena then
+		if krok <= minimalni krok then
+			potvrd zmenu podminek
+			stavova udalost
+			krok = bezna delka kroku
+		else
+			obnova stavu a casu
+			krok = krok / 2
+			if krok < minimalni krok then
+				krok = minimalni_krok
+\end{lstlisting}
+Umístit do algoritmu pro diskrétní simulaci místo Time = čas další události.
+
+\section{Simulace číslicových obvodů}
+
+Úrovně popisu: Elektrická, Logická, Meziregistrové přenosy, Systémová sběrnice
+
+Specializované jazyky pro popis a simulaci (VHDL, Verilog)
+
+\emph{Modely signálů} -- Dvouhodnotové, Tříhodnotové (X), Pětihodnotové (Rise, Fall). Dále může být Z = Vysoké impedance, statický a dynamický hazard
+
+\emph{Zpoždění} 0, 1, přiřaditelné, přesné.
+
+\subsection{Algoritmus}
+
+\lstset{caption={Algoritmus číslicových obvodů}}
+\begin{lstlisting}
+inicializace, planovani udalosti pro novy vstup
+while( planovana udalost ) do
+	nastav hodnotu modeloveho casu na T
+	for (u in vsechny planovane udalosti na cas T) do
+		vyber zaznam udalosti z kalendare
+		aktualizuj hodnoty signalu
+		pridej vsechny pripojene prvky do mnoziny M
+	for (p in M) do
+		vyhodnoceni prvku p
+		if (zmena jeho vystupu) then
+			planovani nove udalosti
+\end{lstlisting}
+
+Simulace poruch: trvalá 1, trvalá 0, zkrat.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setcounter{chapter}{33}
