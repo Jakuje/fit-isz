@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{multirow}
 \usepackage{a4wide}
+\usepackage{amsmath}
 
 \usepackage{color}
 \usepackage[unicode,colorlinks,hyperindex,plainpages=false,pdftex]{hyperref}
@@ -2399,9 +2400,261 @@ Operátory se vyskytují až za operandy (postorder průchod ASS)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Numerické metody a matematická pravděpodobnost} \label{cha:23}
 
-3. semestr, INM, 
+3. semestr, INM, skripta Matematika 3\\
+5. semestr, IMS, slajdy 100 - 111
 
 (numerické řešení algebraických a obyčejných diferenciálních rovnic, rozložení pravděpodobnosti, generování pseudonáhodných čísel)
+
+\section{Numerické řešení soustavy lineárních rovnic}
+
+N lineárních rovnic o N neznámých.
+
+
+\subsection{Přímé metody}
+
+řešení získáme po konečném počtu kroků. Přesné (mimo zaokrouhlovací chyby).
+
+\paragraph{Crammerovo pravidlo}
+Je-li matice doustavy regulární (Determinant $\neq$ 0), pak $x_1 = \frac{D_1}{D}, \dots$, kde D je determinant matice a $D_k$ je determinant s nahrazeným k-tým sloupcem matice vektorem pravých stran soustavy. Řešitelné pro 2 - 3 rovnice.
+
+\paragraph{Gaussova eliminační metoda}
+Úprava soustavy na trojúhelníkový tvar odstraněním $x_1$ ze všech rovnic kromě první (odečtením $\frac{a_{i1}}{a_{11}}*$první rovnice od všech ostatních). Stejně tak pokračovat s dalšími rovnicemi.
+
+\paragraph{Eliminace s výběrem hlavního prvku}
+Stejná jako Gaussova, ale nejdříve vybereme na uhlopříčku největší koeficient u $x_i$ a změníme pořadí rovnic. Eliminace (zmenšení) zaokrouhlovacích chyb.
+
+\subsection{Iterační metody}
+Získáme pouze přibližné řešení. Zvolíme počáteční aproximaci a tu zpřesňujeme
+
+\paragraph{Jacobiho metoda}
+Z každé rovnice vyjádříme jedu proměnnou: $x_1 = \frac{1}{a_{11}} \left( b_1 - a_{12}x_2 - \dots - a_{1n}x_n \right)$.
+
+Zvolíme libovolně vektor počáteční aproximace $x^{(0)}$ a dosadíme do pravých stran rovnic a získáme novou aproximaci.
+
+Pokračujeme do předem dané přesnosti (počtu kroků, dostatečně malé změny).
+
+Ne vždy konverguje -- Pro zaručení musí být matice řádkově ostře diagonálně dominantní, nebo sloupcově ostře diagonálně dominantní.
+
+\paragraph{Gauss-Seidelova metoda}
+Velmi podobná Jacobiho, používá ale pouze jeden vektor hodnot -- $x_1$ spočítané v jednom kroku používáme při výpočtu $x_2$.
+
+Stejné podmínky konvergence. Konverguje také pokud je pozitivně definitní.
+
+\section{Numerické metody řešení nelineárních rovnic}
+
+\subsection{Řešení jedné rovnice}
+$f(x) = 0$ hledáme, kde se rovnice protíná s osou x. Hledáme kořeny rovnice.
+
+\paragraph{Separace kořenů}
+
+Je-li funkce $f(x)$ na intervalu $<a,b>$ spojitá a platí-li $ f(a) \cdot f(b) < 0$, pak v intervalu leží alespoň jeden kořen rovnice $f(x) = 0$. (Funkce má opačná znaménka)
+
+\paragraph{Metoda půlení intervalů}
+Máme interval $<a_0,b_0>$ takový, že je v něm funkce spojitá a leží v něm alespoň jeden kořen.
+
+určíme střed $x_0 = \frac{a_0 + b_0}{2}$ a z intervalů $<a_0, x_0>$ a $<x_0, b_0>$ vybereme ten, který obsahuje kořen (opačná znaménka krajních bodů).
+
+Opakujeme dokud $b_k - a_k < 2 \varepsilon$.
+
+Kořen nalezne vždy, přesnost řešení je zaručena, konverguje pomalu.
+
+\paragraph{Metoda regula falsi}
+Zužujeme interval, nový bod je bod průsečíku sečny mezi body $[a, f(x)]$ a $[b, f(b)$ a osy x.
+
+$x_k = b_k - \frac{b_k - a_k}{f(b_k) - f(a_k)} f(b_k)$
+
+Kořen nalezne vždy, většinou rychlejší než půlení intervalů. Nezaručí přesnost $|x_k - x_{k-1}| < \varepsilon$.
+
+\paragraph{Metoda sečen}
+Hledáme sečny, ale výpočet dalšího intervalu je nezávislý na hodnotě znaménka. Vždy sečna mezi druhým bodem a nově spočítaným.
+
+$x_{k+1} = x_k - \frac{x_k - x_{k-1}}{xf(x_k) - f(x_{k-1})} f(x_k)$
+
+Bývá rychlejší, ale nemusí konvergovat. Nezaručuje přesnost.
+
+\paragraph{Newtonova metoda (tečen)}
+funkce musí mít na intervalu derivaci. Určíme počáteční aproximaci $x_0$, bodem $[x_0, f(x_)0]$ vedeme tečnu, průsečík s osou x je nový bod $x_1$, kterým vedeme další tečnu.
+
+$x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}$
+
+Nejefektivnější, ale nemusí konvergovat. Konverguje, pokud je splněna \emph{Fourierova podmínka}: $f'(x)$ a $f''(x)$ musí být spojité a neměnit znaménko na intervalu (nemění se růst/klesání, konvexnost/konkávnost) a $f(x_0) \cdot f''(x_0) > 0$.
+
+\paragraph{Metoda prosté iterace}
+Rovnici $f(x) = 0$ upravíme na tvar $x = g(x)$ -- iterační funkce.
+
+Zvolíme počáteční aproximaci a počítáme $x_{k+1} = g(x_k)$
+
+\section{Metody řešení soustavy nelineárních rovnic}
+
+$F(x) = o$ N nelineárních rovnic o N neznámých.
+
+\paragraph{Metoda prosté iterace}
+upravíme na tvar $x = G(x)$, zvolíme počáteční aproximace a postupně dosazujeme do rovnic a určujeme nové aproximace.
+
+Bývá obtížné najít vhodné iterační funkce.
+
+\paragraph{Newtonova metoda}
+V každém kroku řešíme soustavu lineárních rovnic $F'(x^{(k)}) \cdot \delta^{(k)} = -F(x^{(k)})$ a $x^{(k+1)} = x^{(k)} + \delta^{(k)}$ 
+
+\section{Numerické řešení diferenciálních rovnic}
+Nehledáme spojitou funkci jako výsledek, ale pouze konečnou množinu tzv. uzlových bodů, síť. $\Delta x$ je krok sítě, označovaný jako $k$.
+
+\subsection{Počáteční úlohy: Jednokrokové metody}
+
+Definované jako diferenciální rovnice prvního řádu s počáteční podmínkou.
+
+\paragraph{Eulerova metoda} prvního řádu. Pravidelná síť s krokem h. Další bod určíme podle derivace v daném bodě.
+
+$y_{i+1} = y_i + n f(x_i, y_i)$, vycházíme z počátečních podmínek $[x_0, y_0]$.
+
+\paragraph{Modifikovaná Eulerova metoda} druhého řádu
+
+$k_1 = f(x_n, y_n)$
+
+$k_2 = f(x_n + \frac{1}{2}h, y_n + \frac{1}{2} k_1 h)$
+
+$y_{n+1} = y_n + k_2 h$
+
+\paragraph{Runge Kuttovy metody} RK4. Obecně mohou mít jiné koeficienty.
+
+$k_1 = f(x_n, y_n)$
+
+$k_2 = f(x_n + \frac{1}{2}h, y_n + \frac{1}{2} k_1 h)$
+
+$k_3 = f(x_n + \frac{1}{2}h, y_n + \frac{1}{2} k_2 h)$
+
+$k_4 = f(x_n + h, y_n + k_3 h)$
+
+$y_{n+1} = y_n + \frac{1}{6} h \left( k_1 + 2k_2 + 2k_3 + k4 \right) h$
+
+\paragraph{Odhad chyby a řízení kroku} poloviční krok
+
+\subsection{Počáteční úlohy: Vícekrokové metody}
+Používáme výsledky minulých kroků. Problém startu metody (nemáme historii. Často řešení pomocí nějaké jednokrokové).
+
+\paragraph{Lineární k-kroková metoda} 
+\begin{itemize}
+	\item Explicitní -- hodnotu v novém bodě vypočítáme dosazením do vzorce
+	\item Implicitní -- V každém kroku řešíme soustavu rovnic
+\end{itemize}
+
+$y_{n+1} = y_{n-3} + \frac{4}{3} n \left( 2 f_{n-1} - f_{n-1} + 2f_{n} \right)$, kde $f_n = f(x_n, y_n)$
+
+\paragraph{Metody založené na numerické integraci} Adams-Bashforthovy metody, Adams-Moultonova metoda
+
+\paragraph{Prediktor-Korektor}
+\begin{enumerate}
+	\item Vypočítáme počáteční aproximaci pomocí explicitní vícekrokové metody (Prediktor)
+	\item Tuto hodnotu zpřesňujeme pomocí implicitní vícekrokové metody (Korektor)
+\end{enumerate}
+
+Většinou volíme metody téhož řádu.
+
+\subsection{Okrajové podmínky}
+Hledání sítě na intervalu $<a, b>$, definovány dva body: $y(a) = \alpha$, $y(b) = \beta$
+
+Metoda konečných diferencí, Metoda střelby
+
+\section{Pravděpodobnost}
+
+$\Omega$ množina všech hodnot, kterých dané náhodná veličina X může nabývat. Množina všech možných výsledků.
+
+$A, B \subset \Omega$ náhodné jevy.
+
+$X$ náhodná proměnná, pokud nabývá hodnoty z A, nastal náhodný jev.
+
+$P(A)$ pravděpodobnost jevu A, $0 \leq P(A) \leq 1$
+
+\subsection{Rozdělení pravděpodobností}
+\begin{description}
+	\item[Klasická pravděpodobnost] Podíl počtu příznivých výsledků ku počtu všech možných výsledků. Množina všech možných výsledků je konečná, všechny jevy jsou stejně pravděpodobné.
+	\item[Geometrická pravděpodobnost] Podíl míry příznivých výsledků a míry všech možných výsledků. Míra může být délka, obsah, objem. $\Omega$ je nespočetná a výsledky nastávají se stejnou pravděpodobností.
+	\item[Diskrétní pravděpodobnost] $\Omega$ je konečná nebo spočetná, výsledky mohou mít různou pravděpodobnost.
+	
+	X diskrétní náhodná veličina \\
+	$p(x) = P(X=x)$ pravděpodobnostní funkce\\
+	$F(X) = P(X < x)$ distribuční funkce
+	
+	\item[Spojitá pravděpodobnost] $\Omega$ nespočetně konečná (např. reálná čísla). Může nabývat různých pravděpodobností
+	
+	$f(x)$ funkce hustoty pravděpodobnosti\\
+	$F(x) = P(X < x) = \int_{-\infty}^x f(t) dt$ distribuční funkce
+\end{description}
+
+\subsection{Empirické charakteristiky rozložení pravděpodobnosti}
+získáno z naměřených dat, reprezentováno tabulkou, histogramem četnosti / pravděpodobnosti proměnné X
+
+\begin{description}
+	\item[Průměr] $\overline{x} = \frac{1}{n} \sum_{i=1}^n x_i$
+	\item[Medián] Prostřední z hodnot uspořádaných podle velikosti
+	\item[Modus] Hodnota které se ve vzorku vyskytuje nejčastěji
+	\item Odchylka, Absolutní odchylka, Kvadratická odchylka, Průměrná odchylka, ...
+\end{description}
+
+\subsection{Teoretické charakteristiky rozložení pravděpodobnosti}
+
+hodnoty určené výpočtem
+
+\paragraph{Diskrétní}
+\begin{itemize}
+	\item $EX = \sum v_i p(v_i)$ Střední hodnota
+	\item $DX = E(E-EX)^2 = EX^2 - (EX)^2$ Rozptyl
+	\item $\sqrt(DX)$ Směrodatná odchylka
+\end{itemize}
+
+\paragraph{Spojité}
+\begin{itemize}
+	\item $EX = \int_{-\infty}^{+\infty} x f(x) dx$
+	\item $DX, \sqrt{DX}$ stejné
+\end{itemize}
+
+\subsection{Konkrétní rozdělení}
+\begin{description}
+	\item[Binomické rozdělení pravděpodobnosti] p je pravděpodobnost úspěchu, (1-p) je pravděpodobnost neúspěchu, náhodná veličina X udává počet úspěchů při N nezávislých opakování experimentu. Pokud p=0.5, rozdělení je symetrické.
+	
+	$X \sim Bi(N, p) \qquad P(X = r) = {N \choose r} p^r (1-p)^{n-r}$
+	
+	\item[Poissonovo a Exponenciální] diskrétní a spojité. Poissonovo určuje počet výskytů události za určitý časový interval, Exponenciální označuje průměrnou dobu mezi příchody náhodných událostí. Proměnná $\lambda$ značí průměrný počet výskytů za jednotku času.
+	
+	$X \sim Exp(\lambda) \qquad EX = \frac{1}{\lambda} \qquad DX = \frac{1}{\lambda^2}$ 
+	
+	$Y \sim Po(\lambda) \qquad EY = \lambda \qquad DY = \lambda$
+	
+	Využíváno v teorii front.
+	
+	\item[Rovnoměrné a Normální] Rovnoměrné má stejnou pravděpodobnost na celém intervalu. Základem pro ostatní rozložení.
+	
+	$X \sim Ro(a,b) \qquad f(t) = \left\{ 
+   \begin{array}{l l}
+     \frac{1}{b-a}  & \quad t \in <a,b>\\
+     0  & \quad \text{jinak}\\
+   \end{array} \right.$
+   
+   $Y \sim No(\mu, \sigma^2) \qquad EY = \mu \qquad DY = \sigma^2$
+   
+   Centrální limitní věta -- Hodně proměnných lze popsat s velkou přesností pomocí normálního rozdělení.
+   
+   Standardizované normální rozdělení: No(0, 1). Definováno v tabulce $\Phi(u)$
+\end{description}
+
+\section{Generování náhodných čísel}
+
+\begin{itemize}
+	\item Kongruentní generátory: $x_{n+1} = (a x_n + b) \bmod m$. Konstanty multiplikativní, aditivní, modulu.
+	
+	Problém určení vhodných hodnot pro splnění podmínek: rovnoměrné rozložení, konečná posloupnost $ix * 69069 + 1 \pmod{ 2^{32} }$
+	
+	\item Mersene twister -- perioda obrovská
+	\item Lienar Congruent generator (LCG): další druhy
+\end{itemize}
+
+\paragraph{Transformace na jiné rozložení}
+\begin{itemize}
+	\item Inverzní transformace
+	\item Vylučovací
+	\item Kompoziční
+	\item Jiné, speciální
+\end{itemize}
 
 
 
@@ -3050,6 +3303,61 @@ while( planovana udalost ) do
 \end{lstlisting}
 
 Simulace poruch: trvalá 1, trvalá 0, zkrat.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{26}
+\chapter{Vyhledávání a řazení} \label{cha:27}
+
+3. semestr, IAL, 7. - 11. přednáška
+
+\section{Vyhledávání}
+
+přístupová doba, minimální/maximální doba vyhledání, doba úspěšného/neúspěšného vyhledání.
+
+Klasifikace: Tabulka s přímým přístupem $\times$ tabulka se sekvenčním přístupem.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4795,6 +5103,44 @@ Pokud se shodují ve všem, je to jeden síťový tok.
 umožňuje snížit nároky na HW, může být u kolektoru i exportéru, deterministické/náhodné.
 
 Umožňuje zobrazení nextHop routeru pro kontrolu směrování, počet paketů/bajtů pro účtování, zákonné ukládání poskytovatelem, sledování aplikací a uživatelů, účtování, SLA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{TCP/IP komunikace} \label{cha:39}
+
+4. semestr, IPK, 2. přednáška
+
+(model klient-server, protokoly TCP, UDP a IP, řízení a správa toku TCP)
+
 
 
 
