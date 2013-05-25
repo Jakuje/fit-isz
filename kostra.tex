@@ -1420,6 +1420,42 @@ stav <= reset; -- nelze stav <= "00"
 
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Metody rasterizace 2D vektorových objektů: úseček, kružnic a křivek} \label{cha:11}
+
+4. semestr, IZG
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setcounter{chapter}{15}
@@ -3345,20 +3381,289 @@ přístupová doba, minimální/maximální doba vyhledání, doba úspěšného
 
 Klasifikace: Tabulka s přímým přístupem $\times$ tabulka se sekvenčním přístupem.
 
+\subsection{Sekvenční vyhledávání v neseřazeném poli}
+
+Nad prvkem klíč relace rovnosti.
+
+\begin{itemize}
+	\item Vkládání: Přepsání prvku se stejným klíčem, nebo vložení na konec
+	\item Odstranění: přepsání poslední prvkem a zkrácení pole.
+\end{itemize}
+
+\subsection{Vyhledávání se zarážkou}
+
+Hledaný prvek umístěn na konec pole, vynechán test na konec pole. Vyšší rychlost vyhledání. Pokud najdeme zarážku, prvek neexistuje.
+
+\subsection{Sekvenční vyhledávání v seřazeném poli}
+
+Nad prvkem klíč musí být definována relace uspořádání. Urychluje čas neúspěšného vyhledání. Operace insert a delete musí posouvat všechny prvky vpravo od vkládaného/odstraňovaného.
+
+\subsection{Vyhledávání v poli seřazeném podle četnosti vyhledávání}
+
+Občasné seřazení podle počítadla vyhledání. Nebo adaptivní (pokud je prvek vyhledán a není první, vyměň jej s jeho levým sousedem).
+
+\subsection{Binární vyhledávání}
+
+Nad seřazeným polem, půlení intervalů. Logaritmická časová složitost
+
+\subsection{Dijkstrova varianta binárního vyhledávání (pro účely řazení)}
+
+V poli může být více položek se stejným klíčem, je potřeba nálézt například poslední.
+\lstset{caption={},language=Pascal}
+\begin{lstlisting}
+while right <> (left+1) do begin
+	middle := (left + right) div 2;
+	if Tab[middle].Klic <= K then
+		left := middle
+	else
+		right := middle;
+	end
+Search := K = Tab[left].Klic;
+\end{lstlisting}
+
+\subsection{Uniformní binární vyhledávání a Fibonacciho metoda}
+
+určení hranic intervalu odchylkou od středu -- vyhneme se dělení. Na dané úrovni uniformní, můžeme předpočítat. Různé odchylky pro různý počet prvků
+
+\paragraph{Sharova metoda}
+První vyhledání na největší celé mocnině dvou menší než N, pokud v levé části, pokračujeme, jinak zvolíme transformaci na stejnou velikost pravé části.
+
+\paragraph{Fibonacciho metoda}
+založená na binárním vyhledávacím stromu, uzel řádu [0]: levý podstrom 0, pravý 1. Jinak uzel řádu [n]: levý podstrom řádu n-1 a pravý řádu n-2.
+
+\subsection{Binární vyhledávací strom (BVS)}
+kořenový strom, pro jehož každý uzel platí, že n-tice kořenů je uspořádaná. Pro každý uzel platí, že levý podstrom obsahuje uzly s menší hodnotou a pravý podstrom obsahuje uzly s vyšší hodnotou (nebo jsou prázdné).
+
+Inorder průchod -- seřazená posloupnost.
+
+\begin{itemize}
+	\item Vyhledávání: Podobné binárnímu -- uzel = hledaný $\to$ úspěch, menší $\to$ levý podstrom, větší $\to$ pravý podstrom, prázdný podstrom $\to$ neúspěch.
+	\item Vkládání: Aktualizační sémantika -- pokud uzel existuje, přepíše hodnotu. Jinak vkládat se zachováním sémantiky
+	\item Odstranění: List smazat, Jeden syn: přemostit. Dva synové:
+	\begin{itemize}
+		\item Levý podstrom připojíme na nejlevější podstrom pravého podstromu nebo naopak
+		\item Hodnotu přepíšeme nejpravějším uzlem levého podstromu a ten odstraníme (nebo obráceně)
+	\end{itemize}
+\end{itemize}
+
+\subsection{Binární vyhledávání se zarážkou}
+
+Pomocný uzel, do kterého vedou všechny ukazatele (místo Nil).
+
+\subsection{BVS se zpětnými ukazateli}
+Lze provést inorder průchod bez zásobníku nebo rekurze.
+
+levý syn ukazuje na otce, pravý syn dědí ukazatel od otce. Kořen ukazuje na nil. Při odstranění uzlu je potřeba oprava uzlů na pravé diagonále levého podstromu.
+
+\subsection{AVL stromy}
+Výškově vyvážené binární stromy, výška každého je stejná nebo o 1 různá pro každý uzel podstromu.
+
+Při odstranění nebo vkládání do nejvzdálenějšího uzlu od kořene je porušena rovnováha. Řešení je Rotace: LL, nebo DLR.
+
+\subsection{Tabulky s přímým přístupem}
+
+Množina klíčů tabulky jednoznačně mapována na množinu sousedních míst v paměti. Časová složitost vyhledání je 1. Problémem je nalezení vhodné mapovací funkce.
+
+\paragraph{Mapovací funkce}
+
+Dva klíč jsou mapovány do stejného místa paměti (=synonyma). Vzniká kolize. Je třeba zvolit takovou s minimem kolizí a dobrou rychlostí.
+
+Dvě etapy -- převod klíče na přirozené číslo, modulo velikostí tabulky (mělo by být prvočíslo). $h(K) = K \bmod Max + 1$
+
+\paragraph{Zřetězení}
+\begin{itemize}
+	\item Explicitní -- prvek obsahuje adresu následovníka (zřetězené seznamy)
+	\item Implicitní -- adresa je funkcí adresy předchůdce (konstantní nebo proměnný krok)
+\end{itemize}
+
+\paragraph{TRP -- Tabulka s rozptýlenými položkami}
+mapovací prostor je pole + seznam synonym (zřetězený). Indexsekvenční vyhledávání (index do pole a sekvenční průchod zřetězeným seznamem).
+
+Implicitní řazení synonym -- druhá kolizní funkce. Například kvadratická metoda, která zvětšuje krok o 1 s každým krokem.
+
+\paragraph{TRP s dvojí rozptylovací funkcí}
+krok určen programem, pole 0..Max
+\begin{itemize}
+	\item 1. rozptylová funkce: hodnota do pole: 0..Max
+	\item 2. rozptylová funkce: krok: 1..Max
+\end{itemize}
+
+Vyhledání, Insert, kapacita o 1 menší, 1 prvek musí být jako zarážka vyhledávání.
+
+Implicitní zřetězení s používá v systémech, kde se nepoužívá delete.
+
+\paragraph{Brentova varianta}
+TRP se dvěma rozptylovými funkcemi. Při vkládání probíhá rekonfigurace pro lepší dobu vyhledávání.
 
 
+\section{Řazení}
+řazení prováděné tříděním -- nejdříve roztřídit podle sloupce s nejnižší prioritou, postupně až nejvyšší. Potom seřazeno.
 
+\begin{description}
+	\item[Uspořádání podle klíčů] seřazení podle uspořádané množiny klíčů
+	\item[Řazení] uspořádání podle relace lineárního uspořádání nad klíči
+	\item[Slučování] Vytváření souboru položek položek sjednocením několika souborů stejného typu
+	\item[Setřídění] Vytvoření souboru setříděných položek sjednocením několika seřazených souborů položek téhož typu
+	\item[Sekvenční řazení] sekvenční přístup k prvkům
+\end{description}
 
+\paragraph{Vlastnosti metod}
+\begin{itemize}
+	\item Přirozenost: doba seřazení náhodně uspořádaného je větší než doba seřazení uspořádaného souboru a menší než doba seřazení opačně uspořádaného souboru.
+	\item Stabilita: zachování relativního pořadí klíčů se stejnou hodnotou. Důležité pro řazení podle více klíčů v několika průchodech (třeba tříděním)
+\end{itemize}
 
+\subsection{Řazení podle více klíčů}
+\begin{itemize}
+	\item Složené relace uspořádání (porovnávat v jednom kroku více klíčů)
+	\item Řadit postupně podle narůstající priority klíčů (stabilní metoda)
+	\item Aglomerovaný klíč, například string, na kterém je definována relace uspořádání.
+\end{itemize}
 
+\subsection{Řazení polí bez přesunu položek}
+K poli je potřeba vytvořit pořadník (inicializovat hodnotami s indexem), výsledkem je seřazený pořadník.
 
+Výsledek lze převést do cílového pole, nebo zřetězit.
 
+\paragraph{MacLarenův algoritmus}
+uspořádání pole na místě (seřazené bez přesunu).
 
+První prvek se vymění s prvkem, který má být na indexu 1, opraví se ukazatele pro prvek, který na něj ukazuje.
 
+\begin{lstlisting}
+i := 1;
+Pom := Prvni;
+while i < Max do begin
+	while Pom < i do Pom := Pole[Pom].Uk;
+	Pole[i] :=: Pole[Pom];
+	Pole[i].Uk :=: Pom;
+	i := i + 1;
+	end
+\end{lstlisting}
 
+\subsection{Klasifikace metod}
+\begin{description}
+	\item[Podle přístupu k paměti] \hfill
+	\begin{description}
+		\item[Vnitřní] Pole, náhodný přístup
+		\item[Vnější] Soubory, sekvenční přístup
+	\end{description}
+	\item[Podle procesoru] \hfill
+	\begin{description}
+		\item[Sériové] Jeden procesor
+		\item[Paralelní] Více procesorů
+	\end{description}
+	\item[Podle principu] \hfill
+	\begin{description}
+		\item[Výběr] Určení extrému a umístění
+		\item[Vkládání] Prvek v neseřazené posloupnosti zařazujeme do seřazené
+		\item[Rozdělování] Rozdělujeme problém na podproblémy, často dělíme množinu na podmnožiny
+		\item[Slučování] Setřiďují setříděné podmnožiny
+	\end{description}
+\end{description}
 
+\subsection{Select sort}
+Vyhledání minimálního prvku v posloupnosti a výměna s prvkem na začátku neseřazené posloupnosti, dokud není celé setříděno.
 
+Nestabilní, Nepřirozené, Kvadratická časová složitost $O(n^2)$
 
+\subsection{Bubble sort}
+Porovnává se každá sousední dvojice v celém poli a pokud je špatně seřazena, prvky se vymění. Tím se dostane největší prvek na konec. Opakuje se dokud není celá posloupnost setříděná.
+
+\begin{description}
+	\item[Ripple sort] Pamatuje si index první výměny, od kterého má smysl v další iteraci pokračovat
+	\item[Shaker sort] Střídá směr prohledávání
+	\item[Shuttle sort] Pří výměně zavádí menší prvek do seřazené posloupnosti.
+\end{description}
+
+Stabilní, přirozený, kvadratická časová složitost.
+
+\subsection{Heap sort}
+
+Binární strom, implementován polem (otec i, synové 2i, 2i+1), relace uspořádání k synům (otec menší než oba synové) platí pro všechny uzly.
+
+Sift down -- znovuustavení hromady, prosetí.
+
+Nestabilní, nepřirozený, Linearitmetická časová složitost.
+
+\subsection{Insert sort}
+Zařaď aktuální prvek do seřazené posloupnosti (Najdi pozici, posuň všechny až do konce neseřazené posloupnosti, vlož aktuální na danou pozici).
+
+Stabilní, přirozený, kvadratická časová složitost.
+
+\subsection{Bubble-Insert sort}
+Postupné zařazování prvku na pozici i do setříděné posloupnosti vlevo. V cyklu kombinuje hledání pozice a posouvání vpravo.
+
+Stabilní, přirozený, kvadratická časová složitost.
+
+\subsection{Vkládání s binárním vyhledáváním}
+
+Insert sort s použitím binárního vyhledávání v setříděné části.
+
+Stabilní, přirozený, kvadratická časová složitost, na místě.
+
+\subsection{Quicksort}
+
+Rozděl na dvě části, podle hodnoty středového prvku (měl by být medián, ale ten nelze získat rychle a tak stačí pseudomedián -- číslo ve středu) podle velikosti. Toto pravidlo rekurzivně aplikuj na obě části, dokud tato část obsahuje více než jeden prvek.
+
+\begin{lstlisting}
+procedure QuickSort(var A:TArr; left, right:integer);
+(* Pri volani ma left hodnotu 1 a right hodnotu N *)
+var i,j:integer;
+begin
+	Partition(A,left,right,i,j);
+	if left<j then QuickSort(A, left, j); (* Rekurze doleva *)
+	if i<right then QuickSort(A, i, right); (* Rekurze doprava *)
+end;
+\end{lstlisting}
+
+Nejrychlejší, nestabilní, nepřirozený, linearitmická časové složitost ($O(n \log{n})$).
+
+\subsection{Shell sort}
+
+Opakované průchody podobné bublinkovému řazení s pevným krokem. Opakuje se od \verb|N div 2|, snižuje se \verb|krok := krok div 2| až po krok 1 (bubble sort).
+
+Nestabilní, přirozený, na místě, bez rekurze a zásobníku, pomalejší než Quicksort.
+
+\subsection{Merge sort}
+
+Postupujeme v poli zleva a zprava, hledáme neklesající posloupnosti a tyto slučujeme do druhého pole. Tzv. houpačkový mechanismus.
+
+Potenciálně stabilní a přirozený, není na místě, asymptotická (linearitmická) časová složitost.
+
+\subsection{List-Merge sort} setřiďování seznamů bez přesunu položek (Dále lze zpracovat MacLarenovým algoritmem). Postupné setřiďování dvojic neklesajících posloupností.
+
+Potenciálně stabilní, přirozený, linearitmetická časová složitost.
+
+\subsection{Radix sort}
+
+Řazení tříděním podle základu. Podobně řazení děrných štítků. Třídění podle nejnižšího řádu, poté dáme dohromady a pokračujeme s dalším řádem.
+
+Stabilní, Nepřirozená, Lineární časová složitost $O(n)$.
+
+\subsection{Přímé setřiďování souborů}
+
+Distribuce n-tic od 1 do N a jejich setřiďování.
+
+Stabilní, Nepřirozený, $log_2 N$ setřiďovacích fází.
+
+\subsection{Přirozené setřiďování}
+
+Distribuce neklesajících posloupností a jejich setřiďování, dokud není jen jedna neklesající posloupnost.
+
+Stabilní, Přirozený, $log_2 n$ setřiďovacích fází, kde n je počet neklesajících posloupností.
+
+\subsection{Přirozená čtyřpásková metoda}
+
+Ušetření fáze distribuce za cenu další pásky (2 pásky vstupní, 2 pásky výstupní).
+
+\subsection{Mnohacestné vyvážené setřiďování}
+
+Generalizace předchozí metody pro 2k pásek.
+
+\subsection{Polyfázové setřiďování}
+
+Ušetření pásek s výkonem srovnatelným s minulou metodou. Pouze k+1 pásek, vždy jedna výstupní, počet neklesajících posloupností by měl být rozdělen mezi vstupní pásky v poměru fibbonacciho posloupnosti k-tého řádu, ve chvíli kdy se jedna páska vyprázdní, stane se z ní výstupní.
 
 
 
