@@ -1428,7 +1428,181 @@ stav <= reset; -- nelze stav <= "00"
 4. semestr, IZG
 
 
+\subsection{Počítačová grafika}
 
+CG -- část oboru informatika, zabývá se analýzou, interpretací a tvorbou obrazové informace. Může být 2D $\times$ 3D, vektorová $\times$ rastrová.
+
+\begin{description}
+	\item[Rasterizace] Proces převodu vektorových entit na jejich odpovídající rastrové zobrazení. Tento proces probíhá automaticky se snahou o jeho maximální rychlost a kvalitu. Často opakovaný proces, realizován v HW.
+	\item[Vektoriazce] Proces převodu rastrového zobrazení objektů na jejich vektorovou reprezentaci. Není triviální a v mnoha případech je nejednoznačný. Není automatizovatelný.
+\end{description}
+
+\section{Úsečka}
+dva koncové body, rovnice přímky popisující její geometrii.
+
+Obecná rovnice přímky: $(y_1 - y_2) x + (x_2 - x_1) y + C = 0$, Parametrická: $y = kx + q$
+
+Vykreslujeme přímku v prvním kvadrantu, když roste nejvíce ve směru osy X, pokud v jiné poloze, provedeme výměnu os, souřadnic, znamének.
+
+\subsection{DDA}
+
+Digital Differencial Analyser. Používá FP aritmetiku, málo efektivní. Naivní přístup.
+
+Po ose X se posouváme s přírůstkem 1, na ose Y připočítáváme v každém kroku směrnici ($k = \frac{y_2-y_1}{x_2-x_1}$) a zaokrouhlujeme na nejbližší celé číslo.
+
+\subsection{Error controll DDA}
+
+posun na další řádek, pokud relativní odchylka $ E \geq 0,5$ (inkrementována s každým dalším dx).
+
+\subsection{Bresenhamův algoritmus}
+
+Používá celočíselnou aritmetiku, sčítání a porovnávání, lze jednoduše implementovat v HW grafické karty.
+
+Po ose X stále přírůstek 1, o ose Y rozhodujeme na základě znaménka prediktoru: $P_0 = 2 \Delta y - \Delta x$, pokud $ < 0: P_{i+1} = P_i + 2\Delta y$, jinak posun p ose Y a $P_{i+1} = P_i + 2\Delta y - 2 \Delta x$.
+
+\section{Kružnice}
+
+Definována středem a poloměrem, obecná rovnice: $(x-s_1)^2 + (y-s_2)^2 - R^2 = 0$. 8x symetrická, stačí tedy nakreslit pouze jednu část. Všechny ostatní získáme podobně jako úsečky jiným směrem. Postupujeme od bodu $[0, R]$ do bodu, kde se $x = y$.
+
+\subsection{Naivní algoritmus}
+FP aritmetika, Na ose X přírůstek. Hodnotu na ose Y vypočítáme ze obecné rovnice: $y = \sqrt{R^2 + x^2}$ a zaokrouhlíme na celá čísla.
+
+\subsection{Vykreslení jako N-úhelník}
+
+Zvolíme posun o konstantní úhel, body spojujeme úsečkami:
+
+$x_{n+1} = x_n \cos{\alpha} - y_n \sin{\alpha}$
+
+$y_{n+1} = x_n \sin{\alpha} + y_n \cos{\alpha}$
+
+\subsection{Midpoint algoritmus}
+
+Celočíselná aritmetika, rychlé a  efektivní. Podobný jako Bresenhamův algoritmus. Určuje se poloha midpointu vůči kružnici. Změna na ose Y určena znaménkem prediktoru.
+
+$p_0 = 1-R$
+
+$p_{i+1} = p_i + 2 x_i + 3$ pro $p_i < 0$
+
+$p_{i+1} = p_i + 2 x_i - 2y_i + 5$ jinak
+
+\section{Elipsa}
+Podobně jako kružnice, 4x symetrická, algoritmus s skládá ze dvou fází podle parciálních derivací (normála ve směru $(1,1)$).
+
+\section{Křivky}
+
+\paragraph{Požadované vlastnosti}
+\begin{itemize}
+	\item Invariance k lineárním transformacím
+	\item Interpolace krajních bodů -- křivka prochází krajními body
+	\item Konvexní obálka -- křivka se nachází v konvexní obálce definované řídícími body
+	\item Lokalita změn -- lokální, globální
+\end{itemize}
+
+\subsection{Dělění}
+\begin{description}
+	\item[Interpolační křivky] Prochází body
+	\item[Aproximační křivky] Neprochází řídícími body
+\end{description}
+
+\begin{description}
+	\item[Racionální] Váhové koeficienty řídících bodů
+	\item[Iracionální] Váhy řídících bodů jsou stejné.
+\end{description}
+
+\subsection{Vyjádření}
+\begin{itemize}
+	\item Matematické: nevhodné pro naše použití
+	\item Parametrická 2D křivka: $Q(t) = [x(t), y(t)], t \in <0,1>$
+	
+	\begin{description}
+		\item[Polynomiální křivka] Kubická křivka
+		
+		$x(t) = a_x t^3 + b_x t^2 + c_x t + d_x$
+		
+		$y(t) = a_y t^3 + b_y t^2 + c_y t + d_y$
+		
+		\item[Maticový zápis] $Q(t) = T \cdot C =
+\begin{bmatrix}
+t^3 & t^2 & t & 1
+\end{bmatrix}
+\begin{bmatrix}
+a_x & a_y\\
+b_x & b_y\\
+c_x & c_y\\
+d_x & d_y\\
+\end{bmatrix} = T \cdot M P$ (Bázová matice a matice řídících bodů).
+	\end{description}
+\end{itemize}
+
+\subsection{Parametrická spojitost křivek $C^N$}
+\begin{itemize}	
+	\item $C^0$ -- totožnost navazujících koncových bodů
+	\item $C^1$ -- totožnost tečnových vektorů u navazujících bodů
+	\item $C^2$ -- totožnost vektorů druhé derivace u navazujících bodů
+\end{itemize}
+
+Podobně oslabená podmínka spojitosti $G^N$ (totožnost bodů, lineární závislost vektorů).
+
+\paragraph{Spline} po částech polynomiální křivka. Spline N-tého řádu splňuje spojitost $C^{N-1}$.
+
+\paragraph{Fergusonova kubika} Nejčastější, určena dvěma koncovými body a dvěma tečnými vektory. Segmenty navázány shodností koncových bodů a shodností tečných vektorů.
+
+Málo interaktivní a intuitivní řízení tvaru, nelokální změna jedním bodem.
+
+Přirozený spline -- maticové řešení celé křivky pro nulové koncové vektory
+
+\paragraph{Kochanek-Bartels Spline}
+
+Využívá Fergusonových kubik, N tečných bodů s koeficienty $a_i$, $b_i$, $c_i$ (tenze, šikmost, špičatost) určující chování v daném bodě.
+
+\paragraph{Catmul-Rom spline}
+
+N bodů, tečný vektor bodu $P_i$ je rovnoběžný se spojnicí bodů $P_{i-1}$ a $P_{i+1}$. Ekvivalentní Kochanek-Bartels spline s nulovými koeficienty.
+
+Obecně neleží v konvexní obálce! Neprochází koncovými body.
+
+\paragraph{Beziérovy křivky}
+Aproximační křivky, křivka stupně N je určena N+1 body. Prochází koncovými body. Polynomiální křivka s použitím Bernsteinových polynomů. Leží v konvexní obálce, k vykreslení se používá algoritmus de Casteljau.
+
+\paragraph{Algoritmus de Casteljau} Rekurzivní algoritmus v vykreslení Beziérových křivek, vychází z rekurzivní definice Bernsteinových polynomů.
+
+Úseky řídícího polynomu jsou děleny v poměru $t : (1-t)$. Nevíme jako zvolit velikost kroku pro získání vhodně rozdělených bodů. Ty potom spojujeme úsečkami.
+
+Výpočet po konstantním kroku t.
+
+\paragraph{Beziérovy kubiky}
+
+segment popsán 4 řídícími body, nelokální změna tvaru, invariantní k lineárním transformacím.
+
+Podmínky pro navazování segmentů pro spojitost $C^1$
+\begin{itemize}
+	\item Totožnost koncových bodů
+	\item Sousední tečné vektory -- koncový bod úseku je středem předposledního bodu $Q_i$ a druhého bodu $Q_{i+1}$
+\end{itemize}
+
+\emph{de Casteljau pro Beziérovy kubiky} -- rekurzivní dělení intervalu na dvě podkřivky v polovině ($t = 0,5$). Dostatečně rovná křivka může být vykreslena pohromadě.
+
+\paragraph{Racionální beziérovy křivky} přidávají váhový koeficient řídících bodů, leží v konvexní obálce, nemají rekurentní definici a pro vykreslení nelze použít de Casteljau.
+
+\paragraph{Coonsovy křivky (kubiky)} aproximační, stupeň n určen n+1 řídícími body.
+
+Neprochází koncovými body, pokud dvojíme, bod bude v 1/6 od dalšího bodu, pokud ztrojíme, končí v daném trojbodu.
+
+Segmenty se navazují zopakováním posledních 3 bodů. Nelze pracovat s jednotlivými body, pouze s celým segmentem.
+
+\paragraph{B-Spline křivky}
+
+Zobecnění coonsových křivek, určení n+1 body, křivka stupně k vykazuje spojitost typu k+1.
+
+Uzlový vektor určuje hodnoty parametru t v uzlech. Délka n+k+2. 
+
+Vykreslování algoritmem de Boor.
+
+Uniformní: $t_{i+1} - t_i$ konstantní.
+
+\paragraph{NURBS} Non-Uniform Rational B-Spline -- zobecnění B-Spline křívek, přidány váhové koeficienty.
+
+Invariantní vůči lineárním transformacím.
 
 
 
