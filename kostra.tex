@@ -4,6 +4,7 @@
 \usepackage{multirow}
 \usepackage{a4wide}
 \usepackage{amsmath}
+\usepackage{amsfonts}
 
 \usepackage{color}
 \usepackage[unicode,colorlinks,hyperindex,plainpages=false,pdftex]{hyperref}
@@ -21,6 +22,52 @@
 
 
 \begin{document}
+
+\ref{cha:1}
+\ref{cha:2}
+\ref{cha:3}
+\ref{cha:4}
+\ref{cha:5}
+\ref{cha:6}
+\ref{cha:7}
+\ref{cha:8}
+\ref{cha:9}
+\ref{cha:10}
+
+\ref{cha:11}
+\ref{cha:12}
+\ref{cha:13}
+\ref{cha:14}
+\ref{cha:15}
+\ref{cha:16}
+\ref{cha:17}
+\ref{cha:18}
+\ref{cha:19}
+\ref{cha:20}
+
+\ref{cha:21}
+\ref{cha:22}
+\ref{cha:23}
+\ref{cha:24}
+\ref{cha:25}
+\ref{cha:26}
+\ref{cha:27}
+\ref{cha:28}
+\ref{cha:29}
+\ref{cha:30}
+
+\ref{cha:31}
+\ref{cha:32}
+\ref{cha:33}
+\ref{cha:34}
+\ref{cha:35}
+\ref{cha:36}
+\ref{cha:37}
+\ref{cha:38}
+\ref{cha:39}
+\ref{cha:40}
+
+\newpage
 
 \tableofcontents
 
@@ -1444,6 +1491,8 @@ Obecná rovnice přímky: $(y_1 - y_2) x + (x_2 - x_1) y + C = 0$, Parametrická
 
 Vykreslujeme přímku v prvním kvadrantu, když roste nejvíce ve směru osy X, pokud v jiné poloze, provedeme výměnu os, souřadnic, znamének.
 
+Gradient = strmost.
+
 \subsection{DDA}
 
 Digital Differencial Analyser. Používá FP aritmetiku, málo efektivní. Naivní přístup.
@@ -1634,9 +1683,255 @@ Invariantní vůči lineárním transformacím.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Transformace, reprezentace a zobrazení 3D objektů} \label{cha:11}
+\chapter{Transformace, reprezentace a zobrazení 3D objektů} \label{cha:12}
 
 5. semestr, IZG, 5. přednáška
+
+Popis objektů v počítači je založen na uzlových bodech, vrcholech.
+
+\paragraph{Vytváření a zobrazování objektů}: Posunutí, rotace, zvětšení, zkosení vrcholů.
+
+Implementace v HW pro vyšší výkon.
+
+\subsection{Způsob aplikace transformace}
+Změna souřadného systému do vhodnější pozice.
+
+3D scéna: Rozmístění objektů, umístění kamery (poloha, směr, úhel záběru), souřadný systém scény (posunutí, rotace).
+
+Zobrazení - transformace do souřadného systému kamery = (perspektivní) projekce.
+
+\section{Lineární transformace}
+
+Zobrazení f z jednoho vektorového prostoru do druhého, které zachovává lineární kombinace.
+
+\paragraph{Homogenní souřadnice ve 2D}
+Umožňuje pracovat se všemi druhy základních transformací jednotně, pomocí maticového zápisu. Umožňuje skládat transformace a provádět zaráz. Souřadnice bodu $[x, y]$: $P = [X, Y, w]$, kde $X = x/w, Y = y/w$. $w$ je 1 pro bod a 0 pro vektor.
+
+\begin{description}
+	\item[Posunutí] bodu v rovině $P(x,y,w)$, vektor $(d_x, d_y)$. $x' = x + dx$, $y' = y + dy$
+	
+	$P' = P \cdot T = \begin{bmatrix} x' & y' & 1 \end{bmatrix} = \begin{bmatrix} x & y & 1 \end{bmatrix}
+	\cdot \begin{bmatrix}
+		1 & 0 & 0 \\
+		0 & 1 & 0 \\
+		d_x & d_y & 1
+	\end{bmatrix}$
+	\hfill
+	$T^{-1} = \begin{bmatrix}
+		1 & 0 & 0 \\
+		0 & 1 & 0 \\
+		-d_x & -d_y & 1
+	\end{bmatrix}$
+	
+	\item[Otočení] bodu v rovině o úhel $\alpha$. Střed otáčení v počátku souřadného systému
+	
+	$P' = P \cdot R = \begin{bmatrix} x' & y' & 1 \end{bmatrix} = \begin{bmatrix} x & y & 1 \end{bmatrix}
+	\cdot \begin{bmatrix}
+		\cos{\alpha} & \sin{\alpha} & 0 \\
+		-\sin{\alpha} & \cos{\alpha} & 0 \\
+		0 & 0 & 1
+	\end{bmatrix}$
+	\hfill
+	$R^{-1} = \begin{bmatrix}
+		\cos{\alpha} & -\sin{\alpha} & 0 \\
+		\sin{\alpha} & \cos{\alpha} & 0 \\
+		0 & 0 & 1
+	\end{bmatrix}$
+	
+	\item[Změna měřítka] Poměr zvětšení ve směru os $S_x$, $S_y$; $< 0$: zrcadlení, $< 1$ zmenšení, jinak zvětšení.
+	
+	$P' = P \cdot S = \begin{bmatrix} x' & y' & 1 \end{bmatrix} = \begin{bmatrix} x & y & 1 \end{bmatrix}
+	\cdot \begin{bmatrix}
+		S_x & 0 & 0 \\
+		0 & S_y & 0 \\
+		0 & 0 & 1
+	\end{bmatrix}$
+	\hfill
+	$S^{-1} = \begin{bmatrix}
+		1/S_x & 0 & 0 \\
+		0 & 1/S_y & 0 \\
+		0 & 0 & 1
+	\end{bmatrix}$
+	
+	\item[Zkosení ve 2D] faktory zkosení podle os $S_x$, $S_y$.
+	
+	$P' = P \cdot S_H = \begin{bmatrix} x' & y' & 1 \end{bmatrix} = \begin{bmatrix} x & y & 1 \end{bmatrix}
+	\cdot \begin{bmatrix}
+		1 & S_y & 0 \\
+		S_x & 1 & 0 \\
+		0 & 0 & 1
+	\end{bmatrix}$
+	\hfill
+	$S_H^{-1} = \begin{bmatrix}
+		1 & -S_y & 0 \\
+		-S_x & 1 & 0 \\
+		0 & 0 & 1
+	\end{bmatrix}$
+\end{description}
+
+Transformace lze skládat, záleží na pořadí. Nejdříve vyjádříme matice, vynásobíme zprava a poté je dáme grafické kartě k aplikaci na objekty: $M = S \cdot R \cdot T$
+
+\section{Transformace ve 3D} Body popsány 3D souřadnicemi $P(x,y,z,w)$ podobně jako ve 2D.
+
+\begin{description}
+	\item[Posunutí] stejné jako 2D, jen o jednu souřadnici více (čtvrtý řádek)
+	\item[Změna měřítka] stejné jako ve 2D, jen o jednu souřadnici více (na hlavní uhlopříčce).
+	\item[Rotace] Podle dané osy (x, y, z)
+	
+	Podle osy Y: $\begin{bmatrix}
+		\cos{\alpha} & 0 & \sin{\alpha} & 0 \\
+		0 & 1 & 0 & 0 \\
+		-\sin{\alpha} & 0 & \cos{\alpha} & 0 \\
+		0 & 0 & 0 & 1
+	\end{bmatrix}$
+	
+	\item[Zkosení] podle dvou os
+	
+	Podle os XY: $\begin{bmatrix}
+		1 & 0 & 0 & 0 \\
+		0 & 1 & 0 & 0 \\
+		S_{HX} & S_{HY} & 1 & 0 \\
+		0 & 0 & 0 & 1
+	\end{bmatrix}$
+\end{description}
+
+\subsection{Rotace podle obecné osy skládáním}
+\begin{enumerate}
+	\item Posunutí osy do počátku souřadného systému
+	\item Otočení osy do jedné souřadné roviny (XY)
+	\item Otočení osy do jedné souřadné osy (X)
+	\item Rotace podle osy X ($\omega$)
+	\item Vrácení osy do původní pozice
+\end{enumerate}
+
+Maticově: $M = T \cdot R_X \cdot R_Z \cdot R_{X(\omega)} \cdot R_Z^{-1} \cdot R_X^{-1} \cdot T^{-1}$
+
+Mnohem efektivnější pomocí kvaternionů!
+
+\section{Projekce}
+
+Zobrazení 3D objektů na 2D průmětnu (ztráta informace).
+
+\subsection{Podle tvaru průmětny}
+\begin{description}
+	\item[Rovna průmětna] úsečka se promítají na úsečky -- stačí promítat vrcholy úseček
+	\item[Zakřivená průmětna] Úsečky se promítají na křivky -- projekce všech rastrových bodů (Rybí oko, panorama)
+\end{description}
+
+\subsection{Podle typu projekce}
+\begin{description}
+	\item[Paralelní (rovnoběžná)] lineární, prostřednictvím rovnoběžných paprsků, většinou technické aplikace. Zachovává rovnoběžnost hran. Vzdálenost od průmětny neovlivňuje velikost obrazu. Nejčastěji kolmé promítání.
+	
+	$P_{XY} = \begin{bmatrix}
+		1 & 0 & 0 & 0 \\
+		0 & 1 & 0 & 0 \\
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 0 & 1
+	\end{bmatrix}$ (zanedbání souřadnice Z -- průmět do roviny Z
+	
+	\item[Obecná kolmá projekce] \hfill
+	\begin{enumerate}
+		\item Přenést objekty do souřadného systému, kde je průmětna souběžná s rovinou XY (složená lineární transformace)
+		\item Provést promítání do roviny XY
+	\end{enumerate}
+	\item[Perspektivní (středová)] Paprsky vycházejí z jednoho bodu (místo pozorovatele), nezachovává rovnoběžnost hran. Odpovídá realitě, používá se v architektuře, virtuální realita, hry. Vzdálenost od středu ovlivňuje velikost průmětu.
+	
+	(počet os, které průmětna protíná) 
+	\begin{description}
+		\item[Jednobodová perspektiva]$T_{per} = \begin{bmatrix}
+		1 & 0 & 0 & 0 \\
+		0 & 1 & 0 & 0 \\
+		0 & 0 & 1 & 1/d_z \\
+		0 & 0 & 0 & 1 \\
+		\end{bmatrix}$, kde $d_z$ je vzdálenost objektu od průmětny po ose Z
+		
+		\item[Tříbodová perspektiva] $T_{per} = \begin{bmatrix}
+		1 & 0 & 0 & 1/d_x \\
+		0 & 1 & 0 & 1/d_y \\
+		0 & 0 & 1 & 1/d_z \\
+		0 & 0 & 0 & 1 \\
+		\end{bmatrix}$
+	\end{description}
+\end{description}
+
+Ořezávání: přední/zadní ořezávací stěna. Hranol/komolý jehlan -- oříznutí mimo tento útvar (okno). Urychlení procesu zobrazení, možnost převedení na jednotkovou krychli/jehlan.
+
+\section{Kvaterniony}
+
+Efektivní způsob realizace rotace ve 3D.
+
+Kvaternion: rozšíření komplexních čísel: $q = q_1 + i q_2 + j q_3 + k q_4$ (jedna reálná část, 3 komplexní).
+
+Vektor je vtah mezi dvěma body $\Rightarrow$ Kvaternion je vztah mezi dvěma vektory ve 3D.
+
+$q = w + i x + j y + k z$\qquad $|q| = \sqrt{w^2 + x^2 + y^2 + z^2}$
+
+sdružený kvaternion: $q^* = w - i x - j y - k z$ \qquad $q q^* = 1$
+
+Rotaci lze popsat úhlem otočení $\alpha$ a jednotkovým vektorem $a = (a_1, a_2, a_3)$, který reprezentuje osu otáčení. $q = cos(\alpha/2) + a_1 \sin(\alpha/2) i + a_2 \sin(\alpha/2) j + a_3 \sin(\alpha/2) k$
+
+Otočení: $ v' = q v q^*$, kde $v$ je vektor s $\mathbb{R}$ složkou 0: $v = v_0 i + v_1 j + v_2 k$
+
+Skládání rotací odpovídá násobení kvaternionů.
+
+Kvaternion lze převést na Rotační matici pro výpočet v HW, což je velmi důležité.
+
+\section{Reprezentace 3D objektů}
+
+\subsection{Požadavky na model}
+\begin{itemize}
+	\item Obecnost -- rozsah problémů, které pokrývá
+	\item Úplnost
+	\item Jednoznačnost -- lze vyhodnotit jen jedním způsobem
+	\item Unikátnost -- jedno těleso = jeden model
+	\item Přesnost
+	\item Regulérnost -- nemožnost vytvořit nereálnou reprezentaci
+	\item Konzistence vůči vybraným operacím
+	\item Kompaktnost -- paměťové nároky
+	\item Efektivita zpracování
+\end{itemize}
+
+\paragraph{Manifold} tělesa, která lze vyrobit. Hrana sdílí pouze dvě stěny, bod má v množině stěn otevřené okolí.
+
+\paragraph{Eulerovy rovnice} kontrola topologie objektu podle počtu hran, stěn, vrcholů a dalších informací (vrcholů - hran + stěn = 2).
+
+\subsection{Modely}
+\begin{description}
+	\item[Konstrukční] skládání jednotlivých 3D primitiv
+	\begin{description}
+		\item[CSG] Konstrukční geometrie. Objekt je popsán stromem primitiv (součet, rozdíl, průnik). Zobrazení může být urychleno použitím octree (oktalový strom).
+	\end{description}
+	\item[Šablonování] translační, rotační, protahování. Pohyb křivky/plochy/tělesa po zvolené trajektorii.
+	\item[Dekompoziční metody] Diskrétní popis, rozklad na objemové jednotky (Voxel)
+	\begin{description}
+		\item[Objemové (obsah)] CT (medicína, strojírenství), reprezentace pomocí 3D pole (velká datová náročnost), octree (vhodné pro malou hustotu dat)
+	\end{description}
+	\item[Hraniční reprezentace (povrch)] popis pouze povrchu.
+	\begin{description}
+		\item[B-rep] hranice modelu. Vrcholy, stěny, hrany a jejich vzájemné propojení
+		\item[Okřídlená hrana]lineární seznamy vrcholů, hran a stěn. Každá hrana má odkaz na dva sousední vrcholy, 2 sousední stěny a 4 sousední hrany.
+		\item[Drátový model] Může být nejednoznačný, používá se jako jednoduchý návrh
+		\item[Polygonální model] HW podpora, ideální pro interaktivní zobrazení, nutnost dodržet regulérnost (uzavřenost).
+		\item[Hraniční spline model]
+		\item[LOD] Level of detail -- při pozorování z velké vzdálenosti nemá cenu počítat polygony, které se ani nezobrazí.
+	\end{description}
+	\item[3D plochy] rozšíření parametrických polynomiálních křivek, spojování segmentů až do $C^2$
+	\begin{description}
+		\item[Bikubické plochy] analogie Fergusonových kubik, 4x4 řídící body
+		\item[Beziérovy plochy] aproximační. Mohou být racionální, nebo neracionální.
+		\item[algoritmus de Casteljau] podobný princip jako vykreslování křivek, dvě proměnné
+		\item[NURBS plochy] Invariantní k lineárním transformacím
+	\end{description}
+	\item[Implicitní plochy] Potenciální pole elementárních částí kostry (\uv{náboj} může být kladný nebo záporný), povrch v místě, kde je intenzita 0. Omezená směšovací funkce.
+	
+	Lze kombinovat například s CSG (stromy primitiv, bool. operace (uzly)).
+	
+\end{description}
+
+
+
+
+
 
 
 
@@ -1838,9 +2133,53 @@ $(X, \leq)$ je uspořádaná množina -- \emph{svazově uspořádaná} (svaz), p
 
 
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setcounter{chapter}{17}
+\chapter{Diferenciální a integrální počet funkcí více proměnných} \label{cha:17}
+
+2. semestr, IMA, ??
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Číselné soustavy a převody mezi nimi} \label{cha:18}
 
 1. semestr, IAS, 1. přednáška
@@ -5552,7 +5891,7 @@ Přístup k síťovému médiu 802.1x autorizovat, oddělení hlasového provozu
 \subsection{Na úrovni IP}
 ICMP -- Ping, Traceroute. Hrozí prohledávání sítě, podvržení implicitní brány (některé někdy blokovat)
 
-\subsection{N úrovni L3 -- L7}
+\subsection{Na úrovni L3 -- L7}
 Monitorování dostupnosti, odezvy, sledování služeb, aplikací, topologie.
 
 IETF -- SNMP 1989
