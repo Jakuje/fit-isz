@@ -2139,13 +2139,251 @@ $(X, \leq)$ je uspořádaná množina -- \emph{svazově uspořádaná} (svaz), p
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Diferenciální a integrální počet funkcí více proměnných} \label{cha:17}
 
-2. semestr, IMA, ??
+2. semestr, IMA, skripta
+
+\section{Diferenciální počet}
+minimalizace hodnoty funkce (hledání extrémů na intervalu) -- položení první derivace rovno 0.
+Elektrické obvody $Ri + L\frac{di}{dt} = U \Rightarrow i(t) = \frac{U}{R}\left(1-e^{-(R/L)t} \right)$
+
+\subsection{Limita}
+Funkční hodnotu v bodě $a$ se blíží číslo $b$. Funkce $f$ má v bodě $a$ limitu $b$, když
+\begin{itemize}
+	\item $a$ je hromadným bodem množiny $D_f$ (bod, v jehož libovolně redukovaném okolí leží alespoň jedem bod dané množiny).
+	\item k libovolnému okolí $U(b)$ limity $b$ existuje okolí $U(a)$ bodu $a$ tak, že funkce $f$ zobrazí redukované okolí $U^*(a)$ do $U^*(b)$, tedy
+	
+	$\forall U(b) \exists U(a): f(U^*(a) \subset U(b)$
+\end{itemize}
+
+Je-li $b \neq \pm \infty$, pak se jedná o vlastní limitu. Jinak je to limita nevlastní.
+
+$\lim\limits_{x \to a} c = c \qquad
+\lim\limits_{x \to a} x = a \qquad
+\lim\limits_{x \to \pm \infty} \frac{1}{x} = 0 \qquad
+\lim\limits_{x \to \infty} a^x = \infty \qquad
+\lim\limits_{x \to - \infty} a^x = - \infty \qquad a > 1$
+
+\paragraph{Relativní limita} (vzhledem k množině M) -- definovaná na intervalu/množině M.
+
+\paragraph{Limita zleva/zprava} je relativní limita pro interval $(a,\infty)$ / $(\infty, a)$.
+
+Limita posloupnosti, Hromadná hodnota, Horní, dolní limita
+
+\paragraph{Limita složené funkce} $a$ je hromadný bod $D_f$, $f = g \circ h$, $c = \lim\limits_{c \to a} g(x)$, $d = \lim\limits_{t \to c} h(t)$ na jistém okolí bodu a je pro $x \neq a$ také $g(x) \neq c$, pak $\lim\limits_{x \to a} g(x) = d$.
+
+\subsection{Spojitost}
+Funkce $f(x)$ je spojitá v bodě, platí-li $\lim\limits_{x \to a} f(x) = f(a)$. Podobně je definována spojitost zprava a zleva.
+
+\paragraph{Nespojitosti}
+\begin{itemize}
+	\item Prvního druhu -- spojitá zprava a zleva, vlastní limity.
+	\begin{itemize}
+		\item Pokud okolí $f(a^+) = f(a^-)$ pak spojitost odstranitelná
+		\item Jinak skoková
+	\end{itemize}
+	\item Druhého druhu
+\end{itemize}
+
+Spojitost na uzavřeném intervalu znamená, že je funkce spojitá v každém bodě tohoto intervalu.
+
+\subsection{Derivace}
+Směrnice tečny, Okamžitá rychlost.
+
+\paragraph{V bodě} nechť pro funkcí definovanou na nějakém okolí $U(x_0)$ existuje vlastní limita $f'(x_0) = \lim\limits_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0}$, potom tuto limitu nazýváme derivací funkce $f$ v bodě.
+
+Derivace zleva, zprava -- jednostranné limity.
+
+\paragraph{Tečna ke grafu funkce v bodě $x_0$}: $y-f(x_0) = f'(x_0) (x-x_0)$
+
+je-li $f(x_0) \neq 0$, přímka o rovnici $y - f(x_0) = - \frac{1}{f'(x_0)}$ je normála ke grafu funkce.
+
+Polotečna -- v rovnici použita levá a pravá derivace.
+
+\paragraph{Na intervalu}
+funkce definována na intervalu $<a, b>$, v každém bodě mé derivaci. Potom má derivaci na intervalu.
+
+$(c)' = 0 \qquad
+(x^n)' = nx^{n-1} \qquad
+(\sin{x})' = \cos{x} \qquad
+(\cos{x})' = - \sin{x} \qquad
+(e^x)' = e^x$
+
+\paragraph{L'Hospitalovo pravidlo} Výpočet limit neurčitých výrazů (nelze vypočítat jako funkční hodnoty) $\lim\limits_{x \to a} \frac{f'(x)}{g'(x)} = \lim\limits_{x \to a} \frac{f(x)}{g(x)}$, pokud $\lim\limits_{x \to a} f(x) = \lim\limits_{x \to a} g(x) = 0 \text{nebo} \infty$
+
+\subsection{Derivace vyšších řádů} druhá derivace -- zrychlení.
+
+$f''(x) = \frac{d^2f}{fx^2}$
+
+Rekurzivně: $f^{(n)} = \left( f^{(n-1)} \right)'$ Derivace n-tého řádu je derivace (n-1)-ní derivace.
+
+Je-li funkce n.krát diferencovatelná v bodě $x_0$, pak $d' f(x_0) = f^{(n)} (x_0) dx^n$ je diferenciál n-tého řádu.
+
+Linearizace: aproximace funkce v bodě přímkou: $y - f(x_0) = f'(x_0) (x-x_0)$
+
+\paragraph{Aproximace Taylorovým rozvojem}
+
+$f(x) = T_n(x) + R_{n+1}(x)$ Taylorův rozvoj a zbytek po n-tém členu Taylorova rozvoje (vystupuje číslo mezi $x$ a $x_0$).
+
+$T_n(x) = \sum\limits_{k=0}^n \frac{f^{k}(x_0)}{k!} (x-x_0)^k = f(x_0) + \frac{f'(x_0)}{1!} (x-x_0) + \dots + \frac{f^{n}(x_0)}{n!} (x-x_0)^n$
+
+\subsection{Extrémy, průběh funkce}
+
+$f'(x) \geq 0$, potom $f(x)$ je neklesající, $f'(x) \leq 0$, potom je $f(x)$ nerostoucí.
+
+Lokální extrém vzniká, když $f'(x) = 0$ (stacionární bod), nebo když je funkce není v bodě definovaná. 
+
+Lokální maximum je, pokud $f''(x) < 0$ ve stacionárním bodě, 
+lokální maximum je, pokud $f''(x) > 0$.
+
+\paragraph{Absolutní extrémy} získáme porovnáním lokálních extrémů a okrajových bodů intervalu.
+
+\paragraph{Inflexní box} $f''(x) = 0$ nebo neexistuje -- změna konvexnosti (pod přímkou) / konkávnosti (nad přímkou).
+
+\paragraph{Asymptoty}
+\begin{itemize}
+	\item bez směrnice (rovnoběžné s Y) -- limita v bodě zprava nebo zleva je rovna $\pm \infty$
+	\item se směrnicí: $\lim\limits_{x \to \pm \infty} \left[ f(x) - (ax + b) \right] = 0$
+\end{itemize}
+
+\section{Integrální počet}
+
+Neurčitý integrál -- zákon dráhy po přímce, je definována jeho okamžitá rychlost.
+
+$F'(x) = f(x)$, kde $F$ je primitivní funkce k funkci $f$.
+
+$\int f(x) dx = F(x) + C$, kde $C \in \mathbb{R}$ (f je integrand, integrovaná funkce, x je integrační proměnná)
+
+\subsection{Integrační metody}
+\begin{description}
+	\item[Per partes] $\int u(x) v'(x) dx = u(x) v(x) - \int u'(x) v(x) dx$
+	\item[Substituční metoda] $\int f(t) dt = \int f( g(x) ) g'(x) dx$, kde $t = g(x)$, $dt = g'(x)dx$
+	\item[Racionální lomené funkce] $R(x) = \frac{P_m(x)}{Q_n(x)}$, $m < n$, Rozložení na parciální zlomky a jejich následná integrace.
+\end{description}
+
+$\int 0 dx = C \qquad
+\int 1 dx = x \qquad
+\int x^k dx = \frac{x^{k+1}}{k+1} \qquad
+\int \frac{1}{x} dx = ln |x|$
+
+$\int\left(a f \left(x \right) + b g \left(x \right) \right) dx = a \int f(x) dx + b \int g(x) dx$
+
+\subsection{Určitý integrál} Obsah plochy pod grafem, odhad pomocí dělení intervalu.
+
+\paragraph{Integrální součet} $s(D,f) = \sum\limits_{i=1}^n F(\xi_i) (x_i - x_{i-1}$ s funkcí f a dělením D.
+
+$f: <a,b> \to \mathbb{R}$ je ohraničená funkce f, integrovatelná na intervalu , jestliže existuje číslo $I \in \mathbb{R}$, že ke každému $\varepsilon > 0$ existuje $\delta > 0$ tak, že pro každé dělené D intervalu $<a,b>$ jehož norma $\nu(D) < \delta$, platí $|s(D,f)| < \varepsilon$.
+$I = \int_a^b f(x) dx$ (integrand, dolní mez, horní mez, integrační proměnná x. Určitý integrál je číslo!
+
+Funkce je integrovatelná, pokud má na daním intervalu pouze konečně mnoho nespojitostí.
+
+$\int_a^b dx = b - a \qquad \int_a^a f(x) = 0$
+
+Odhad hodnoty: integrační střední hodnota $\mu = \frac{1}{b-a} \int_a^b f(x) dx$
+
+Funkce horní meze, funkce dolní meze ...
+
+\paragraph{Newton-Leibnizova věta} spojitá funkce $f(x)$ na intervalu $<a, b>$:
+
+$F'(x) = f(x)$, $\int_a^b f(x) dx = F(b) - F(a) = \left[ F(x) \right]_a^b$
+
+\paragraph{Per partes pro spojité integrály}
+
+$\int_a^b u(x) v'(x) dx = [u(x) v(x) ]_a^b - \int_a^b u'(x) v(x) dx$
+
+\paragraph{Substituce pro spojité integrály}
+
+$\int_a^b f(g(x))g'(x) dx = \int_{g(a)}^{g(b)}f(t) dt$
+
+\paragraph{Využití} Obsah rovinné oblasti, objem tělesa, objem rotačního tělesa $\pi \int_a^b f^2(x) dx$, Délka křivky, která je grafem: $L = \int_a^b \sqrt{1+[f'(x)]^2} dx$
 
 
+\subsection{Nevlastní integrál} zobecnění pro neohraničené intervaly (nekonečno):
 
+$\int_a^\infty f(x) dx = \lim\limits_{\xi \to \infty} \int_a^\xi f(x) dx$
 
+Je-li limita nevlastní, nebo neexistuje, integrál diverguje. Jinak konverguje. Nespojitost maximálně v konečném množství bodů.
 
+\section{Funkce více proměnných}
+n reálných proměnných $f: \mathbb{R}^n \to \mathbb{R}$, $f(x,y,z)$ pro $\mathbb{R}^3$.
 
+\paragraph{Složená funkce} $f:A \to \mathbb{R}, A \subset \mathbb{R}^m$ a m funkcí n proměnných $\varphi_1, \varphi_2, \dots, \varphi_m$ na množině $m \subset \mathbb{R}^n$:
+
+$f( \varphi_1(t_1, t_2, \dots, t_n),  \varphi_2(t_1, t_2, \dots, t_n), \dots \varphi_m(t_1, t_2, \dots, t_n) )$ je složená funkce (vnitřní a vnější složka).
+
+\paragraph{Vrstevnice} průmět křivky vzniklé jako řez rovinou z=k do $D_f$. Rovnice $f(x,y) = k$.
+
+\subsection{Limita a spojitost}
+
+definice formálně stejná jako pro funkci jedné proměnné.
+
+Vzdálenost v Eukleidovském prostoru: $d(X,Y) = \sqrt{(x_1 - y_1)^2 + (x_2 - y_2)^2 + \dots + (x_n - y_n)^2}$
+
+\paragraph{Otevřená množina} neobsahuje žádný bod své hranice
+\paragraph{Uzavřená množina} obsahuje všechny body své hranice
+\paragraph{Hromadný bod množiny} v každém bodě jeho redukovatelného okolí leží nějaký bod množiny
+
+\subsection{Derivace podle více proměnných}
+
+\paragraph{Parciální derivace} podle proměnné x: $f_x'(X_0)$ v okolí bodu $X_0$, pokud existuje limita $\lim\limits_{h \to 0} \left( \frac{f(x_0 +h, y_0) - f(x_0, y_0}{h} \right)$ v bodě $X_0$.
+
+Podobně pro druhou až n-tou proměnnou.
+
+\paragraph{Směrová derivace} Ne podle osy, ale podle libovolného jednotkového vektoru $u \in E_n$:
+
+$\lim\limits_{h \to 0} \frac{f(X_0 + h u) - f(X_0)}{h} = f_u'(X_0)$
+
+\paragraph{Gradient} $grad f(X_0) = (f_{x_1}'(X_0), \dots, f_{x_n}'(X_0) )$
+
+Gradient funkce v bodě $X_0$ je směr (vektor), ve kterém roste funkce nejrychleji (ve 2D je kolmý na vrstevnici).
+
+Diferenciál funkce f v bodě $X_0$: $df(X_0, h) = gradf(X_0) \cdot h = f_h'(X_0)$
+
+\paragraph{Rovnice tečné roviny} v bodě $X_0 = (x_0, y_0, f(x_0,y_0))$:
+
+$z-f(x_0, y_0) = df((x_0, y_0), (x,y)) = f_x'(x_0, y_0)(x-x_0) + f_y'(x_0, y_0)(y-y_0)$ 
+
+Normála: $(f_x'(x_0, y_0), f_y(x_0, y_0), -1)$
+
+\section{Derivace a diferenciály vyšších řádů}
+
+$f_{x_i, x_j}''(X_0) = \frac{\partial^2f}{\partial x_i \partial x_j}$ smíšená parciální derivace druhého řádu
+
+Druhá derivace funkce $f$: matice všech kombinací $x_i, X_j$.
+
+Diferenciál k-tého řádu funkce f v bodě $X_0: d^k f(X_0)$
+
+\paragraph{Taylorův polynom} $T_k(X_0)$
+
+$f(X_0) + \frac{1}{1!}df(X_0, X - X_0) + \frac{1}{2!}d^2f(X_0, X - X_0) + \dots + \frac{1}{k!}d^kf(X_0, X - X_0)$
+
+\paragraph{Extrémy funkce} Ve stacionárních bodech -- $f'(X_0) = grad  f(X_0)$. Maximum nebo minimum rozhodne znaménko druhé derivace $d^2f(X_0,h) > 0$ minimum, $< 0$ maximum. Pokud nějaký nulový, extrém nemusí nastat (sedlový bod?).
+
+\paragraph{Subdeterminanty} $D_k$ obsahují prvních k řádků a sloupců matice $f''$
+
+\paragraph{Sylvestrovo kriterium}
+\begin{itemize}
+	\item Subdeterminanty kladné: lokální minimum
+	\item Subdeterminanty $D_1, D_3, \dots $ záporné, $D_2, D_4, \dots $ kladné: lokální maximum
+	\item Subdeterminant se sudým indexem záporný, extrém nenastane
+	\item Subdeterminant s lichým indexem kladný a jiný záporný, extrém nenastane
+\end{itemize}
+
+Jestli je nějaký rovný nule, nelze rozhodnout.
+
+\paragraph{Absolutní extrémy} opět v lokálních, nebo v hraničních bodech.
+
+\section{Dvojný a trojný integrál}
+
+Integrální součet: $\sum\limits_{i = 1}^n f(\xi_i) m_1(I_i)$, kde $I_1, I_2, \dots I_n$ jsou intervaly, jejichž sjednocením je interval $<a,b>$, $m_1(I_i) = x_i - x_{i-1}$ je délka intervalu $I_i$, $\xi_i \in I_i$, $\forall i,j, i \neq j \Rightarrow m_1(I_i \cap I_j) = 0$.
+
+Pro dvojný integrál $m_2(I_i)$ je plošný obsah intervalu $I_i$ (dvojrozměrný interval)
+
+$\mathcal{J} = \int_I f(x,y) dx dy$ dvojný integrál funkce f. Určuje objem tělesa pod plochou dvojného integrálu:
+
+\paragraph{Fubininova věta} pro interval: $V = \int_a^b F(X) dx = \int_a^b \left[ \int_c^d f(x,y) dy \right] dx = \int_c^d \left[ \int_a^b f(x,y) dx \right] dy$
+
+Postupná integrace podle jednotlivých proměnných a intervalů.
+
+Transformace integrálů a převod z kartézských souřadnic do polárních, cylindrických.
 
 
 
