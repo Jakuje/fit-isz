@@ -1,10 +1,18 @@
-\documentclass[a4wide]{report}
+\documentclass[a4paper, 11pt]{report}
 \usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{multirow}
-\usepackage{a4wide}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+
+\usepackage{geometry}
+\usepackage{layout}
+
+\geometry{
+  includeheadfoot,
+  hmargin=2.0cm,
+  vmargin={0cm, 1.0cm}
+}
 
 \usepackage{color}
 \usepackage[unicode,colorlinks,hyperindex,plainpages=false,pdftex]{hyperref}
@@ -2546,6 +2554,7 @@ Algebra: definuje množinu prvků, množinu operátorů, axiomy (postuláty) a t
 			Existence komplementu: 	&$a.a' = 0$			&$a+a' = 1$		\\
 			\multicolumn{3}{l}{V množině B existují alespoň 2 různé prvky}
 		\end{tabular}
+		
 		Teorémy (odvozeny na základě axiomů. Definují další užitečné vlastnosti):\\
 		\begin{tabular}{l l l}
 			Idempotence: 			&$a+a = a$			&$a.a = a$		\\
