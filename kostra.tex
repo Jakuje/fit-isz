@@ -4482,6 +4482,344 @@ Ušetření pásek s výkonem srovnatelným s minulou metodou. Pouze k+1 pásek,
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{29}
+\chapter{Životní cyklus softwaru} \label{cha:30}
+
+1. semestr, IUS, 
+
+(charakteristika etap a základních modelů)
+
+\subsection{Softwarové inženýrství}
+Systematický přístup k vývoji, nasazení a údržbě software.
+
+Disciplína zabývající se praktickými problémy vývoje rozsáhlejších SW projektů.
+
+Důvodem je zlepšení vlastností SW (SW je všudypřítomný), zlepšení spolehlivosti, bezpečnosti, použitelnosti.
+
+\paragraph{Kvalita} Čas $\times$ Cena $\times$ Splnění požadavků
+
+\subsection{Vývoj}
+\paragraph{60. léta} Strukturované programování, neúnosné prodlužování projektů.
+
+\paragraph{70. léta} Metoda shora dolů (rozklad problémů na podproblémy), programování v týmech, metodologie (analýza a návrh důležitější), ADT
+
+\paragraph{80. léta} Vývojová prostředí, IDE, objektová orientace, důležitější nasazení a údržba SW
+
+\paragraph{90. léta} Prototypování, znovupoužitelnost, OOP, Java, OO specifikace a návrh, opensource, využití internetu, distribuovaný vývoj i využití SW
+
+UML, formální techniky pro analýzu a verifikaci systémů, důraz na podporu zákazníků, servis a údržbu. Metody návrhu založené na modelech.
+
+\subsection{Cíle}
+\paragraph{Management projektu} řízení životního cyklu , efektivní práce s časem a zdroji.
+
+\paragraph{Techniky} Analýza, návrh, programování, testování
+
+\paragraph{Vlastnosti SW inženýra} Báze znalostí, schopnost je aplikovat, schopnost získávat nové.
+
+\subsection{SW}
+\begin{description}
+	\item[Generický] Libovolný zájemce, dobře otestované (opravy drahé), krabicový SW
+	\item[Zákaznické] Na objednávku, specializované aplikace, většinou vyšší cena
+\end{description}
+
+\subsection{Vlastnosti SW}
+\begin{description}
+	\item[Použití] \hfill
+	\begin{description}
+		\item[Správnost] splnění specifikace
+		\item[Spolehlivost] pravděpodobnost, že SW bude v daném čase vykonávat zamýšlenou funkci
+		\item[Efektivnost] využití zdrojů, využití nákladů na vývoj
+		\item[Použitelnost] úsilí, které je potřeba vynaložit na to, aby se dal používat
+		\item[Bezpečnost] míra odolnosti proti neoprávněným zásahům do systému
+	\end{description}
+	\item[Přenos] \hfill
+	\begin{description}
+		\item[Přenositelnost] úsilí, které je potřeba vynaložit pro přenos na jinou platformu
+		\item[Znovupoužitelnost] jednotlivých částí
+		\item[Interoperabilita] úsilí pro zajištění spolupráce s jinými systémy
+	\end{description}
+	\item[Změny] \hfill
+	\begin{description}
+		\item[Udržovatelnost] úsilí, které je potřeba vynaložit na další vývoj, podle měnících se potřeb
+		\item[Testovatelnost] úsilí nutní pro testování
+		\item[Dokumentovanost] míra, do které jsou všechna rozhodnutí při vývoji dokumentována
+	\end{description}
+\end{description}
+
+\subsection{Problémy vývoje SW} Nevyhnutelné: Složitost, Přizpůsobivost, Nestálost
+
+\paragraph{Problémy, které se nemusí projevit vždy}
+\begin{itemize}
+	\item Specifikace požadavků (nejasná, neúplná, plánování)
+	\item Náchylnost SW k chybám
+	\item Práce v týmu -- organizace, plánování, komunikace, výkonost
+	\item Nízká znovupoužitelnost
+	\item Tvorba dokumentace -- konzistence, úplnost
+	\item Stárnutí SW -- přidávání nové funkcionality degraduje struktury (a přidává další chyby).
+\end{itemize}
+
+\paragraph{Validace} ověření, zda model/specifikace odpovídá skutečným potřebám
+\paragraph{Metodologie} zabývá se tvorbou a aplikací metod
+\paragraph{Metodika} souhrn doporučených praktik a postupů (automatizované SW inženýrství, modelování procesů, datové modelování, modelovací jazyky, \emph{proces vývoje software}, řízení
+
+\section{Proces vývoje software}
+
+Potřeby uživatele $\Rightarrow$ Požadavky na SW $\Rightarrow$ Návrh $\Rightarrow$ Implementace $\Rightarrow$ Testování $\Rightarrow$ Předání uživateli
+
+Určení kdo co kdy a jak bude dělat.
+
+\paragraph{Životní cyklus} rozděluje proces vývoje SW na, za sebou jdoucí, etapy s cílem. Existují různé metodické přístupy.
+
+\subsection{Analýza a specifikace požadavků}
+Identifikace požadavků uživatele na systém, transformace neformálních do strukturovaných, studium vhodnosti, identifikace a analýza rizik, plánování akceptačního testování.
+
+\subsection{Architektonický návrh}
+Koncepce systému, dekompozice, vztahy, funkcionalita a ohraničení podsystémů (nezávislý vývoj, pozornost pouze na část problému), plánování testování a nasazení systému (rozhraní podsystému).
+
+\subsection{Podrobná návrh}
+Podrobná specifikace SW součástí, algoritmů, rozhraní, způsobu ošetření chybových a neočekávaných stavů. Plán prací při implementaci, plán testování, návrh testovacích dat. Specifikace požadavků na lidské zdroje
+
+\subsection{Implementace a testování součástí}
+Programová realizace SW součástí, dokumentace, testování součástí, začátek zaškolování uživatelů.
+
+\subsection{Implementace a testování systému}
+Spojení součástí do podsystémů, integrace podsystémů do systému, testování, opravy, návraty k implementaci součástí.
+
+\subsection{Akceptační testování systému} Testování uživatelem, přebírání, školení uživatelů, nasazení.
+
+\subsection{Provoz a údržba}
+Zabezpečení provozu SW, řešení problémů s nasazením a používáním, opravy, rozšiřování, přizpůsobení SW podle požadavků
+
+\subsection{Role}
+\begin{description}
+	\item[Zákazník] Sponzoruje vývoj, specifikuje požadavky
+	\item[Dodavatel] Vyvíjí systém, komunikuje s uživatelem, má závazky vůči zákazníkovi
+	\item[Uživatel] Používá systém, testuje, upřesňuje požadavky
+\end{description}
+
+\section{Modely životního cyklu SW}
+Určují etapy, časovou následnost, činnost, vstupy a výstupy etap
+
+\subsection{Lineární (sekvenční) modely} Postupně od první etapy po poslední
+
+\paragraph{Vodopádový model} následující etapa začíná až po dokončení předchozí, existuje možnost návratu k předchozí etapě.
+
+Lineární, oblíbený v 70. letech. Dobré výsledky, struktura pro stálé požadavky. Uživatel se účastní pouze definice požadavků a nasazení systému.
+
+\paragraph{V-model} větší důraz na testování. Každá etapa je v jiné etapě otestována.
+
+\subsection{Iterativní modely}
+Sekvence etap (vodopád) se v cyklu opakuje. Více iterací, v každé iteraci vzniká reálný výsledek, který může zákazník validovat. Náročnější na řízení, potenciálně horší struktura se změnami požadavků.
+
+\subsection{Prototypování} bývá součástí jiných modelů a metodik. Částečná implementace, většinou vnějšího rozhraní, kterou může zákazník schválit.
+
+\subsection{Inkrementální model}
+Kombinace lineárního a iterativního. Stanovení ucelených částí, pro každou se aplikuje vodopád, postupné předávání uživateli, jednodušší změny během vývoje. Důležitost dobře specifikovaných rozhraní podsystémů.
+
+\subsection{Spirálový model}
+Prototypování a analýza rizik, jednotlivé kroky se opakují na vyšší úrovni zvládnuté problematiky. Vyžaduje stálou spolupráci zákazníka.
+
+\subsection{RAD -- Rapid application development}
+
+Rychlý iterativní vývoj prototypů. Co nejdříve nějaká funkční verze, intenzivní zapojení zákazníka.
+
+Priorita plnění business požadavků, inženýrské a technologické kvality mají nižší priritu.
+
+\subsection{RUP -- Rational Unified Process}
+
+\paragraph{6 základních praktik}
+\begin{itemize}
+	\item Využívání existujících komponent
+	\item Verze, Iterační způsob vývoje
+	\item Model systému vizualizován -- UML
+	\item Průběžná kontrola kvality kódu -- objektivní měření, metriky
+	\item Správa požadavků na systém -- umění získat od zákazníka
+	\item Řízen změn v systému -- sledovatelnost, přijatelnost
+\end{itemize}
+
+Jednotlivé etapy vývoje se překrývají.
+
+Další metodiky jsou modfifikované verze vodopádu, nebo agilní metodiky.
+
+\subsection{Role}
+\begin{description}
+	\item[Programátor] návrh technického řešení, implementace, ladění, předem daný cíl
+	\item[Analytik] vytvářejí cíle projektu, zpracovávají specifikační dokumenty, diplomatické vztahy se zákazníkem.
+\end{description}
+
+\section{Analýza a specifikace požadavků (8\% času)}
+
+\emph{Cíl}: Stanovení služeb, které zákazník od systému požaduje a vymezení podmínek jeho vývoje a provozu.
+
+\paragraph{Požadavky}
+\begin{itemize}
+	\item Funkcionální
+	\item Na provoz systému -- statické (počet uživatelů), dynamické (požadovaná odezva)
+	\item Na výsledný systém -- počítačové, programové vybavení
+	\item Vývojový proces -- normy, odevzdání
+	\item Rozhraní -- uživatelské, s jinými systémy
+	\item Externí -- legislativa
+\end{itemize}
+
+Požadavek -- Přijatý -- Zrušený / Akceptovaný -- Řešený -- Ukončený.
+
+Specifikace musí být detailní -- pro SW vývojáře.
+
+\paragraph{metody získávání informací}
+interview, dotazníky, studium dokumentů, pozorování prací u zákazníka, přímá účast na pracích u zákazníka, analýza existujícího SW.
+
+\paragraph{Problémy} různorodost požadavů, komunikace se zákazníkem, přirozený jazyk nejednoznačný
+
+\section{Implementace SW}
+
+Transformace návrhu jednotlivých podsystémů a jejich vzájemných vazeb do programové realizace.
+
+Kritéria: srozumitelnost, čitelnost, udržovatelnost, efektivnost (aplikace, procesu vývoje), přenositelnost.
+
+Důležité jsou jasné cíle.
+
+S 4GL (jazyky 4. generace -- oop) se časový podíl implementace snižuje (IDE, vizuální programování).
+
+\paragraph{Správa verzí} inteligentní sdílení, zálohování -- SVN, CVS, GIT
+
+\subsection{Strategie}
+\begin{description}
+	\item[Zdola nahoru] systém lze předvádět až po úplném dokončení, testování samostatných částí je jednodušší, chyby v logice systému se odhalí až nakonec.
+	\item[Shora dolů] možnost demonstrovat již brzy, potřeba simulovat podsystémy pro testování.
+\end{description}
+Používá se kombinace obou přístupů.
+
+\subsection{Dokumentace}
+\begin{description}
+	\item[Interní] Slouží k opravě chyb, údržbě
+	\item[Externí] Popisy problémů, algoritmy, oprostěná od programu
+	\item[Hlavičky souborů]
+	\item[Komentáře v kódu] nestandardní, neočekávané obraty, algoritmy.
+\end{description}
+
+\section{Validace a verifikace programu}
+
+Validace = správný výrobek?, verifikace = správně udělaný?
+
+Má odhalit chyby během vývoje a prokázat požadované vlastnosti.
+
+\begin{description}
+	\item[Statické] Není potřeba běh programu, formální nebo neformální, matematická verifikace
+	\item[Dynamické] vybrat vstupy u kterých je pravděpodobné, že by mohly mít chybné výstupy
+\end{description}
+
+\section{Agilní metodiky}
+
+\paragraph{Metodika} disciplinovaný proces nad vývojem SW s cílem zajistit tento vývoj více predikovatelná a efektivní
+
+Problém heavyweight metod je příliš mnoho byrokracie (předepsané aktivity a dokumentace). Agilní metodiky přináší kompromis pro menší projekty a týmy (decentralizace, vyšší orientace na lidi).
+
+U většiny projektů lze těžko predikovat proces vývoje, protože nejsou fixní požadavky. Agilní metodiky používají iterativní přístup, který umožňuje plán přizpůsobit a zpřesňovat.
+
+\begin{description}
+	\item[Process-oriented] lidé jsou zdroje (nahraditelné, pevné role), dokumentace je komunikační prostředek.
+	
+	Fixní funkcionalita a kvalita $\Rightarrow$ Variabilní cena a čas
+	\item[People-oriented] důležitá je kvalita lidí (těžko nahraditelní), osobní rozvoj, role se může měnit. Hlavní komunikační prostředek je osobní komunikace.
+	
+	Fixní cena a čas $\Rightarrow$ Variabilní funkcionalita a kvalita.
+	
+	Rychle vyvinout a na základě zpětné vazby upravovat.
+\end{description}
+
+\subsection{Extreme programming (XP)}
+\begin{description}
+	\item[Komunikace] programátoři, manažeři, zákazník
+	\item[Zpětná vazba] snaha mít co nejdříve nejdůležitější části v provozu
+	\item[Jednoduchost] jednoduché věci dělat jednoduše (dají se rozšířit)
+	\item[Odvaha] zahodit kód, zkosit namáhavé, zásadní změny
+	\item[(Malé) přírustkové změny] uvolnění malých verzí systému často
+	\item[Testování] Automatizované, ke každé funkci, psané dříve než kód
+	\item[Párové programování] jeden píše, druhý sleduje, přemýšlí o kódu, u jednoho PC
+	\item[Refaktorizace] zjednodušení, změna architektury
+\end{description}
+
+Jednotlivé iterace mají 1-4 týdny. V první se definují základy v dalších se rozšiřují.
+
+\subsection{Crystal}
+Základní principy XP, není tak přísně disciplinovaný (použitelný pro více lidí).
+
+\subsection{Scrum}
+Iterace má 30 dní, na začátku se stanoví požadavky, každý den 15 minut setkání a zhodnocení co se udělalo, co se má udělat a jaké problémy nastaly.
+
+Může se kombinovat s praktikami XP.
+
+\subsection{RUP}
+Lze použít i jako agilní metodiku.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Jazyk UML} \label{cha:31}
+
+1. semestr, IUS, 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setcounter{chapter}{33}
 \chapter{Principy a struktury správy souborů a správy paměti} \label{cha:34}
 
