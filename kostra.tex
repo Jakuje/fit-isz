@@ -4485,7 +4485,7 @@ Ušetření pásek s výkonem srovnatelným s minulou metodou. Pouze k+1 pásek,
 \setcounter{chapter}{29}
 \chapter{Životní cyklus softwaru} \label{cha:30}
 
-1. semestr, IUS, 
+1. semestr, IUS, přednášky
 
 (charakteristika etap a základních modelů)
 
@@ -4752,7 +4752,25 @@ Může se kombinovat s praktikami XP.
 \subsection{RUP}
 Lze použít i jako agilní metodiku.
 
+\section{Analýza a návrh}
 
+\subsection{Strukturovaná}
+Modely konceptuální, logické a fyzické
+
+Funkční modelování, minispecifikace. Datové modelování: ERD, STD
+
+\subsection{Objektový}
+Kolekce vzájemně komunikujících objektů.
+
+Analýza a návrh zahrnuje prostředky + metodiky. Obecně vyšší stabilita pro měnící se požadavky.
+
+Zapouzdření Data -- Metody -- Protokol.
+
+Abstrakce, zapouzdření, polymorfizmus, dědičnost.
+
+Třídní přístup -- objekty klasifikovány do tříd. Operace s objekty jsou implementovány metodami.
+
+Identita a shoda objektů.
 
 
 
@@ -4791,7 +4809,128 @@ Lze použít i jako agilní metodiku.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Jazyk UML} \label{cha:31}
 
-1. semestr, IUS, 
+1. semestr, IUS, zbývající přednášky
+
+\section{UML}
+Unified Modelling language -- základ od RUP, inspirován existujícími analytickými jazyky a modely. Základem je \emph{diagram tříd}.
+
+\begin{description}
+	\item[Statický model (struktura)] \hfill
+	\begin{itemize}
+		\item Diagram tříd
+		\item Diagram komponent
+		\item Diagram nasazení
+	\end{itemize}
+	\item[Dynamický model (chování)] \hfill
+	\begin{itemize}
+		\item Objektový diagram
+		\item Diagram případů užití (1) Požadavky
+		\item Sekvenční diagram
+		\item Diagram spolupráce
+		\item Stavový diagram (3) Návrh
+		\item Diagram aktivit (2) Analýza
+	\end{itemize}
+\end{description}
+
+\subsection{Analýza}
+
+\paragraph{Analytické třídy}
+mapují problémové domény na abstraktní entity modelu. Jen nejpodstatnější atributy, operace, množiny odpovědnosti a vazby.
+
+\paragraph{Objektové diagramy}
+objekty a jejich relace v určitém čase (dynamické)
+
+\paragraph{Analytické balíčky}
+seskupení sémantiky souvisejících elementů, zapouzdření prostoru jmen.
+
+Obsahují: Use Case, Analytické třídy, Realizace případů užití a další.
+
+\paragraph{Diagram interakce: Diagram spolupráce}
+Strukturální relace mezi objekty a spolupráce při plnění úkolu.
+
+\paragraph{Diagram interakce: Sekvenční diagramy}
+interakce objektů vzhledem k času. Každý objekt má vlastní časovou osu a předává řízení jiným objektům. Mohou být omezení.
+
+\subsection{Návrh}
+Upřesňování analytických diagramů, realizace případů užití.
+
+\paragraph{Návrhové třídy}
+lze je přímo implementovat, využití tříd doménového řešení (GUI, knihovny). Upřesnění analytických tříd.
+
+\paragraph{Stavové diagramy}
+Stavové automaty (diagramy aktivit). Modelují životní cyklus jednoho reaktivního objektu (řada stavů, přechodů a událostí). Stavy mohou být složené, obsahovat události, podmínky ...
+
+
+\section{Diagram tříd}
+Zobrazení tříd a statických vztahů mezi nimi.
+
+Přepisování (overwriting) -- dědičnost, náhrada metody v podřazené třídě\\
+Přetěžování (overriding) -- vícenásobná definice operace (např. různé parametry).
+
+\subsection{Vztahy}
+\begin{description}
+	\item[Asociace] zachycuje vztah tříd z různých perspektiv (násobnosti, název). Může být povýšena na asociační třídu.
+	\begin{description}
+		\item[Agregace] seskupení, celek je složen z více částí (stejná třída)
+		\item[Kompozice] seskupení, celek je složen z více částí (různé třídu). Implicitní násobnost 1
+		\item[Závislost] pomocí stereotypů, nebo speciální. Např. \verb|<<use>>|
+	\end{description}
+	\item[Realizace] vztah mezi třídou a nadtřídou (generalizace/specifikace)
+\end{description}
+
+Dědičnost -- implementace třídy pomocí nějaké jiné, předefinování metod\\
+Skládání -- složení z existujících objektů.
+
+\section{Diagram případu užití}
+Zobrazuje účastníky + případy užití + hranice systému. Funkce, které systém vykonává ve prospěch, nebo jménem konkrétních účastníků.
+
+\section{Detail případů užití}
+Konkretizace případu užití -- většinou tabulka. Obsahuje název, identifikátor, specifikaci (vstupní podmínky, účastníci, tok událostí, alternativní toky, následné podmínky).
+
+Umožňuje zobecnit účastníka, zobecnit případu užití, vazby \verb|<<include>>|, \verb|<<extend>>|. Účelem je jednoduchost a čitelnost pro uživatele.
+
+\section{Data Flow diagram (DFD)}
+Strukturovaná analýza a návrh pro specifikaci chování. Hierarchický, obsahuje informace o datových skladech. Doplněn minispecifikacemi. Popisuje funkce.
+
+\section{ER diagram}
+Zobrazuje data a vztahu mezi nimi v klidu.
+
+\begin{description}
+	\item[Entita] věc reálného světa
+	\item[Entitní množina] množina entit téhož typu
+	\item[Atribut] vlastnost entity
+	\begin{itemize}
+		\item Jednoduché x Složené
+		\item Jednohodnotové, prázdné, odvozené (věk)
+	\end{itemize}
+	\item[Vztah] asociace mezi několika entitami
+	\begin{description}
+		\item[Jméno] vztahové množiny, role
+		\item[Stupeň] počet entitních množin, které spojuje
+		\item[Kardinalita] maximální počet vztahů daného typy 1 nebo N
+		\item[Členství/Účast] minimální počet vztahů daného typu 0 nebo 1 (volitelně/povinně)
+		\item[Atributy] vztah povýšený na entitu
+	\end{description}
+	\item[Vztahová množina] Množina vztahů téhož typu, které sdílí tytéž vlastnosti
+\end{description}
+
+Zobrazuje pouze data, atribut pouze jednou. Data pro účely databáze a ne tiskové sestavy. Systém by neměl být zahrnut v ERD.
+
+Slabé entitní množiny, převod N:M na dva dvě vazby 1:N.
+
+\section{Stavový diagram (STD)}
+Zobrazuje chování systému v závislosti na čase. Obsahuje stavy (počáteční, koncové), Změny/Přechody -- monou být podmíněné. Každá změna může vyvolat akci (zaslanou okolí systému /výpočet).
+
+
+\section{OCL = Object Constraint Language}
+formální jazyk pro UML -- umožňuje definovat omezení a podmínky (zpřesnění modelu). Přináší přesnější modelování kódu (podmínky pro vykonání metod, invarianty, počáteční hodnoty atributů, těla operací, precondition, postcondition).
+
+
+
+
+
+
+
 
 
 
