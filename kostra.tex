@@ -88,7 +88,8 @@
 
 (dioda, bipolární a unipolární tranzistor ve spínacím režimu, realizace logických členů NAND a NOR v technologii CMOS)
 
-
+%1. Princip činnosti polovodičových prvků
+%Za tu minutu jsem si moc nestihnul napsat, ale lepsi nez nic. Zacal jsem diodou, ale chteli napred vedet co je to polovodic. Rekl jsem ze to je material, ktery vede el. proud jen za urcitych podminek. Pak jsem tedy nakreslil PN prechod, oznacil +/- v propustnem smeru, zeptal se me, kde jsou diry a elektrony, tak jsem to tam nakreslil. Pak chtel VA charakteristiku, taky jsem nakreslil a zminil jsem, ze prurazem se znici (chtel jsem zminit Zenerovu jeste, ale nedostal jsem se), pak chtel nakreslit bipolarni a unipolarni tranzistor, bipolarni jsem nakrelil v kolecku a unipolarni bez kolecka, u unipolarniho jsem ale oznacil vyvody taky jako B, C, E (misto S, G, D), ale to mu az tak nevadilo. Zeptal se me asi spis ze zajimavosti, jestli vim, proc se kresli nekdy s koleckem a bez, normalne bych k tomu dosel, ale radsi jsem neriskoval, ze budu placat, tak rekl on, ze to je pouzdro a ze kdyz jsou na integrovanem obvode, tak jsou bez kolecka. Pak cim se tranzistor spina, tak jsem nejdriv spatne rikal ze napetim na bazi, pak jsem si uvedomil, ze zalezi na proudu mezi bazi a emitorem, pak se zeptal jak je to u toho unipolaru, tam jsem rikal ze je to tim napetim a ze se tam tvori vodivy "tunel" (misto kanal ). Nakonec chtel abych nakreslil zapojeni trazistoru ktere realizuji NAND, v tom jsem se motal. Zvonil budik ale nechal me tam neco stvorit, nakreslil jsem dva tranzistory v serii, tak se me alespon zeptal, co realizuje to co jsem nakreslil, tak jsem rikal ze AND (on doplnil ze s tim ze to neni komplementarni - chybi tam ty dalsi dva). V podstate dobry, zbytecne jsem zmatkoval, na nem bylo videt, ze by to chtel kvalitneji a na lepsi urovni. Zkouska tedy za C.
 
 
 
@@ -4814,6 +4815,7 @@ Identita a shoda objektů.
 
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Jazyk UML} \label{cha:31}
@@ -4910,7 +4912,7 @@ Zobrazuje data a vztahu mezi nimi v klidu.
 	\item[Atribut] vlastnost entity
 	\begin{itemize}
 		\item Jednoduché x Složené
-		\item Jednohodnotové, prázdné, odvozené (věk)
+		\item Jednohodnotové x vícehodnotové, prázdné, odvozené (věk)
 	\end{itemize}
 	\item[Vztah] asociace mezi několika entitami
 	\begin{description}
@@ -4966,9 +4968,445 @@ formální jazyk pro UML -- umožňuje definovat omezení a podmínky (zpřesně
 
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setcounter{chapter}{33}
+\chapter{Konceptuální modelování a návrh relační databáze.} \label{cha:32}
+
+4. semestr, IDS, přednášky
+
+Fáze datové, popřípadě objektové analýzy využívající modelů založených na objektech aplikační domény.
+
+\paragraph{Strukturovaný návrh}
+Východiskem pro konceptuální modelování je \emph{ER Diagram (UML)} $\Rightarrow$Modifikace na základě funkčních požadavků $\Rightarrow$ Převod datového modelu na logické schéma databáze.
+
+\paragraph{Objektový návrh}
+Východiskem diagram tříd. Zanedbáváme metody, modelujeme perzistentní data.
+
+Máme tedy entitní množiny, které transformujeme na prvotní schéma a následně \emph{normalizujeme}.
+
+\begin{description}
+	\item[Atribut] vlastnost entity, která nás v kontextu daného problému zajímá.
+	\begin{itemize}
+		\item Jednoduché $\times$ Složené
+		\item Jednohodnotové $\times$ Vícehodnotové
+		\item Povolující prázdnou hodnotu (NULL)
+		\item Odvozené (věk z data narození)
+	\end{itemize}
+	\item[Doména atributu] obor hodnot atributu
+	\item[Identifikátor (Primární klíč)] (entitní nebo vztahová množiny). Atribut, jehož hodnota je v rámci celé množiny jednoznačná a neredukovatelná (v případě složeného klíče)
+	\item[Vztah] \hfill
+	\begin{itemize}
+		\item Jméno
+		\item stupeň (počet spojujících entit)
+		\item Kardinalita (1, N)
+		\item Členství (min. kardinalita: 0, 1)
+	\end{itemize}
+	\item[Slabá entitní množina] závislá na jiné dominantní entitní množině
+	\item[Dědičnost (Generalizace/Specifikace)] Stejný identifikátor, různé možnosti implementace
+	\item[Náhrada vztahů N:M] za vztahy 1:N
+\end{description}
+
+\paragraph{Špatný návrh}
+\begin{itemize}
+	\item Opakující se informace
+	\item Nemožnost reprezentovat určitou informaci
+	\item Složitá kontrola integritních omezení
+\end{itemize}
+
+\section{Postup převodu ERD na návrh databáze}
+\begin{description}
+	\item[Odstranění složených atributů] Další entitní množina, nebo pevný počet opakování
+	\item[Odstranění vícehodnotových atributů] Několik jednoduchých atributů
+	\item[Reprezentace silné entitní množiny] TE(a1, a2, \dots, an)
+	\item[Reprezentace vztahů] \hfill
+	\begin{description}
+		\item[1:1] Atributy vztahu umístit k jedné z nich
+		\item[1:N] Atributy vztahu umístit k množině s N opakováním
+		\item[M:N] Atributy jsou umístěny v nové entitní množině
+	\end{description}
+	\item[Reprezentace slabé entitní množiny] jako silná + vztah 1:M k dominantní
+	\item[Reprezentace ternárních vztahů] nová entitní množina
+	\item[Generalizace/Specifikace] Různé možnosti
+	\begin{itemize}
+		\item Tabulka pro nadtyp a tabulky podtypu s PK nadtypu
+		\item Pouze tabulky podtypů i s atributy nadtypů
+		\item Všechno v jedné tabulce, rozlišení pomoc diskriminátoru nebo podle prázdných hodnot
+	\end{itemize}
+\end{description}
+
+\section{Transformace objektového návrhu}
+\begin{itemize}
+	\item Neuvažujeme operace
+	\item Identifikace pomocí OID (nepoužitelné). Pokud není identifikátor, nějaký vytvořit
+	\item Řešení vztahů generalizace/specifikace, agregace, kompozice (složitější)
+\end{itemize}
+
+\section{Normalizace schématu}
+Založena na 3 typech závislostí mezi atributy relace
+\begin{description}
+	\item[Funkční závislost] $X \to Y$ hodnota atributu relace určuje jednoznačně hodnotu jiného atributu téže relace (Y je funkčně závislé na X)
+	\begin{description}
+		\item[Plná funkční závislost] funkčně závislý na celém složeném atributu
+		\item[Tranzitivní závislost] atribut je plně funkčně závislý na jiném funkčně závislém atributu
+	\end{description}
+	\item[Vícehodnotové závislosti]
+	\item[Závislosti na spojení]
+\end{description}
+
+Podmínka: Společný atribut musí být kandidátním klíčem alespoň jedné z tabulek.
+
+\subsection{Normální formy}
+Požadavek na vlastnosti schématu relace z pohledu závislostí mezi atributy.
+
+\begin{description}
+	\item[1NF] Všechny jednoduché domény obsahují pouze atomické hodnoty
+	\item[2NF] Každý neklíčový atribut je plně funkčně závislý na každém kandidátním klíči.
+	\item[3NF] Neexistuje žádný neklíčová atribut, který je tranzitivně závislý na některém kandidátním klíči.
+	\item[BCNF] (Boyce-Coddova normální forma) Může existovat více kandidátních klíčů, mohou být složené, mohou se překrývat.
+	
+	Pro každou netriviální funkční závislost $X \to Y$ je X superklíčem (nadmnožinou kandidátního klíče).
+	
+	Není vždy splnitelné.
+	
+	\item[4NF] Vlastnosti pro atributy relace s ohledem na vícehodnotové závislosti
+	\item[5NF] Vlastnosti pro atributy relace s ohledem na závislosti na spojení
+\end{description}
+
+Databáze je v n-té normální formě, pokud všechny její relace splňují alespoň n-tou NF.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Relační datový model a jazyk SQL.} \label{cha:33}
+
+4. semestr, IDS, přednášky
+
+\section{Historie}
+\begin{description}
+	\item[50. léta] vše v programu
+	\item[60. léta] systém pro ovládání souborů (hromadné zpracování dat). Problémy s redundancí, konzistencí, bezpečností, integritou.
+	\item[pol. 60. let] Databázové technologie, SŘBD -- datová nezávislost.
+	\item[70. léta] snaha o standardizaci
+\end{description}
+
+\section{Slovník pojmů aneb nevím jak to už pojmenovat}
+\begin{description}
+	\item[Databáze] perzistentní data
+	\item[Perzistentní data] data s dobou života přesahující běh programu i vypnutí počítače.
+	
+	Data mohou být sdílená, jsou bezpečná a splňují integritní omezení.
+	\item[Konzistence dat] nerozporuplnost
+	\item[SŘBD] programová vrstva řídící operace nad databází -- odstiňuje uživatele od technických detailů
+	\item[Úrovně pohledu na data]
+	\begin{description}
+		\item[Fyzická] jak jsou uložena na disku/v souborech
+		\item[Konceptuální/Logická] jaká jsou to data, vztahy mezi nimi
+		\item[Externí] Jak data vnímají jednotliví uživatelé (pohledy)
+	\end{description}
+\end{description}
+
+\paragraph{Datové modely}
+kolekce konceptuálních nástrojů pro popis objektů reality, sémantika, vztahy, reprezentovaná data, integritní omezení.
+
+\subsection{Podle úrovně modelování}
+\begin{description}
+	\item[Logické modely] Konceptuální, pohledy
+	\begin{itemize}
+		\item Modely pro modelování objektů reálného světa
+		\item Databázové modely definující logickou organizaci dat v databázi
+	\end{itemize}
+	\item[Fyzické modely]
+\end{description}
+
+\subsection{Podle druhů vazeb}
+\begin{description}
+	\item[Hierarchický] strom, navigační programování
+	\item[Síťový] množina záznamů + pojmenované vazby, stále navigační manipulace
+	\item[Relační] Na logické úrovni tabulky, atomické hodnoty, výběr, vložení, úprava tabulky po řádcích.
+	
+	Jednoduchá struktura, jednoduché operace, informace rozptýlena po tabulkách.
+	
+	Schéma databáze je v systémovém katalogu.
+	
+	\item[Objektově orientované, objektově-relační] (postrelační)
+\end{description}
+
+\subsection{Datová nezávislost}
+možnost modifikovat schéma bez vlivu na vyšší úrovně
+\begin{description}
+	\item[Fyzická] modifikace fyzického schématu (uložení na disku) bez nutnosti zasahovat do aplikace
+	\item[Logická] schopnost modifikovat logické schéma bez nutnosti zasahovat do aplikace aplikace (přidat sloupec)
+\end{description}
+
+\subsection{Databázové dotazovací jazyky}
+
+\begin{description}
+	\item[DDL] Data Definition Language -- definice dat, aktualizace systémového katalogu
+	\item[DML] Data Manipulation Language -- Vyhledávání, vkládání, aktualizace, rušení
+	\item[DCL] Data Controll Language -- kontrola přístupu k datům, definice integritních omezení
+	\item[ostatní] Transakce
+\end{description}
+
+\section{Relační model dat}
+Oddělení logické struktury dat od implementace, matematická podpora (E.F.Codd).
+
+\begin{description}
+	\item[Doména] Pojmenovaná množina skalárních hodnot téhož typu
+	\item[Skalární hodnota] atomická, nejmenší sémantická jednotka dat
+	\item[Složená doména] z několika domén
+	\item[Relace] na doménách $D_1, D_2, \dots D_n$ je dvojice $R = (R, R^*)$, kde $R = R(A_1:D_1, A_2:D_2, \dots, A_n:D_n)$ je schéma relace a $R^* \subseteq D_1 \times D_2 \times \dots \times D_n$ je tělo relace. Počet atributů n = řád (stupeň) relace.
+\end{description}
+
+tabulka = znázornění relace
+
+\paragraph{Integritní pravidla} omezení plynoucí z reality. Mohou být
+\begin{itemize}
+	\item Speciální pro konkrétní aplikaci
+	\item Obecná pro každou databázi
+\end{itemize}
+
+\paragraph{Primární klíč} jednoznačně identifikuje n-tici v relaci. Nesmí být prázdný (NULL). Jeden z kandidátních klíčů (jednoznačný, minimální)
+
+\paragraph{Cizí klíč} atribut FK bázové relace R2. Každá hodnota musí být plně zadaná nebo nezadaná. Musí existovat odpovídající kandidátní klíč v R1.
+
+\paragraph{Referenční integrita} relace nesmí obsahovat žádnou nesouhlasnou hodnotu cizího klíče.
+
+\section{Relační algebra}
+$RA = (R,O)$, kde R jsou Relace a O jsou operace:
+
+\begin{description}
+	\item[Sjednocení] $R_1 = R( R, R_1^*)$, $R_2 = R( R, R_2^*)$
+	
+	$R_1 \text{ union } R_2 = (R, R_1^* \cup R_2^*)$
+	
+	\item[Průnik] $R_1 \text{ intersect } R_2 = (R, R_1^* \cup R_2^*)$
+	\item[Rozdíl] podobně
+	\item[Kartézský součin] $R_1 = R( R_1, R_1^*)$, $R_2 = R( R_1, R_2^*)$
+	
+	$R_1 \text{ times } = ( (R_1, R_2), R_1^* \times R_2^*)$
+	
+	\item[Projekce] $R = (R, R^*)$ na atributy X, Y, \dots, Z je relace R[X, Y, \dots, Z] se schématem (X,Y,Z) a tělem zahrnujícím všechny n-tice t = (x,y, \dots, z) takové, že v $R^*$ existuje n-tice $t'$ s hodnotou atributu X rovnou x, Y = y, \dots
+	\item[Selekce] (restrikce) relace $R = (R, R^*)$ na atributech X, Y a s operátorem $\theta$ je relace $R \text{ where } X \theta Y$, která má stejné schéma a obsahuje všechny n-tice pro které platí $x \theta y$, kde x je hodnota atributu X a y je hodnota atributu Y.
+	\item[Spojení] $R_1(X_1, X_2, \dots, X_m, Y_1, Y_2, \dots, Y_n) \quad R_2(Y_1, Y_2, \dots, Y_n, Z_1, Z_2, \dots, Z_k)$ a atributy x, y, z: $R_1 join R_2$ je relace se schématem $(X, Y, Z)$ a tělem zahrnujícím všechny n-tice  s hodnout X a Y v $R_1^*$ a Y a Z v $R_2^*$.
+\end{description}
+
+Dále pak přiřazení, přejmenování a agregace
+
+Základ pro optimalizaci dotazů. Implementace jazyka SQL je relačně úplná, pokud je aspoň tak mocná, jako relační algebra.
+
+\section{Jazyk SQL}
+
+od roku 1975 řada dialektů, standardizace SQL/92, později SQL/99. Různé úrovně implementace (Entry).
+
+\subsection{Kontexty použití SQL}
+\begin{description}
+	\item[Přímý (direct)]
+	\item[Hostitelská verze (embedded)]
+	\item[Jazyk modulů] (vyšší programovací jazyk)
+\end{description}
+
+\subsection{Kategorie příkazů}
+\begin{description}
+	\item[Definice dat] DDL -- Data Definition Language
+	
+	CREATE, DROP, ALTER TABLE sloupce, integritní omezení (CHECK, PRIMARY KEY). Sloupec: jméno, typ, výchozí hodnota, io
+	
+	Datové typy: CHARACTER, NUMERIC, DATE, TIME, od SQL/99 BOOLEAN, BLOB, zkratky VARCHAR, literály
+	
+	události ONUPDATE, ONDELETE -- co se stane s odkazovanými tabulkami
+	
+	CREATE SYNONYM -- přístup k tabulce jiných uživatelů
+	
+	CREATE SEQUENCE -- sekvence primárních klíčů
+	\item[Manipulace s daty] DML -- Data Manipulation Language
+	
+	SELECT, UPDATE, DELETE -- operandy: bázové tabulky, výsledkem je opět tabulka
+	
+	SELECT ALL/DISTINCT položka AS alias FROM tabulka AS alias WHERE podminka GROUP BY sloupce pro seskupení HAVING podminka po agregaci ORDER BY sloupce pro řazení
+	
+	Spojení: JOIN: Vnější (outer) $\times$ Vnitřní (inner) (obecné/rovnost, přirozené)
+	
+	podmínky WHERE -- NOT, AND, OR, IS NULL, BETWEEN, EXISTS (korelovaný poddotaz), LIKE (podřetězec), IN tabulkový výraz
+	
+	UNION, EXCEPT, INTERSECT -- sjednocení, rozdíl, průnik (ALL -- neodstraňuje duplicity)
+	
+	DELETE FROM table WHERE, UPDATE TABLE SET fields WHERE
+	
+	\item[Pohledy] virtuální tabulky
+	CREATE VIEW pohled (sloupce) AS tabulkový výraz
+	
+	DROP VIEW pohled
+	
+	SŘBD umožňuje aktualizovatelnost pohledů (nový řádek, úprava hodnoty). Některé pouze pro čtení.
+	
+	Materializované pohledy -- fyzicky uložené v databázi
+	
+	\item[Přístup k systémovému katalogu] aplikačně závisle. SHOW TABLES, DESCRIBE table
+	
+	\item[autorizace, integrita dat, řízení transakcí]
+\end{description}
+
+\paragraph{Chybějící hodnota} označení NULL, Vzniká tříhodnotová logika porovnávání -- true, false, unknown -- porovnávání: IS NULL
+
+SQL/92 není výpočetně úplný. Hostitelská verze bývá obecně mocnější.
+
+\subsection{Architektura}
+Třívrstvá architektura: Prezentační služby/logika, logika aplikace/dat, Datové služby/ovládání souborů
+
+Přímo v DB mohou být uložené procedury/funkce
+
+\paragraph{Databázové triggery} kód spouštěný jako reakce na událost tabulky: AFTER/BEFORE, INSERT, DELETE, UPDATE, popřípadě další podmínka WHEN
+
+Mohou řešit integritní, bezpečnosti omezení, audit přístupu, výpočty odvozených hodnot.
+
+\subsection{Bezpečnost}
+\begin{itemize}
+	\item Důvěrnost -- nepřístupné neautorizovaným
+	\item Integrita
+	\item Dostupnost -- autorizovaným není bráněno v přístupu
+\end{itemize}
+
+\paragraph{Bezpečnostní politika + mechanismy}
+
+\begin{itemize}
+	\item Většinou přístupová práva uživatel $\times$ databázový objekt (nepovinné), SQL implementuje.
+	\item Bezpečnostní třídy, stupně utajení objektů, stupně pověření subjektů. (povinné) Není běžné.
+\end{itemize}
+
+CREATE USER, GRANT TO, REVOKE FROM
+
+dále šifrování dat, přenosu jména a hesla po síti, záznamy o manipulacích (audit).
+
+\subsection{Fyzická úroveň}
+
+Struktura souborů -- pevná/proměnná délka, neuspořádaný/sekvenční/hashovaný.
+
+Snaha o minimalizaci přístupů na disk: Vyrovnávací paměť -- výměna bloků (LRU, MRU), vynucený zápis.
+
+\paragraph{B+ Strom} indexová struktura v databázových systémech. Víceúrovňový index, vyvážený n-nární strom, kde n - maximální počet následovníků. Listy tvoří jednosměrný uspořádaný seznam. Uzel je typicky velikosti diskového bloku.
+
+\paragraph{Hashování}
+Hodnota vyhledávacího klíče je typicky adresa sektoru se záznamem. Požadavkem je rovnoměrné a náhodné rozložení.
+
+\paragraph{Shlukování} Clustering. Umístění záznamů se stejnými vlastnostmi fyzicky blízko sebe. 
+
+\paragraph{Bitmapové indexy} ve kterých záznamech se vyskytuje daná hodnota vyhledávacího klíče (očíslování řádků tabulky, málo různých hodnot, jednoduché operace hledání (bitový AND, OR)).
+
+\paragraph{Výběr indexu}
+Použití klíče ve klauzulích WHERE, JOIN. Pro porovnání je lepší hashování, pro rozsahové dotazy B+ stromy.
+
+\subsection{Optimalizace}
+prováděná SŘBD.
+\begin{itemize}
+	\item Převod do Relační algebry (vnitřní reprezentace)
+	\item Efektivnější výraz (může využít sémantické optimalizace -- klíče)
+	\item Výběr kandidátů pro implementaci operací
+	\item Generování plánu vyhodnocení (podle cenových funkcí).
+\end{itemize}
+
+Dále může využívat statistiky -- počet n-tic v relaci, velikost n-tice relace, počet různých hodnot atributu X v relaci $\Rightarrow$ Odhad ceny dotazu
+
+Cílem je minimalizovat odezvu systému a maximalizovat propustnost systému.
+
+\subsection{Transakční zpracování}
+
+\paragraph{Transakce} jednotka provádění programu, která zpřístupňuje případně modifikuje data v databázi.
+
+\paragraph{ACID vlastnosti}
+\begin{itemize}
+	\item Atomicita -- transakce se vykoná celá, nebo se nevykoná ani její část.
+	\item Konzistence -- izolovaná transakce zanechává konzistenci databáze
+	\item Izolace -- i při souběžném běhu jsou transakce zpracovány za sebou
+	\item Trvalost -- po ukončení jsou změny trvalého charakteru
+\end{itemize}
+
+Stavy transakce:
+\begin{verbatim}
+A -- PC -- C
+  \f |f
+   \ |
+     F -- AB
+\end{verbatim}
+\begin{itemize}
+	\item A -- Počáteční stav
+	\item PC -- Poslední příkaz
+	\item C -- OK, úspěch, potvrzení
+	\item F -- Chyba
+	\item AB -- Transakce zrušená (rollback)
+\end{itemize}
+
+SQL příkazy jsou atomické. Zahájení transakce je implicitní, nelze zanořovat, lze použít SAVEPOINT, COMMIT, ROLLBACK
+
+\subsection{Zotavení po chybách a poruchách}
+Před modifikací databáze uložit do stabilní paměti informace o modifikaci (Žurnál, logfile): číslo transakce, akce (start, změny, commit, abort. Akce undo(), pokud žurnál obsahuje start transakce, ale ne její commit. Akce redo(), pokud oboje.
+
+\paragraph{Kontrolní body}
+Snížení režie při výpadku -- periodické ukládání
+\begin{enumerate}
+	\item Uložení žurnálu z hlavní paměti
+	\item Uložení modifikovaných bloků databáze na disk
+	\item Uložení záznamu checkpoint do žurnálu (stabilní paměť)
+\end{enumerate}
+
+WAL -- Write-ahead Loging -- záznam do logu před zápisem do databáze.
+
+\subsection{Řízení souběžného přístupu}
+Sériový plán -- instrukce jedné transakce jsou prováděny bezprostředně za sebou -- zachování konzistence.
+
+Problémy: Ztráta aktualizace/Závislost na potvrzení jinou transakcí/Přepis nepotvrzené hodnoty.
+
+Instrukce jsou \emph{konfliktní}, pokud přistupují ke stejnému databázovému objektu a alespoň jednou z nich je write.
+
+Plánování, zamykání, časová razítka.
+
+Uzamykací protokol -- pravidla 2PL -- dvě fáze: růst (zamykání) a zmenšování (pouze odemykání).
+
+Lze řešit granularitu: tabulka, řádek.
+
+Řešení deadlock: Jiný protokol, timeout.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Principy a struktury správy souborů a správy paměti} \label{cha:34}
 
 2. semestr, IOS, 4. a 7. přednáška
