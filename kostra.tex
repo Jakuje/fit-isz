@@ -7161,23 +7161,247 @@ Umožňuje zobrazení nextHop routeru pro kontrolu směrování, počet paketů/
 
 (model klient-server, protokoly TCP, UDP a IP, řízení a správa toku TCP)
 
+Internet -- miliony propojených počítačů.
+\begin{itemize}
+	\item Hosté: koncové systémy, servery
+	\item komunikační linky
+	\item směrovače
+	\item Protokol TCP/IP -- definuje formát zasílaných zpráv, jejich příjem mezi více entitami, akce na přijaté/odeslané zprávy
+\end{itemize}
 
+Standardy: RFC, IEEE (802.x)
 
+\subsection{Vrstvy}
+\shorthandoff{-}
+\begin{tabular}{ |c | l | c |}
+\hline
+ISO/OSI		& Popis & TCP/IP \\ \hline \hline
+Aplikační	& Informační slubžy: Email, Directory & \multirow{3}{*}{Aplikační} \\ \cline{1-2}
+Prezentační	& Nezávislost aplikací z pohledu reprezentace dat (ASN.1)  & \\ \cline{1-2}
+\multirow{2}{*}{Relační}	& \multirow{2}{*}{Ustavení, správa a ukončení spojení} &	\\ \cline{3-3}
+ & & \multirow{2}{*}{Transportní} \\ \cline{1-2}
+Transportní & Přenos dat mezi aplikacemi, spolehlivý TP0, TP1, \dots & \\ \hline
+Síťová		& Směrování, identifikace cesty mezi systémy & Síťová \\ \hline
+Linková		& Přenos dat mezi sousedními systémy	& Linková \\ \hline
+Fyzická		& Příjem a vysílání proudu bitů. > Síťová karta & Fyzická \\ \hline
+\end{tabular}
+\shorthandon{-}
 
+Komunikace s okolím: Nejdříve soubory UNIXu, ale to bylo nepostačující. Nyní BSD sockets
 
+\section{BSD Sockets}
+Mechanismus pro přístup ke službám protokolů transportní vrstvy, přístup přes deskriptor (podobné souborům), ale speciální operace.
 
+\paragraph{Operace}
+\begin{itemize}
+	\item Vytvoření
+	\item Vazba na lokální port
+	\item Vazba na vzdálený port
+	\item Spojení/čekání na spojení
+	\item Read/Write, speciální send/recv, sendto/recvfrom
+\end{itemize}
 
+Odlišnosti od souborů:  síťové chyby, čekání na data, SOCK\_STREAM, SOCK\_DGRAM
 
+\paragraph{Adresace}
+\begin{itemize}
+	\item Síťové rozhraní: IPv4/IPv6 adresa
+	\item Proces: Číslo portu
+	\item Klient/server -- adresy na obou stranách
+	\begin{itemize}
+		\item Čtveřice
+		\item Pětice (i s protokolem transportní vrstvy)
+	\end{itemize}
+\end{itemize}
 
+Server: Socket(), Bind(), Listen(), Accept(), Read(), Write(), Close()
 
+Klient: Socket(), [Bind()], Connect(), Write(), Read(), Close()
 
+\paragraph{Organizace paměti}
+Síťová x lokální, Little /Big endian
 
+\paragraph{Blokující operace}
+write (čekání na místo v bufferu), read, accept (čekání na spojení/data od klienta)
 
+Lze nastavit operace neblokující, použít Select() -- vrací řízení, jestliže je I/O připravena
 
+\paragraph{Konkurentní server} komunikuje se všemi klienty zároveň (pro každého klienta samostatný proces). Fork(), Signal(). Dobré, pokud není potřeba uchovávat globální stav serveru. Je třeba řešit problém sirotků.
 
+\paragraph{Iterativní server} obsluhuje klienty v pořadí příchodu požadavků na spojení.
 
+\section{UDP}
+User Datagram Protocol -- jednoduchý bez záruky doručení (stačí pro DNS, multimedia, \dots), nevytváří spojení, port identifikuje aplikaci na cílové stanici.
 
+\paragraph{Datagram} obsahuje Port odesílatele a příjemce, délku, kontrolní součet, data.
 
+Porty jsou pro server využívané well-known, klient generuje většinou náhodný > 1023
+
+\subsection{Spolehlivý přenos}
+jednosměrný, chování popsáno KA.
+
+\begin{itemize}
+	\item RDT 1.0 -- přenos přes spolehlivý kanál je spolehlivý
+	\item RDT 2.0 -- můžou nastávat bitové chyby, proto se používá kontrolní součet a ACK, NACK (co když se poškodí potvrzení?)
+	\item RDT 2.1 -- pořadová čísla 0, 1. Kontrola pořadového čísla a potvrzení
+	\item RDT 2.2 -- pouze pozitivní potvrzení
+	\item RDT 3.0 -- ztráty packetů, potřeba časovače a znovuodeslání packetu.
+	
+	Garantuje spolehlivost, ale sám o sobě má malou výkonost $U = \frac{L/R}{RTT+L/R} \approx 0,027 \%$ L -- velikost packetu, R -- přenosová rychlost, RTT -- Round Trip Time
+\end{itemize}
+
+\paragraph{Stop-and-wait} většinu času čeká na potvrzení, velmi pomalé (výše)
+
+\paragraph{Zřetězené protokoly} větší rozsah číslování, vyrovnávací paměti. Výkonnost N krát vyšší (počet packetů poslaných zároveň bez potvrzení prvního).
+
+\paragraph{Go-back-N}
+\begin{itemize}
+	\item k-bitové sekvenční číslo
+	\item okno velikosti až N pro nepotvrzené packety
+	\item ACK(n) potvrzuje všechny packety $ \leq $ n
+	\item časovač pro každý packet
+	\item Neumožňuje přijímat packety mimo pořadí.
+\end{itemize}
+
+\paragraph{Selective Repeat}
+\begin{itemize}
+	\item Selektivně potvrzuje každý packet
+	\item Přijímané uchovává ve vyrovnávací paměti (i mimo pořadí)
+	\item časovač pro každý packet
+	\item Po přijetí/potvrzení přijetí prvního packetu v okně posouvá
+	\item Okno obsahuje N po sobě jdoucích čísel, rozsah sekvenčních čísel musí být alespoň dvojnásobek velikosti okna
+\end{itemize}
+
+\section{TCP}
+point-to-point, spolehlivost (zachování pořadí, bez omezení velikosti), zřetězený přenos, vyrovnávací paměti, plně duplexní v jednom spojení. Spojově orientovaný (handshaking)
+
+\paragraph{TCP segment}
+Porty, číslo sekvence a potvrzení, příznaky, options, Data, Checksum.
+
+Obsahuje jakákoliv data bez struktury -- stream v navazujících packetech.
+
+\paragraph{Inicializace spojení}
+\begin{itemize}
+	\item Poloviční asociace -- protokol, IP, port
+	\item Plná asociace -- protokol, IP, port, IP2, port2
+\end{itemize}
+
+\paragraph{Otevření spojení}
+\begin{itemize}
+	\item Aktivní -- iniciuje spojení (většinou klient)
+	\item Pasivní -- čekání na spojení (server)
+	\item Active-Pasive normálně, Active-Active (distribuované systémy)
+\end{itemize}
+
+\paragraph{3-way-handshake} SYN $\to$ SYN, ACK $\to$ ACK
+
+\paragraph{Ukončení} FIN $\to$ ACK (half close), FIN $\to$ ACK od druhé strany (plné)
+
+\paragraph{Initial Sequence number ISN} na obou stranách náhodné čísle sekvence, které postupně v komunikaci roste. K identifikaci.
+
+\section{Řízení přístupu}
+zřetězené segmenty, kumulativní potvrzení (AKC -- číslo očekávaného segmentu), jeden časovač, segmenty mimo pořadí RFC nespecifikuje.
+
+Selektivní potvrzování (SACK -- volba při inicializace spojení).
+
+Znovuodeslání po ztrátě packetu/ACK nebo zpoždění packetu/ACK -- jak dlouho > RTT (mění se)
+
+\begin{description}
+	\item[(Smooted) Round Trip Time] čas potřebný na přenos segmentu a přijetí potvrzení, ignorujeme měření pro znovuodeslané, nebo zpožděné ACK. Průměrná hodnota je určena z několika posledních RTT:
+	
+	$\text{SRTT}' = (1 - \alpha) \text{SRTT} + \alpha \text{RTT}$, kde $\alpha = 0,125$ dle RFC 
+	
+	\item[Rozptyl RTT] $\text{DevRTT} = (1 - \beta) \text{DevRTT} + \beta | \text{SRTT} - \text{RTT} |$, kde $\beta = 0,25$
+	
+	\item[Retransmission Time-Out] $\text{RTO} = \text{SRTT} + 4 \text{DevRTT}$
+\end{description}
+
+\paragraph{Karnův algoritmus}
+\begin{itemize}
+	\item Ignoruj měření pro znovu vyslané packety
+	\item RTO by mělo být zdvojnásobeno po opakovaně vyslaném packetu (exponential Back-off)
+\end{itemize}
+
+\paragraph{Fast Retransmit}
+detekce ztracených segmentů pomocí duplikovaných ACK -- ještě před vypršením timeoutu.
+
+\subsection{Řízení toku} Klouzající okénko Sliding window. Velikost se mění během vysílání. Cílem je maximální využití přenosové linky a minimální zpoždění potvrzováním.
+
+\paragraph{Urgentní data} interaktivní aplikace vyžadují rychlou odezvu a proto jsou tato data zaslána společně s jinými daty přednostně bez čekání na ostatní v bufferu (příznak Urgent, Urgent pointer, data).
+
+\paragraph{PSH} příznak zabraňující uváznutí dat v bufferu (čekání na naplnění) a uváznutí komunikace. Vyžaduje okamžité odeslání opět pro interaktivní aplikace (na konci každého příkazu).
+
+\subsection{Řízení zahlcení}
+
+více dat, než je přenosová kapacita linka. Směrovače obsahují fronty a když jsou zahlceny, zahazují packety.
+
+\begin{description}
+	\item[Network Assisted] komponenty sítě poskytují koncový stanicím informace o stavu (ATM ABR)
+
+	\item[End-end] bez informací o síťové vrstvě. Sledování chování -- RTT, ztráty packetů (TCP, Internet).
+
+Řízeno koncovými systémy, jednoduchá algoritmy pro odhad stavu sítě, vhodná rychlost. Ztráta znamená zahlcení. Limity jsou odhadovány sledováním ztrát packetů.
+
+Congestion Window (cwnd) -- každá strana počítá velikost okna, aditivní nebo multiplikativní změny velikosti
+
+\begin{description}
+	\item[Tahoe] Slow Start, Condestion Avoidance, Fast Retransmit
+	
+	Exponenciální růst okna až do první ztráty packetu -- proměnná \verb|ssthresh|. Při ztrátě packetu se nastavuje na hodnotu cwnd/2
+	
+	cwnd $<$ ssthresh -- Slow start -- exponenciální růst\\
+	cwnd $>$ ssthresh -- Congestion avoidance -- lineární růst\\
+	\item[Reno] Fast Recovery, Fast Retransmit
+	
+	Timeout  -- vážné zahlcení -- okno nastav na minimum a Slow Start systému \\
+	Duplikace ACK -- není kritické -- okno zmenši na polovinu, Congestion Avoidance
+	\item[New Reno] nový Fast Revovery algoritmus
+\end{description}	
+\end{description}	
+
+\section{Síťová vrstva (IP)}
+přeposílání, směrován (Routing).
+
+\begin{description}
+	\item[Datagramové sítě] nespojovaná služba, bezstavové směrovače, best effort
+	\item[Sítě s vyhrazenými okruhy] spojovaná, stavové směrovače, host-host, různé služby.
+\end{description}
+
+\paragraph{IPv4 Datagram} verze, délka (proměnná), checksum, hlavičky, options, adresy IP, ToS (zajištění QoS), DF/MF (Don't fragment, More fragments), unikátní identifikátor, TTL -- hopcount. Protokol vyšší vrstvy.
+
+\subsection{Adresy}
+\paragraph{Třídy: prvni bity}
+\begin{itemize}
+	\item A: 0 (1B maska sítě)
+	\item B: 10 (2B maska sítě)
+	\item C: 110 (3B maska sítě)
+	\item D: 1110 (Multicast)
+	\item E: 1111 (rezerva)
+\end{itemize}
+
+Druhy: Unicast, Multicast, Broadcast
+
+\paragraph{Subneting} -- maska podsítě určuje hranici mezi sítí a hostem
+
+\paragraph{VLSM} -- Variable length subnet mask -- efektivnější využití adresového prostoru.
+
+\paragraph{CIDR} -- Classless Interdomain Routing -- eliminace classfull adresování
+
+\paragraph{Privátní adresy} neadresovatelné v internetu: 192.168.*, 10.*
+
+\subsection{ICMP}
+používán hosty, směrovači -- oznámení chyb, žádost o službu, diagnózu sítě.
+
+Traceroute -- ping s TTL postupně 1- daleko
+
+\subsection{DHCP} aplikační protokol klient/server. Mechanismus přidělení IP adresy a TCP/IP parametrů. Přes UDP.
+
+Discover -- Offer -- Request -- Ack
+
+\subsection{NAT}
+Překlad adres. Navenek stejná IP adresa a změněny porty. NAT drží tabulku LAN/WLAN s překladem vnitřní IP+Port / Vnější IP + Port, aby mohl správně přeposílat odpovědi.
+
+Modifikuje hlavičky (aplikační protokol musí být navržen, aby jej to neohrozilo). Další možnost přeposílání provozu zvenčí na konkrétní vnitřní IP.
 
 
 
