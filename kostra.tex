@@ -7406,4 +7406,269 @@ Modifikuje hlavičky (aplikační protokol musí být navržen, aby jej to neohr
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Směrování a filtrování dat v Internetu} \label{cha:40}
+
+4. semestr, IPK, 6. přednáška \\
+5. semestr, ISA, 9., 10. přednáška
+
+(algoritmy Link-state a Distance-vector, RIP, OSPF, klasifikace paketů a filtrování, firewally, kvalita služeb)
+
+\section{Filtrování}
+
+Pravidla pro vstupní/výstupní provoz, kontrola obsahu: Rozhodnutí o propuštění/zablokování paketu (Protokol, IP odesílatele a příjemce, port odesílatele a příjemce.
+
+Př: \verb|10 permit TCP from 147.229.0.0 to any dst-port 80|
+
+Pokročilé filtrování: inspekce paketů známých protokolů (aplikační úrovně): filtrování URL, P2P sítě. Dále například kontextově nebo časově závislá pravidla.
+
+\paragraph{Vyhledávání adres a prefixů} směrovače, nezáleží na pořadí, hledá nejdelší shodu s prefixem.
+
+\subsection{Klasifikace} Typy: Exact $\times$ Prefix $\times$ Interval. Výsledkem je číslo porovnávacího pravidla.
+
+paket: $H = \{ H_1, H_2, \dots H_K\}$, $K$ hlaviček
+
+klasifikátor: $R = \{R_1, R_2, \dots R_N\}$ pravidla, každé obsahuje K položek/dimenzí.
+
+\paragraph{Požadavky} Rychlost, Paměťové nároky, Rozšiřitelnost, Aktualizace
+
+\begin{description}
+	\item[Podle počtu dimenzí] 1D, 2D, nD
+	\item[Podle techniky vyhledávání]
+	\begin{description}
+		\item[Lineární] nejjednodušší implementace, časová složitost $O(N*K)$. Pro všechna pravidla projdi postupně všechny dimenze
+		\item[Rozděl a panuj] rekurzivní, bitové vektory.
+		\item[Stromové] Trie -- binární strom pro klasifikaci jedné dimenze IP, snadné.
+		
+		\paragraph{Vícebitové} n-nární strom, kde počet potomků určuje krok -- více bitů se porovná v každém kroku. Vyžaduje přesnou velikost prefixů.
+		
+		Komprese: V uzlu hodnota, či ukazatel. Bitová mapa (Lulea)
+		
+		\paragraph{Stromové vyhledávání ve 2D} pro každou dimenzi strom trie, stromy druhé úrovně se duplikují -- prostorová složitost $O(N^K)$
+		
+		\emph{Stromové vyhledávání ve 2D bez duplicit + backtracking} -- snížení prostorové náročnosti, ale roste časoví.
+		
+		\emph{S ukazateli na další možný strom} -- snížení časové náročnosti
+		\item[Bitové vektory] 
+		\item[Vektorové součiny]
+		\item[Rozhodovací stromy]
+	\end{description}
+\end{description}
+
+\paragraph{Vyhledávání ve více dimenzích}
+časově i prostorově náročné, jsou přijaty kompromisy, využívány různé heuristiky. Např. prefix IP má maximálně 24bitů, neřeší se průniky prefixů, nepoužívají se intervaly (praxe).
+
+\begin{enumerate}
+	\item Lineární -- preference dvojic S+D IP (kombinace 2D) + lineární průchod dalšími dimenzemi.
+	\item Bitový vektor -- pro každou hlavičku (jednotlivé bity jsou jednotlivá pravidla), výsledek bitovým AND
+	\item Vektorový součin -- množina všech kombinací v R, předpočítány vektorové součty
+	\item Rekurzivní klasifikace toků dle RFC -- třídy ekvivalence, redukce paměťové složitosti, vznikají dílčí vektorové součty a vektorové součty nad třídami. Stromová struktura.
+\end{enumerate}
+
+\paragraph{Využití} Firewally, QoS, detekce útoků
+
+\section{Zajištění kvality služeb}
+
+Protokol IP přenáší data s kvalitou Best Effort delivery. Pro potřeby splnění SLA (Service Level Agreement) potřeba upravit (dostupnost, charakteristika).
+
+Přizpůsobení provozu: Označení paketů, omezení/rozložení provozu.
+
+\begin{description}
+	\item[Rozložení provozu (shaping)] Regulace rychlosti a objemu. Řešení shluků pomocí front. Lepší využití pásma (Výstup ISP).
+	\item[Omezení provozu (policing)] Řízení maximální rychlosti. Neprovádí ukládání, pakety zahazuje (Vstup ISP).
+\end{description}
+
+\subsection{Plánování QoS pomocí front}
+\begin{description}
+	\item[FIFO] Bez priorit
+	\item[Prioritní fronty] Více front, rozdělení podle klasifikace -- hrozí hladovění
+	\item[Cyklické fronty (Round Robin)] fronta odpovídá toku, cyklická obsluha všech front
+	\item[Váhové fronty WFQ] Dynamické vytváření/zánik front pro jednotlivé toky. Váha určuje počet odebíraných paketů z fronty.
+	\item[Leaky Bucket] řízení toku (shaping, vstup)
+	
+	Počítadlo X. Inkrementace o r, rychlost. Pacet projde, pokud je v počítadle dostatečná velikost pro příchozí paket. Omezená délka vstupní fronty.
+	
+	\item[Token Bucket] omezení rychlosti (hloubkou vědra určíme maximální výkyvy).
+	
+	Může být s frontou, nebo bez. Tokeny generovány určitou rychlostí, pokud jich je dost, pošleme dále paket (velikost, počet).
+\end{description}
+
+\paragraph{Specifikace toku QoS u Integrovaných služeb}
+\begin{itemize}
+	\item CIR -- průměrná rychlost (r = token rate)
+	\item R -- maximální rychlost generování paketů
+	\item CBS -- max. bytů při rychlosti R (b = bucket size)
+	\item T -- maximální doba trvání špičky
+\end{itemize}
+
+\subsection{Integrované služby IntServ}
+zajištění QoS nad IP. Rezervace zdrojů pomocí protokolu RSVP. Pevně vytvořené spojení.
+
+\paragraph{Třídy služeb} malý počet, nedostatečná granularita. 
+\begin{enumerate}
+	\item Garantované služby -- striktní maximální zpoždění ve frontách
+	\item Kontrolování zátěže
+	\item Největší úsilí -- běžná kvalita nad IP
+\end{enumerate}
+\paragraph{RSVP} signalizační protokol pro rezervaci zdrojů, provádí koncová stanice, rezervace pásma v multicastových stromech. Nepoužitelné pro páteční směrovače.
+
+\subsection{Diferencované služby DiffServ}
+velká rozšiřitelnost, konfigurovatelnost a flexibilita, možnost rozložení zátěže na jiné linky.
+\begin{description}
+	\item[Klasifikace] edge směrovače -- podle údajů z hlavičky (IP, TCP, UDP), nastaví IP precedenci, ToS nebo DS bajt (třída chování, priorita zahazování).
+	\item[Přeposílání] backbone směrovače
+\end{description}
+
+\paragraph{Třídy chování}
+\begin{itemize}
+	\item EF Přednostní přeposílání
+	\item AE Garantované přeposílání
+	\item BE Nejvyšší úsilí
+\end{itemize}
+
+\paragraph{Priorita zahazování (viz WRED)}
+
+Interactive Voice $>$ Video $>$ Streaming media $>$ Local critical (SAP, Oracle) $>$ Telephone signaling $>$ Network signaling $>$ P2P $>$ WWW, Email
+
+\subsection{Prevence zahlcení}
+problém front na síťových zařízeních -- globální synchronizace TCP, hladovění
+
+\paragraph{RED} Random Early Detection -- zahazování paketů od určité meze zaplnění fronty. Režimy: Nezahazování, Náhodné zahazování, úplné zahazování.
+
+\paragraph{WRED} Weighted RED -- využívé IP precedenci/DSCP, příznak drop probability. Zaplnění fronty pro začátek zahazování je různý pro různé třídy.
+
+\section{Směrování}
+
+Síťová vrstva, zajišťuje doručení paketů koncovým zařízením. Šíření směrovacích informací v internetu (směrovací protokoly).
+
+Směrovač musí rozhodnout, na které rozhraní má paket přesunout pro dosažení cíle.
+\begin{itemize}
+	\item Přepínání (forwarding) -- lokální akce přesunu paketu z jednoho rozhraní na jiné
+	\item Směrování (routing) -- nalezení cesty pro packet. Používá směrovací algoritmus (Distribuovaný výpočet).
+\end{itemize}
+
+\subsection{Směrovací tabulka} obsahuje pro každou IP (prefix) odpovídající rozhraní na které má být předána. Může být definována staticky, nebo aktualizována pomocí směrovacích protokolů.
+\begin{description}
+	\item[Perfect match podle třídy] rozpoznání třídy podle prvních bitů.
+	\item[CIDR] agregace adres ve směrovačích + šíření
+	\item[Longest prefix match] prefixové stromy
+	\item[MLPS] virtuální okruhy, speciální hardware pro match IP a prefixu: CAM (hodnoty 0,1,x)
+\end{description}
+
+\paragraph{koncová stanice} Vlastní adresu doručí lokálně, lokální adresu pošle přímo, adresu mimo síť pošle na lokální bránu.
+
+\subsection{Směrovač}
+Funkce směrovače:
+\begin{description}
+	\item[Zpracování směrovacích informací] -- cesta, směrovací tabulka, směrovací protokoly
+	\item[Přepínání paketů] validace, cílová adresa, nalzení výstupního rozhraní, kontrola TTL, checksum
+	\item[Speciální] Transformace paketů, tunelování, klasifikace, filtrování, účtování.
+\end{description}
+
+\subsection{Vývoj směrovačů}
+\begin{description}
+	\item[1. generace] SW směrovače
+	\item[2. generace] Paralelní zpracování, vnitřní sběrnice pro komunikaci (do roku 2000)
+	\item[3. generace] Distribuované zpracování
+\end{description}
+
+\begin{description}
+	\item[Sběrnice s centrálním CPU] Zpracovává všechny požadavky
+	\item[Sběrnice s lokální cache] Zpracovává na kartě. Co nelze je předáno centrálnímu CPU (také aktualizace cache, příjem směrovacích informací)
+	\item[Sběrnice s paralelním zpracováním] Vše je přeposláno z karty na Forwarding Engine a ten přeposílá opět na některou z karet.
+	\item[Přepínač s více procesory] rychlejší -- fast/slow path (výpadek cache FE). Limitující obsluha cache.
+\end{description}
+
+\section{Směrovací algoritmy}
+
+\subsection{Dijkstrův algoritmus}
+Topologie sítě je předem známa všem uzlům, včetně ceny linek. Všichni mají stejné informace.
+
+Každý směrovač počítá cestu pro každou síť s nejmenší cenou.
+
+\lstset{caption={Dijkstrův algoritmus}}
+\begin{lstlisting}
+forall nodes v
+	if v is adjacent to A then
+		D(v) = C(A,v)
+	else
+		D(v) = inf
+N = {A}
+loop
+	find n not in N such that D(w) is a minimum
+	add w to N
+	forall v adjacent to w and not in N
+		D(v) = min(D(v), D(w) + C(w,v))
+until all nodes in N
+\end{lstlisting}
+
+\subsection{Distance-Vector -- Bellman-Fulkerson-Fordův algoritmus}
+iterativní, nové infromace se šíří mezi sousedy, distribuovaný výpočet -- komunikace se sousedy a výpočet ceny cesty.
+
+Každý uzel obsahuje tabulku: řádku=cíle, sloupce=sousedé, buňky=ceny.
+
+Stavy: Čekáni na změny od souseda -- přepočet -- informování sousedů, pokud nastala změna.
+
+Dobré zprávy se šíří rychle, špatné pomalu. Poison-Reverse zabraňuje označením ceny cesty na nekonečno (Zabraňuje počítání do nekonečna).
+
+\subsection{Path-Vector}
+uvnitř AS. Počítáno na všech uzlech pro všechny cíle. Pro každý uzel je spočítána celá cesta (detekce smyček). Flexibilní lokální politiky může aplikovat každý uzel.
+
+BGP. Politiky jsou smlouvy mezi ISP
+
+
+\section{Směrovací protokoly}
+\begin{description}
+	\item[RIP] Classfull v1, Classless v2, metrikou je hopcount ($>$ 15 je $\infty$). Každých 30 sekund aktualizace (UDP, Broadcast)
+	
+	Request Message (spuštění směrovače), Response Message (odpověď, aktualizace tabulky
+	
+	180 sekund bez odezvy -- neplatný směrovač, zneplatněna cesta a šíření informace.
+	
+	\item[OSPF] Open Shortest Path First -- šíření informace o změně v celé oblasti (flooding). Využit Dijkstrův algoritmus, aktualizace po změně, nebo po 30 minutách, testování linek pomocí HELO paketů.
+	
+	IP protokol (ACK, znovuodeslání, sekvenční čísla), lze zabezpečit, vyvaovat zátěž. Multicast OSPF
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
 \end{document}
