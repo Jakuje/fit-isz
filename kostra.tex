@@ -4669,7 +4669,89 @@ Ušetření pásek s výkonem srovnatelným s minulou metodou. Pouze k+1 pásek,
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setcounter{chapter}{29}
+\setcounter{chapter}{28}
+\chapter{Hodnocení složitosti algoritmů} \label{cha:29}
+
+1. semestr, IZP, 8. přednáška\\
+3. semestr, IAL, 1. přednáška
+
+(paměťová a časová složitost, asymptotická časová složitost, určování časové složitosti)
+
+
+Většinou tvar funkce N, kde N je počet položek souboru.
+
+\section{Asymptotická časová složitost}
+nejčastější hodnotící kritérium. Porovnání s jistou funkcí pro N blížící se nekonečnu.
+
+\begin{description}
+	\item[Omikron $O$] horní hranice chování -- nejhorší případ
+	
+	Funkce $f(n)$ roste maximálně tak rychle jako funkce $g(n)$:\\
+	$O(g(n)) \iff \exists c > 0 \land \exists n_0 > 0 \land \forall n \geq n_0: 0 \leq f(n) \leq c g(n) $
+	\item[Omega $\Omega$] dolní hranice chování -- nejlepší případ
+	
+	Funkce roste maximálně tak rychle jako funkce $g(n)$:\\
+	$\Omega(g(n)) \iff \exists c > 0 \land \exists n_0 > 0 \land \forall n \geq n_0: 0 \leq c g(n) \leq f(n)$
+	
+	\item[Theta $\Theta$] třída chování
+	
+	Funkce roste tak rychle, jako funkce $g(n)$:\\
+	$\Theta(g(n)) \iff \exists c_1,c_2 > 0 \land \exists n_0 > 0 \land \forall n \geq n_0: 0 \leq c_1 g(n) \leq f(n) \leq c_2 g(n)$
+	
+\end{description}
+
+\section{Klasifikace algoritmů}
+\begin{description}
+	\item[$\Theta( 1 )$] Konstantní
+	\item[$\Theta( \log(n) )$] Logaritmická -- rychlé vyhledávací algoritmy
+	\item[$\Theta( n )$] Lineární
+	\item[$\Theta( n * \log(n) )$] Linearitmická -- rychlé řadící algoritmy
+	\item[$\Theta( n^2 )$] Kvadratická -- bubble sort
+	\item[$\Theta( n^3 )$] Kubická -- těžko použitelné
+	\item[$\Theta( k^n )$] Exponenciální -- brute-force algoritmy
+	
+\end{description}
+
+
+\section{Analýza složitosti algoritmů}
+
+v časových jednotkách / v provedených operacích / množství požadované paměti. Slouží k porovná algoritmů.
+
+Analýza algoritmu pro získání funkce T(n), analýza funkce pro získání obecné kategorie složitosti.
+
+funkce T(n) -- kategorie časové složitost\\
+funkce S(n) -- kategorie prostorové složitosti\\
+Nezávislé funkce!
+
+\subsection{Vyšetřování složitosti}
+
+\begin{description}
+	\item[Exaktně] matematické odvození
+	\item[Neformálně] analýzou programu
+\end{description}
+
+\subsection{Třídy složitosti}
+\begin{description}
+	\item[P] Polynomiálně omezené algoritmu -- efektivně řešitelné
+	\item[NP] Nedeterministicky polynomiální -- obecně neřešitelné v polynomiálním čase. Lze jej v polynomiálním čase zkontrolovat.
+\end{description}
+Neřešitelné problémy, které mají exponenciální složitost -- algoritmus nelze vyjádřit polynomem.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Životní cyklus softwaru} \label{cha:30}
 
 1. semestr, IUS, přednášky
