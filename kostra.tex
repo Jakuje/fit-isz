@@ -525,15 +525,85 @@ Univerzální posuvný registr.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Hierarchie paměti v počítači} \label{cha:4}
 
-5. semestr, IPZ, ?. přednáška
+3. semestr, INP, 11. přednáška
 
 (typy a principy pamětí, princip lokality, organizace rychlé vyrovnávací paměti)
 
+\paragraph{Moorův zákon} počet tranzistorů na čipu se každé dva roky zdvojnásobí.
 
+\shorthandoff{-}
+\begin{tabular}{| l || c | l | c | l | l |}
+\hline
+			& Kapacita	& Cena/bit	& čas přístupu			& příklad \\ \hline \hline
+Terciální	& TB 		& minimální	& sekundy						& CD, páskové mechaniky \\ \cline{1-1}
+Sekundární	& stovky GB	&	 		& jednotky ms			& HDD \\ \cline{1-1}
+Hlavní paměť& GB		& střední	& desítky ns, 240 instr.& DRAM \\ \cline{1-1}
+RVP (Cache) & MB		& 			& $<$ 10 ns, 10 instr.	& SRAM (L1, L2) \\ \cline{1-1}
+Registry 	& B			& vysoká	& ns, 1 instr.	&  \\
+\hline
+\end{tabular}
+\shorthandon{-}
 
+\section{RVP} Rychlá vyrovnávací paměť -- mezi CPU a hlavní pamětí (vyrovnává rychlosti mezi komponentami pracujícími jinak rychle). Tvořená SRAM.
 
+Rozdělení do bloků stejné velikosti jako bloky RAM.
 
+\paragraph{Účinnost RVP} závisí na Hit rate/Miss rate -- výpadek bloku. Může nastat při čtení instrukce i při čtení dat/operandů.
 
+Doba potřebná k nalezení bloku je \emph{Přístupová doba}. V případě neúspěchu je potřeba připočíst dobu k přesunutí bloku (uvolnění místa, přístup k požadovanému bloku ve vzdálenější paměti, doba přenosu celého bloku).
+
+\subsection{RVP s přímým mapováním} -- bereme pravou část adresy, podle které ukládáme do paměti. Můžou nastat kolize a proto je potřeba ukládat adresový příznak (zbývající bity adresy) a příznak platnosti (před alokováním prvního bloku jsou neplatné).
+
+\subsection{Koherence dat}
+Po zápisu paměťového místa v cache vzniká nekonzistence ve vzdálenějších úrovních
+\begin{description}
+	\item[Přímý zápis] Write-through -- okamžitý přepis bloku do hlavní paměti (zdržuje procesor)
+	\item[Zápis s mezipamětí] odloží opravné zápisy do času, kdy je volný přístup k paměti (nezdržuje procesor)
+	\item[Zpětný zápis vždy] Zápis je proveden vždy při odstraňování bloku z paměti. (Zbytečné pro nezměněné bloky)
+	\item[Zpětný zápis podle příznaku změny] Při zápisu nastaven dirty-bit. Zápis při odsouvání, pouze pokud je tento bit nastaven.
+\end{description}
+
+Práce s adresami, které mají stejnou část adresy: mnoho kolizí, nevýhodné. Proto se zvyšuje asociativita -- umožní nám uložit více adres se stejnou částí až po plně asociativní pole (nepoužívá se -- drahé).
+
+\subsection{4-cestná RVP}
+Blok s adresou shodující se v dané části může být na 4 různých místech, což snižuje riziko výpadku.
+
+Jsou-li všechna místa obsazena, je potřeba nějaké uvolnit.
+\paragraph{Výběr oběti}
+\begin{itemize}
+	\item LRU -- nejdéle nepoužitá
+	\item MFU -- nejčastěji použitá
+	\item RAND, FIFO
+\end{itemize}
+Potřeba dalších obvodů pro implementaci
+
+\subsection{Lokalita}
+\begin{description}
+	\item[Časová lokalita dat] Procesor používá část paměti a je pravděpodobné, že ji bude používat znovu.
+	\item[Prostorová lokalita] Procesor používá část paměti, s vysokou pravděpodobností použije i části v okolí.
+\end{description}
+
+\paragraph{Typy paměti} Vnitřní $\times$ Hlavní + RVP $\times$ Vnější
+
+\subsection{Parametry paměti}
+
+Kapacita + Přístupová doba + Přenosová rychost = Výkonnost.
+
+Doba cyklu, Cena/bit, Poruchovost/Chybovost
+
+\paragraph{Materiál} Polovodičové, magnetické, Optické, Magnetooptické, (experimentální molekulární).
+
+\paragraph{Čtení/zápis} ROM/RWM
+\begin{itemize}
+	\item PROM -- jen jeden zápis
+	\item EPROM -- mazatelné UV světlem
+	\item EEPROM -- elektronicky programovatelné (Flash)
+\end{itemize}
+
+Volatilni $\times$ Nevolatilní (nezávislá na napájení)
+
+\paragraph{DRAM} kondenzátor, vyžadován pravidelný refresh, větší kapacity
+\paragraph{SRAM} jenom tranzistory, stačí stabilní napájení, dražší, rychlejší.
 
 
 
