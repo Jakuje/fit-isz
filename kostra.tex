@@ -31,7 +31,7 @@
 
 \begin{document}
 
-Chybí: 1, 4, 7, 13, 14, 15, 26, 28, 29
+Chybí: 1, 13, 14, 15, 26, 28
 
 \ref{cha:1}
 \ref{cha:2}
@@ -553,15 +553,154 @@ Univerzální posuvný registr.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Vestavěné systémy} \label{cha:5}
 
-?. semestr, ??, ?. přednáška
+5. semestr, IMP, 1. přednáška a další asi taky
 
 (mikrokontrolér, periferie, rozhraní, převodníky)
 
+\section{Vestavěné systémy}
+Embeded system -- kombinace HW a SW jejímž smyslem je řídit proces, zařízení, nebo systém. Často funkční bez lidského zásahu.
 
+\paragraph{Vlastnosti ES}
+\begin{itemize}
+	\item Reaktivnost -- odezva na pozněty zvenčí, často Realtime (garance odezvy do určitého času).
+	\item Autonomie -- činnost bez lidského zásahu
+	\item Kritičnost -- vliv odchylek od normálního chování na bezpečné plněné úlohy
+	\item Spolehlivost -- nedosažitelnost pro opravu, nutnost neustálého chodu, nelze připustit nekorektní stav
+	\item Jednoúčelový -- aplikační program běží v nekonečné smyčce
+	\item Omezené/Vymezené vlastnosti -- cena, příkon, rozměry, rychlost.
+\end{itemize}
 
+\paragraph{X-by-wire} (drive/fly) -- nahrazení mechanických a hydraulických systémů pro ovládání řízení, brzd, akcelerace atd. spolehlivými elektronickými systémy.
 
+Odolná technologie, využití záložních modulů při poruše primárních.
 
+\paragraph{Specifikace požadavků}
+Co má systém dělat. S jakým okolím má interagovat (vstupy, výstupy), jak má interagovat s uživatelem.
 
+\paragraph{Modely}
+\begin{itemize}
+	\item Sekvenční programový model
+	\item Komunikující procesy
+	\item Konečný automat
+	\item Datové toky
+	\item Objektově orientovaný model
+\end{itemize}
+
+\paragraph{Uživatelské rozhraní}
+Důraz na jednoduchost (dotyková obrazovka).
+
+\paragraph{Požadované vlastnosti}
+Výkonnost,  Odezva,  I/O obvody,  Testovatelnost,  Nízký příkon,  Spolehlivost,  Bezpečnost,  Udržovatelnost,  Zabezpečení,  Dostupnost,  Cena,  Rozměry,  Životnost
+
+\subsection{Vývoj}
+\begin{description}
+	\item[Pevná logika] Omezený sortiment funkcí. Pro každou změnu je potřeba nový návrh
+	\item[Mikroprocesory $\mu P$] Základní procesorová jednotka CPU na čipu (ALU, inst. dekodér, registry). Používané pro zpracování informací v počítačových systémech
+	\item[Mikrokontroléry/Mikropočítače $\mu C$] mikroprocesor + podpůrné obvody (paměť, periferní I/O komponenty). Použití pro řízení vnějších zařízení.
+	\item[Specializované procesory, FPGA, ASIC] 
+\end{description}
+
+\paragraph{Instrukční sady}
+\begin{itemize}
+	\item $\mu P$ výkonné adresové módy, operace nad množstvím dat
+	\item $\mu C$ instrukční sada pro řízení I/O (zabudované obvody), plánování, priority, přerušení od periferních zařízení
+\end{itemize}
+
+Exituje mnoho různých druhů. Lze vybrat na míru požadavkům: šířka sběrnice, RISC/CISC, architektura, von Neumanova / Harvardská.
+
+\begin{description}
+	\item[CISC] Jednoduše se programuje, efektivně se využívá paměť (dříve drahá a pomalá), mnoho instrukcí (100-250), mnoho adresovacích módů, instrukce o proměnné délce.
+	\item[RISC] Redukované množství instrukcí, jednoduché instrukce, v každém cyklu je jedna pokud možno dokončena.
+	
+	Mnoho registrů, s pamětí pracují pouze instrukce LOAD, STORE.
+	
+	Například ARM -- 44 instrukcí, 32bitů každá, nízká spotřeba (převažují u $\mu C$).
+\end{description}
+
+\paragraph{(Periferní) jednotky $\mu C$}
+CPU, programová a datová paměť, , oscilátor hodin, nulovací obvod, sériové porty, číslicové V/V, analogové V/V, časovače, Watchdog, obvod reálného času.
+
+\paragraph{Operační systém} Potřeba reagovat v reálném čase na určité události, RTOS zpřístupňuje.
+\begin{itemize}
+	\item Bez RTOS -- pro jednoduché aplikace, implementace v CodeWarrior v C
+	\item S RTOS -- složitější aplikace, systém časově kritický. Ladění na cílovém systému (nebo cross development).
+\end{itemize}
+
+\paragraph{Aplikace}
+Telekomunikace, Automobily, Čipové karty, Vesmírné aplikace, domácí spotřebiče, GPS, robotický pes.
+
+\paragraph{Metriky návrhu}
+Jednorázové náklady (NRE), jednotkové náklady, velikost, výkon, příkon, flexibilita, doba uvedení na trh, doba výroby prototypu, udržovatelnost, správnost, bezpečnost.
+
+Metriky spolu soupeří, zlepšení jedné může zhoršit jiné.
+
+\paragraph{Výkonnostní metriky}
+Latence, Průchodnost. Obecný výkon není příliš vypovídající.
+
+\paragraph{DSP} Signálové procesory. Rychlé FP operace.
+
+\paragraph{IC} Integrované obvody: Plně zákaznické VLSI, Polozákaznické ASIC -- Hradlové pole, PLD -- programovatelné logické obvody.
+
+\section{Sériová rozhraní}
+
+Přenos dat po jediném vodiči, bity jeden za druhým. Pro určení kdy je na vodiči jaký je třeba synchronizace
+\begin{description}
+	\item[Synchronní] hodinový signál je přenášen společně s daty po jiném vodiči a vymezuje platnost dat. Nemusí být nutně periodický. 
+	\item[Asynchronní] hodinový signál je generován přijímačem. Datový signál musí obsahovat prostředky pro synchronizaci s hodinovým signálem vysílače. Hodiny se nesmí rozejít o více než 1/2 fáze.
+\end{description}
+
+\subsection{SCI}
+Sériová asynchronní komunikace
+
+\paragraph{Datový rámec} Hodnota klidového stavu (1), Start bit (0), datové bity, parita, 1 nebo 2 stop bity (1) -- přijímač má čas zpracovat přijaté slovo, přesunout do jiného registru.
+
+Na HCS08 plně duplexní.
+
+\subsection{SPI}
+Synchronní sériové rozhraní
+
+Komunikace s PZ, nebo mezi MC. Point-to-point nebo sběrnice. Plně duplexní.
+
+\paragraph{Role} Master -- generuje synchronizační hodinový signál. Slave -- vybraný (na sběrnici), obvykle periferie.
+
+Komunikace stylem výměny obsahu posuvných registrů MISO a MOSI (Master Out Slave In)
+
+Výběr prvku na sběrnici pomocí Slave select signálu $\overline{SS}$. Lze nakonfigurovat frekvence, směr posuvu. Může vyvolat přerušení na základě přijetí, chyby, nebo Match.
+
+\subsection{IIC (I$^2$C)}
+Synchronní sériové rozhraní s požadavkem na jednoduchost. Opět role Master/Slave. Half duplex, až 127 zařízení lze adresovat na sběrnici. Obsahuje ACK potvrzení po doručení dat.
+
+\paragraph{Adresa} 7b zařízení 1b r/w (směr: 1: slave $\to$ master, 0: master $\to$ slave).
+
+\section{Periferie}
+
+\subsection{A/D převodník}
+Spojité vstupy -- teplota, odpor, napětí (snímače, zpětná vazba). Určení hodnoty je pomocí aproximace (půlení intervalů) a opakovaného porovnávání -- trvá nějaký čas.
+
+Lze zahájit SW (zápis do registru) -- převod další hodnoty začíná po dokončení, nebo HW (vypršení časovače) -- převod s určitým rozestupem = vzorkování.
+
+Dokončení převodu může generovat přerušení, nebo generovat přerušení až po porovnání s nějakou limitní hodnotou.
+
+\subsection{Časovač}
+Hlavní časovač -- zvyšuje hodnotu o 1, při každé periodě CLK.
+
+Limitování periody: 
+\begin{itemize}
+	\item při přetečení nastavení výchozí hodnoty
+	\item porovnání s registrem TMOD. Po shodě vynulování.
+\end{itemize}
+
+\paragraph{Jednotka záchytu hrany}
+nástupná/sestupná/obě hrany. Generování přerušení. Možnost měřit délku impulzů na vstupu.
+
+\paragraph{Jednotka výstupního srovnání}
+generování impulzů o dané délce
+
+\subsection{PWM -- Pulze délková modulace}
+Impulzní průběh s konstantní periodou a proměnnou střídou. Použitelné k řízení motorů.
+
+Perioda: přetečení volně běžícího čítače\\
+střída: určena komparačním registrem. Standardní se zarovnáním na hranu. Může být symetrický se zarovnáním na střed.
 
 
 
@@ -896,6 +1035,43 @@ Testování přenosem z řadiče do GP registru a tam testování, nebo je souč
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Princip činnosti počítače} \label{cha:7}
+
+3. semestr, INP, 1., 5. přednáška ??
+
+(řetězené zpracování instrukcí, RISC, CISC)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -915,7 +1091,6 @@ Testování přenosem z řadiče do GP registru a tam testování, nebo je souč
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setcounter{chapter}{7}
 \chapter{Minimalizace logických výrazů} \label{cha:8}
 
 2. semestr, INC, 2. přednáška
