@@ -1113,11 +1113,73 @@ Testování přenosem z řadiče do GP registru a tam testování, nebo je souč
 
 (řetězené zpracování instrukcí, RISC, CISC)
 
+\section{Řetězené zpracování instrukcí v procesorech}
 
+\paragraph{CPI -- Cycles Per Instruction} u CISC minimálně 3 (průměrná hodnota pro celý instrukční soubor). U RISC snaha o cíl 1 (jednotlivé fáze se překrývají).
 
+\subsection{RISC}
+Cyklus: Fetch -- Decode -- Execute -- Memory -- Write
 
+Jednoduché a rychlé instrukce, stejná složitost, pevná velikost. Přístup do paměti pouze instrukcemi LOAD a STORE (pomalé operace). Registrová architektura (sada registrů).
 
+Rychlý řadič, oddělená paměť pro data a instrukce.
 
+\begin{description}
+	\item[F -- instruction fetch] $IR \gets M[PC], NPC \gets PC+4$
+	\item[D -- instruction decode + register fetch] 
+	\item[E -- provedení + cyklus výpočtu efektivní adresy]
+	\item[M -- přístup k paměti + dokončení skoku]
+	\item[W -- uložení výsledků do paměti]
+\end{description}
+
+Překrýváním cyklů vznikají konflikty:
+\begin{description}
+	\item[Strukturální] obvodová struktura není schopná zpracovat.
+	
+	např. zároveň přístup k paměti instrukcí a k paměti dat. Řešení oddělit paměti. Obecně přidat výpočetní jednotky.
+	
+	\item[Datové] V instrukci jsou potřeba data, která ještě nebyla dokončena. Možnosti WAR, WAW, RAW (read after write).
+	
+	Řešení Bypassing -- poskytnutí mezivýsledku dříve než bude zapsán do registru -- speciální datové cesty
+	
+	\item[Řídící] Skoková instrukce mění obsah PC, ale až v pozdější fázi. Nevíme kam skočit.
+	\begin{description}
+		\item[Zpožděný skok] Přeskládat instrukce v programu, nebo přidat NOP
+		\item[Predikce skoku] rozpracovat očekávaný skok
+		\item[Rozpracovat obě možnosti]
+	\end{description}
+	
+	83\% skoků se provede. Je potřeba zrychlit zjištění cílové adresy -- pomocí BTB -- \emph{Branch Target Buffer (cache)} -- umožňuje provádět skoky bez zastavení linky (nepodmíněné a dobře předpovězené podmíněné).
+	
+	Predikce může být \emph{statická} (vytvořená při překladu, bit predikce), nebo \emph{dynamická} (speciální hardware -- např. jednobitový, který očekává stejné chování jako poslední skok). 
+	
+	Při chybné predikci je nesprávná větev ukončena, opraven BTB a započata správná větev.
+\end{description}
+
+Při rozšíření o časově náročné operace (FP), které trvají delší čas je potřeba řešit precizní přerušení -- kratší instrukce započatá po delší, která způsobí chybu, se nesmí dokončit.
+
+\section{Procesor}
+Obvodová realizace algoritmu, která dokáže vykonávat libovolné programy (algoritmy) sestavené z předem definovaných elementárních operací (instrukce).
+
+Sekvenční a obvykle synchronní číslicový obvod.
+
+Vykonává program uložený v paměti od určité adresy, transformuje vstupní data na výstupní.
+
+PC, IR, ALU, I/O jednotka, sada registrů, řadič.
+
+Harvardská architektura (odděleny data a program), Von Neumanova architektura (společná paměť pro data a program).
+
+\subsection{Instrukční cyklus CISC}
+\begin{description}
+	\item[Fetch] $PC \to $ sběrnice, čtení z paměti\\
+	$IR \gets $ data z paměti
+	
+	\item[Decode] Dekódování instrukce -- řídící signály, výběr operace a operandů. Pokud operandy z paměti, opět čtení.
+	
+	\item[Execute] Vykonání instrukce, nastavení příznaků\\
+	Uložení výsledků do registru/inicializace zápisu paměti\\
+	Určení nového IP
+\end{description}
 
 
 
@@ -2690,10 +2752,18 @@ $$ = (a_{n-1} a_{n-2}  \dots a_0 a_{-1} a_{-2} \dots)_z$$
 \section{Používané číselné soustavy}
 
 \begin{description}
-	\item[binární]
-	\item[oktalová]
-	\item[desítková]
-	\item[hexadecimální]
+	\item[Polyadické] \hfill
+	\begin{description}
+		\item[binární]
+		\item[oktalová]
+		\item[desítková]
+		\item[hexadecimální]
+	\end{description}
+	
+	\item[Nepolyadické] \hfill
+	\begin{description}
+		\item[Římská]
+	\end{description}	
 \end{description}
 
 \subsection{Možné zápisy}
@@ -7966,9 +8036,11 @@ iterativní, nové infromace se šíří mezi sousedy, distribuovaný výpočet 
 
 Každý uzel obsahuje tabulku: řádku=cíle, sloupce=sousedé, buňky=ceny.
 
-Stavy: Čekáni na změny od souseda -- přepočet -- informování sousedů, pokud nastala změna.
+\paragraph{Stavy} Čekáni na změny od souseda -- přepočet -- informování sousedů, pokud nastala změna.
 
-Dobré zprávy se šíří rychle, špatné pomalu. Poison-Reverse zabraňuje označením ceny cesty na nekonečno (Zabraňuje počítání do nekonečna).
+Dobré zprávy se šíří rychle, špatné pomalu. \emph{Poison-Reverse} zabraňuje označením ceny cesty na nekonečno (Zabraňuje počítání do nekonečna).
+
+\paragraph{Split-horizon} -- prevence smyček.
 
 \subsection{Path-Vector}
 uvnitř AS. Počítáno na všech uzlech pro všechny cíle. Pro každý uzel je spočítána celá cesta (detekce smyček). Flexibilní lokální politiky může aplikovat každý uzel.
