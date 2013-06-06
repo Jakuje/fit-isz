@@ -2274,6 +2274,124 @@ Kvaternion lze převést na Rotační matici pro výpočet v HW, což je velmi d
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{chapter}{13}
+\chapter{Spektrální analýza spojitých a diskrétních signálů.} \label{cha:14}
+
+3. semestr, ISS, 
+
+
+\subsection{Modifikace časové osy}
+
+\begin{tabular}{l l l}
+			& Spojitý čas 	& Diskrétní čas \\
+			& $x(t)$ 		& $x[n]$ \\
+Zpoždění 	& $x(t - \tau)$	& $x[n - \tau]$ \\
+Předběhnutí	& $x(t + \tau)$	& $x[n + \tau]$ \\
+Otočení s posunutím & & \\
+Zpoždění 	& $x( - t + \tau)$	& $x[ - n + \tau]$ \\
+Předběhnutí	& $x( - t - \tau)$	& $x[ - n - \tau]$ \\
+
+Kontrakce času	& $x(t \cdot m)$& \\
+Dilatace času	& $x(t / m)$	&	\\
+\end{tabular}
+
+\begin{description}	
+	\item[Spojitý signál] $x(t)$: $t$ definováno všude ($\mathbb{R}$), Reálný svět, spojitá křivka, zapsané funkcí
+	
+	Např. Rychlost auta na cestě z A do B.
+	
+	\item[Diskrétní signál] $x[n]$: $n$ nabývá pouze celočíselných hodnot. Ze spojitých získáváme vzorkováním, nebo kvantováním (zaokrouhlení)
+	
+	Např. denní kurz koruny k euru.
+\end{description}
+
+\begin{description}
+	\item[Deterministický signál] popsaný rovnicí, vztahem, nerovnicí. Víme jaké hodnoty bude kdy nabývat.
+	\item[Nedeterministický/Náhodný signál] Můžeme charakterizovat pouze parametry: střední hodnota, rozptyl
+\end{description}
+
+\begin{description}
+	\item[Periodický signál] existuje T nebo N takové, že $s(t) = s(t+T)$, nebo $s[n] = s[n+N]$ pro každé n,t
+	\item[Harmonické signály] nejjednodušší definovatelné periodické signály, popsané sinusovkou: $A \sin(\omega t + \phi) = \frac{A}{2} e^{j \phi} e^{j \omega t} + \frac{A}{2} e^{- j \phi} e^{ - j \omega t}$
+\end{description}
+
+\paragraph{LTI} Linear Time Invariant signals -- nemění své chování v čase.
+
+\paragraph{Spektrum signálu}
+popisuje z jakých harmonických složek je signál složen.
+
+\subsection{Spektrální analýza}
+Reálné signály jsou kombinací několika sinusovek. Zjištění zastoupených frekvencí a rozklad na jednotlivé sinusovky.
+
+\paragraph{Komplexní exponenciály}
+zápis amplitudy a fáze jedním číslem: komplexním. Na $\mathbb{R}$ ose cosinus, na $\mathbb{I}$ ose sinus.
+
+$C_1 \cos(\omega_1 t + \phi_1) = \cfrac{C_1 e^{j \omega_1 t} e^{j \phi_1}}{2} + \cfrac{C_1 e^{ - j \omega_1 t} e^{ - j \phi_1}}{2}$
+
+\paragraph{Komplexní koeficienty} (komplexně sdružené k s -k): $c_1 = \cfrac{C_1 e^{j \phi_1}}{2}$, $c_{-1} = \cfrac{C_1 e^{ - j \phi_1}}{2}$
+
+Charakterizují jednu komplexní exponenciálu.
+
+
+\subsection{Frekvence}
+\begin{description}
+	\item[Normální nenormovaná] f [Hz]
+	\item[Normální normovaná] f/Fs
+	\item[Kruková nenormovaná] $2 \pi f$ [rad/s]
+	\item[Kruhová normovaná] $2 \pi f / Fs$ [rad]
+\end{description}
+
+
+\section{Fourierova řada}
+rozdělení libovolného \emph{spojitého periodického} signálu do řady komplexních exponenciál
+
+Koeficienty $c_k$: integrál přes libovolnou periodu
+
+Spektrum periodického signálu -- čárové, hodnoty jsou koeficienty FŘ: zúžení signálu = rozšíření spektra, zpoždění signálu = naklopení spektra z kopce
+
+$x(t) = \sum\limits_{k = -\infty}^\infty c_k e^{j \omega_1 t}$, kde $\omega_1 = \frac{2 \pi}{T_1}$ úhlová frekvence, $c_k$ charakterizuje komplexní exponenciálu.
+
+\section{Fourierova transformace}
+Popis \emph{spojitého neperiodického} signálu. Spektrum vyjádřeno spektrální funkcí $X(j \omega) = \int_{-\infty}^{\infty} x(t) e^{ - j \omega t} dt$ (spojitá, neperiodická).
+
+(nekonečně malý přírůstek koeficientu na nekonečně malém přírůstku kruhové funkce * 2 pi)
+
+Slouží ke zjištění komplexních koeficientů analyzovaného signálu.
+
+$X[k] = \sum\limits_{n = 0}^{N-1} x[n] e^{ - j \frac{2 \pi}{N} k n}$, kde N je počet vzorků a x[n] jsou jednotlivé vzorky.
+
+\section{DTFT} Fourierova transformace s diskrétním časem. Převádí \emph{diskrétní neperiodický} signál na \emph{spojité periodické} spektrum.
+
+\section{DFT} Diskrétní FT: Diskrétní periodický signál převádí na diskrétní periodické spektrum. N vzorků signálu odpovídá N vzorkům spektra.
+
+\section{DFŘ} Vzorkovaný diskrétní periodický signál, výsledkem periodické diskrétní spektrum. ???
+
+\section{Nyguistův theorém} Přesná rekonstrukce spojitého frekvenčně omezeného signál z jeho vzorků je možná tehdy, pokud byla vzorkovací frekvence vyšší než \emph{dvojnásobek nejvyšší harmonické složky} vzorkovaného signálu.
+
+$Tv \leq {}^1/_2 fmax$ TV je interval mezi dvěma vzorky, fmax je maximální frekvence. Pokud není splněno, může dojít k aliasingu -- nevratnému poškození rekonstruovaného signálu.
+
+\section{Konvoluce}
+kruhová, periodická, lineární. Například průměrovací filtr.
+
+$(f * g)(x) = \int_{- \infty}^{\infty} f(x) g(x - \alpha) d \alpha$. \uv{Okénko se posouvá a násobí se signálem}
+
+\paragraph{Impulzní charakteristika} reakce systému na jednotkový impulz: $\delta(t), \delta[n]$
+
+\paragraph{Okamžitý výkon} $p(t) = |x(t)|^2$
+
+\paragraph{Celková energie} $E_\infty = \lim\limits_{T \to \infty} \int_{-T}^{T} |x(t)|^2 dt = \int_{-\infty}^\infty |x(t)|^2 dt$ konečná/nekonečná
+
+\paragraph{Celkový střední výkon} $E_\infty = \lim\limits_{T \to \infty} \frac{1}{2T} \int_{-T}^{T} |x(t)|^2 dt$ u periodických stačí počítat pro jednu periodu!
+
+\section{Vzorkování} normalizovaný čas n (počítadlo vzorků), normalizovaná frekvence (normalizována Fs -- vzorkovací frekvence).
+\section{Kvantování} použití hodnoty reprezentovatelné binárním číslem -- zaokrouhlení
+
+
+
+
+
 
 
 
@@ -2285,7 +2403,50 @@ Kvaternion lze převést na Rotační matici pro výpočet v HW, což je velmi d
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setcounter{chapter}{15}
+\chapter{Číslicové filtry} \label{cha:15}
+
+3. semestr, ISS, 
+
+(diferenční rovnice, impulsní odezva, přenosová funkce, frekvenční charakteristika)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Množiny, relace a zobrazení} \label{cha:16}
 
 1. semestr, IDA
@@ -8061,6 +8222,32 @@ BGP. Politiky jsou smlouvy mezi ISP
 	IP protokol (ACK, znovuodeslání, sekvenční čísla), lze zabezpečit, vyvaovat zátěž. Multicast OSPF
 \end{description}
 
+\section{Firewally}
+
+Kontrola provozu (pustí, nebo zablokují, oznámí/neoznámí nedoručení).
+
+Bezpečná brána pro přístup z/do internetu. Definuje pravidla pro přístup, umožňuje ověření uživatele, ochrana před útoky. Na L3, L4.
+
+\begin{description}
+	\item[Filtrování paketů] kontrola jednotlivých paketů
+	\item[Stavové filtrování] Kontrola TCP toku (SYN/ACK)
+	
+	Ve stavové tabulce jsou zaznamenány aktivní toky (dvousměrná výměna paketů). Pokud odpovídá očekávanému paketu relace je propuštěn, jinak je posuzován podle standardních pravidel.
+	\item[Aplikační brána] Na úrovni aplikací, omezené
+\end{description}
+
+Inkluzivní přístup -- povoluje služby, které splní pravidla. Bezpečnější než exkluzivní přístup.
+
+\paragraph{IDS -- Instrusion Detection System} detekce útoků na aplikační vrstvě
+\begin{itemize}
+	\item Packet signature -- detekce známých útoků pomocí podřetězců v toku dat
+	\item Statefull Signature -- redukce falešných poplachů -- řeší např. IIS/Apache
+	\item Detekce odchylek od specifikace protokolu -- odhaluje neznámé chyby.
+\end{itemize}
+
+Následné informování firewallu pro zablokování.
+
+Honey pot -- simulace služby na kterou je útočeno pro analýzu hackerských postupů.
 
 
 
