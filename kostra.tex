@@ -2409,16 +2409,129 @@ $(f * g)(x) = \int_{- \infty}^{\infty} f(x) g(x - \alpha) d \alpha$. \uv{Okénko
 
 (diferenční rovnice, impulsní odezva, přenosová funkce, frekvenční charakteristika)
 
+\subsection{Filtr}
+obvod (systém), který má různé zesílení při různých frekvencích.
+\begin{itemize}
+	\item V propustném pásmu propouští signály (harmonické složky) s malým útlumem
+	\item V nepropustném pásmu je útlum výraznější.
+\end{itemize}
+
+\subsection{Rozdělení}
+\begin{itemize}
+	\item Analogové: Pasivní (RLC), Aktivní (navíc tranzistory) -- Redukce šumu, ekvalizéry hi-fi
+	\item Digitální (ty nás zajímají): Funkční bloky, stabilnější, DSP procesory.
+\end{itemize}
+
+\subsection{Konkrétní filtry podle pásmových charakteristik}
+\begin{description}
+	\item[Horní propusť] propouští vysoké frekvence, nízké potlačuje.
+	\item[Pásmová propusť] propouští frekvence od -- do, ostatní potlačuje
+	\item[Dolní propusť] propouští nízké frekvence, potlačuje vysoké
+	\item[Pásmová zádrž] 
+\end{description}
+
+S pamětí $\times$ Bez paměti (odezva má pulz pouze pro $t = 0$) \\
+Rekurzivní $\times$ Nerekurzivní\\
+Konečná $\times$ Nekonečná impulzní odezva\\
+Stabilní $\times$ Nestabilní\\
+Kauzální $\times$ Nekauzální (nevidí do budoucnosti, na následující vstupy: $h[n] = 0$ pro $t < 0$\\
+Lineární $\times$ Nelineární
+
+\subsection{Konvoluce}
+$y[n] = \sum\limits_{k = \infty}^\infty x[k] n[n-k] = x[n] * h[n]$\\
+$f(t) = \int\limits_{-\infty}^\infty x(\lambda) h(t-\lambda)dt = x(t)*h(t)$
+
+Komplexně sdružené číslo ke $e^j$ je $e^{-j}$. Součtem komplexně sdružených vznikne $\mathbb{R}$ číslo.
+
+\begin{description}
+	\item[IIR] Infinite impulse response -- s nekonečnou impulzní odezvou. Obsahují zpětnovazebnou smyčku.
+	\begin{itemize}
+		\item Čisté -- výstup závisí pouze na výstupu
+		\item Obecné -- závislé na vstupu a na výstupu
+	\end{itemize}
+	
+	např. $y[n] = -0.8 y[n-1] + 5 x[n]$
+	
+	\item[FIR] Finite impulse response -- s konečnou impulzní odezvou
+	
+	např. $y[n] = h[0] x[n] + h[1] x[n-1] + \dots + h[N-1] x[n - N - 1]$ (konvoluce)
+	
+	z-transformace: konstanty necháme, $x[n] \to X(z)$, zpoždění: $x[n-k] \to X(z)z^{-k}$
+	
+	Přenosová funkce $H(z) = \frac{Y(z)}{X(z)}$
+	
+	Kmitočtová charakteristika: $H(e^{j\omega})$
+\end{description}
+
+\paragraph{Diferenční rovnice} výpočet n-tého vzorku. Rozdíl  součtu vstupů a součtu výstupů.
+
+\section{Systémy}
+
+zařízení zpracovávající signály. Kauzální, lineární, časově invariantní (LTI), stabilní.
+
+Popis pomocí \emph{impulzní odezvy}.
+
+\paragraph{Impulzní odezva} vybuzení Diracovým impulzem $\delta(t)$ (jednotkový impulz $\delta[n]$). Výsledkem je funkce $h(t)$, nebo $h[n]$.
+
+\paragraph{Odezva na libovolný signál}
+Konvoluce s impulzní odezvou.
+
+\subsection{Spojitý čas}
+
+\paragraph{Komplexní kmitočtová charakteristika} FT impulzní odezvy -- neperiodická, neperiodické koeficienty
+
+může být popsána pomocí diferenciální rovnice.
+
+\paragraph{Přenosová funkce} $H(d) = \frac{Y(x)}{X(s)}$.
+
+Nuly a póly jsou kořeny polynomů v čitateli a jmenovateli. Odtud odhad kmitočtové charakteristiky.
+
+\subsection{Diskrétní čas}
+zpoždění, násobení, součet.
+
+\paragraph{Komplexní kmitočtová charakteristika} DTFT impulzní odezvy -- periodická
+
+popis diferenční rovnicí.
+
+\paragraph{Přenosová funkce} $H(d) = \frac{Y(x)}{X(s)}$.
+
+Nuly a póly jsou kořeny polynomů v čitateli a jmenovateli. Odtud odhad kmitočtové charakteristiky.
+
+Stabilní, pokud všechny póly leží na jednotkové kružnici.
+
+\subsection{Náhodné signály}
+popsány pouze funkcemi pravděpodobnosti: $\Omega$ množina realizací/ pokusů
+
+Distribuční funkce: kolik hodnot ze všech realizovaných padlo pod x děleno $\Omega$
+
+Hustota pravděpodobnosti: souborový odhad pomocí histogramu.
+
+\subsection{Základní bloky systémů}
+\begin{description}
+	\item[Zpožďovací článek] zdrží vstupní vzorek o jednu periodu $[z^{-1}]$
+	\item[Násobička] násobí vzorek koeficientem $[>_a$
+	\item[Sčítačka] Sumuje vstupy $(\Sigma)$
+\end{description}
+
+Zápis blokovým schématem.
+
+\section{Frekvenční charakteristika}
+pro daný systém. Které frekvence propouští a které utlumuje. Pro každou harmonickou složku.
+
+Zajímá nás od 0 do $Fs/2$ (polovina vzorkovací frekvence).
+
+Obecně: Komplexní exponenciála $\Rightarrow$ ta stejná komplexní exponenciála vynásobená nějakou hodnotou.
+
+pro určitou kruhovou frekvenci: $H(e^{j\omega_1}) = \sum\limits_{k = 0}^{\infty} H[k]e^{-j\omega_1 k}$
+
+\paragraph{Odezva na harmonický signál (sin, cos)} výstupem je ten stejný, se změněnou amplitudou a fází. Frekvence zůstává stejná!
 
 
 
+\section{Kvantování}
+zaokrouhlení pouze na určité kvantovací hladiny (reprezentovatelné binárním číslem). Pro každé vzorek vybíráme nejbližší hladinu.
 
-
-
-
-
-
-
+Vliv chyby kvantování na kvalitu signálu: SNR = $10 \log_{10}{\frac{P_s}{P_e}}$
 
 
 
