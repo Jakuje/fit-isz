@@ -84,12 +84,109 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Princip činnosti polovodičových prvků} \label{cha:1}
 
-???
+2. semestr, IPR, cucáno z výcuců
 
 (dioda, bipolární a unipolární tranzistor ve spínacím režimu, realizace logických členů NAND a NOR v technologii CMOS)
 
 %1. Princip činnosti polovodičových prvků
 %Za tu minutu jsem si moc nestihnul napsat, ale lepsi nez nic. Zacal jsem diodou, ale chteli napred vedet co je to polovodic. Rekl jsem ze to je material, ktery vede el. proud jen za urcitych podminek. Pak jsem tedy nakreslil PN prechod, oznacil +/- v propustnem smeru, zeptal se me, kde jsou diry a elektrony, tak jsem to tam nakreslil. Pak chtel VA charakteristiku, taky jsem nakreslil a zminil jsem, ze prurazem se znici (chtel jsem zminit Zenerovu jeste, ale nedostal jsem se), pak chtel nakreslit bipolarni a unipolarni tranzistor, bipolarni jsem nakrelil v kolecku a unipolarni bez kolecka, u unipolarniho jsem ale oznacil vyvody taky jako B, C, E (misto S, G, D), ale to mu az tak nevadilo. Zeptal se me asi spis ze zajimavosti, jestli vim, proc se kresli nekdy s koleckem a bez, normalne bych k tomu dosel, ale radsi jsem neriskoval, ze budu placat, tak rekl on, ze to je pouzdro a ze kdyz jsou na integrovanem obvode, tak jsou bez kolecka. Pak cim se tranzistor spina, tak jsem nejdriv spatne rikal ze napetim na bazi, pak jsem si uvedomil, ze zalezi na proudu mezi bazi a emitorem, pak se zeptal jak je to u toho unipolaru, tam jsem rikal ze je to tim napetim a ze se tam tvori vodivy "tunel" (misto kanal ). Nakonec chtel abych nakreslil zapojeni trazistoru ktere realizuji NAND, v tom jsem se motal. Zvonil budik ale nechal me tam neco stvorit, nakreslil jsem dva tranzistory v serii, tak se me alespon zeptal, co realizuje to co jsem nakreslil, tak jsem rikal ze AND (on doplnil ze s tim ze to neni komplementarni - chybi tam ty dalsi dva). V podstate dobry, zbytecne jsem zmatkoval, na nem bylo videt, ze by to chtel kvalitneji a na lepsi urovni. Zkouska tedy za C.
+
+Polovodiče: Prvky 4. skupiny periodické tabulky. Používá se křemík. Má 4 valenční elektrony a vytváří krystalickou mřížku.
+
+Vznikají dva materiály:
+\begin{itemize}
+	\item Polovodiče typu P: Přidán prvek se 3 valenčními elektrony, vznikají \emph{díry}, které mají kladný náboj (pozitivní)
+	\item Polovodiče typu N: Přidán prvek s 5 valenčními elektrony, vznikají \emph{volné elektrony}, které mají nečekaně záporný náboj.
+\end{itemize}
+
+V materiálech jsou majoritní a minoritní nosiče proudu:
+\begin{description}
+	\item[N] Majoritní elektronu, minoritní díry
+	\item[P] Majoritní díry, minoritní elektrony
+\end{description}
+
+\paragraph{PN přechod} difuze majoritních nosičů z jednoho polovodiče do druhého, vznik \emph{Potenciálové bariéry}
+
+V propustném směru (PN, Od Anody ke Katodě) proud snižuje bariéru. V nepropustném zvyšuje.
+
+\section{Polovodičová dioda}
+PM přechod, ve kterém teče proud lépe v jednom směru (PN), než ve druhém. $-[P|N]- \qquad -_A[>_K-$
+
+\paragraph{Přechodová charakteristika}
+ideálně: proud teče pouze v jednom směru, ve druhém ne.
+
+realita: do 0,6 V neteče, potom ano. V závěrném směru proud velmi malý až do závěrného/průrazného napětí, kdy se dioda zničí. (Rozepnutý/sepnutý spínač).
+
+Různé druhy:
+\begin{itemize}
+	\item Usměrňovací (střídavý proud)
+	\item Detekční a spínací (detektory, demodulátory)
+	\item Stabilizační a referenční, tzv. Zenerovy (v závěrném směru, vratný průraz)
+	\item Kapacitní
+	\item Luminiscenční (svítivé)
+	\item Fotodioda (vede proud pouze pokud je na světle)
+\end{itemize}
+
+\section{Tranzistory}
+\subsection{Unipolární}
+Řízené polem, FET -- Field Effect Tranzistor, Minimální spotřeba
+
+Na přenosu se podílejí pouze majoritní nosiče v N. Na P je připojen G vstup (Gate), kterým se ovlivňuje průřez a odpor vodivé dráhy mezi D a S.
+
+$\underline{[P^{\underline{[N^{\underline{[P]}}\quad]}}\quad]} \qquad \_^G\_\_| |\to_{--^S}^{--^D}$
+
+\subsection{Bipolární}
+Dva PN přechody. PNP nebo NPN. Vždy Kolektor, Báze, Emitor.
+
+\paragraph{NPN} přechod emitor-báze ve směru propustném, báze-kolektor nepropustně.
+
+Po připojení napětí na EB nastává rekombinace, proud je veden, ale část elektronů přechází do kolektoru a vede proud z Emitoru do Kolektoru. Přechod je pro majoritní nosiče nepropustný, ale minoritní propouští.
+
+\paragraph{Zapojení se společným emitorem SE}
+
+Na bázi je přiveden impulz, na výstupu je signál inverzní.
+
+Lze určit zesilující činitel $\alpha = \frac{I_C}{I_E}$.
+
+Dva stavy:
+\begin{description}
+	\item[Rozpojeno] Na bázi napětí do 0,6 V, kolektorem nevede proud.
+	\item[Sepnuto] Na bázi větší napětí, vede proud jako sepnutý spínač.
+\end{description}
+
+\section{CMOS} Complementary Metal-Oxide-Semiconductors
+
+Úspornost, pro integrované obvody, méně se zahřívají, než tranzistory.
+
+Reprezentace logických hodnot:
+\begin{itemize}
+	\item log 0: 0 - 1,5 V
+	\item mezitím nedefinováno
+	\item log 1: 3,5 - 5 V
+\end{itemize}
+
+Tři konektory: Gate, Source, Drain
+
+Komplementární chování:
+\begin{itemize}
+	\item S kanálem N: Napětí mezi Gate a Source řídí. Napětí na Drain $>$ Source
+	
+	$V_{GS} = 0 \qquad R_{DS} = 10M\Omega$
+	
+	$V_{GS} > $ prahová úroveň $ \qquad R_{DS} = 10\Omega$, vede proud.
+		
+	\item S kanálem P: Napětí mezi Gate a Source řídí. Napětí na Source $>$ Drain 
+	
+	$V_{GS} = 0  \qquad R_{DS} = 10\Omega$, vede proud.
+	
+	$V_{GS} > $ prahová úroveň $\qquad R_{DS} = 10M\Omega$
+\end{itemize}
+
+Obrázky NAND, NOR, Invertoru.
+
+
+
+
 
 
 
@@ -2247,6 +2344,97 @@ Kvaternion lze převést na Rotační matici pro výpočet v HW, což je velmi d
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Principy grafických uživatelských rozhraní} \label{cha:13}
+
+5. semestr, ITU, asi 1. přednáška
+
+(komunikační kanály, mody komunikace, systémy řízené událostmi, standardní prvky rozhraní)
+
+Ovlivňuje efektivitu používání počítačů.
+
+\section{Komunikační kanály}
+
+Různé, mezi strojem a člověkem. Periferní zařízení -- Obrazovka, klávesnice, myš, tiskárna, reproduktory.
+
+Všechny jsou založeny na lidských smyslech: Zrak, hmat, sluch.
+
+\begin{description}
+	\item[Stroj $\to$ Člověk] \hfill
+	\begin{description}
+		\item[Zrak (Obraz)] Nejvýhodnější médium. Vysoké informační propustnost, možnost náhodného přístupu.
+		\item[Sluch (Zvuk)] Výhodný pro přenos menšího množství informací. Bývá doplňkem obrazu. Nižší propustnost, sériový přístup.
+		\item[Hmat] Výjimečně. Hmatová a silová zpětná vazba. Braillovo písmo
+	\end{description}
+	\item[ČLověk $\to$ Stroj] \hfill
+	\begin{description}
+		\item[Hmat (Pohyb)] Nejobvyklejší. Klávesnice, myš, snímače dotyku a pohybu, dotykové obrazovky
+		\item[Řeč (Zvuk)] Občas se používá, ale zatím nedostatečné porozumění počítače lidské řeči.
+		\item[Obraz, Gesta] Gesta těla, ruky, virtuální realita. Rozpoznávání obrazu, strojové čtení, ovládání vozidel, OCR.
+	\end{description}
+\end{description}
+
+\section{Komunikace}
+\begin{description}
+	\item[Aktivní] Uživatel řídí činnost počítače: Panel nástrojů malování, Příkazová řádka
+	\item[Pasivní] Uživatel (Operátor) odpovídá na dotazy počítače -- dialogové boxy GUI.
+\end{description}
+
+\section{Událostmi řízené systémy}
+Základ práce s GUI. Všechny dnešní systémy.
+
+Tok programu je řízen událostmi (vstupy senzorů, klik myši, stisk klávesy). V programu existuje naslouchač (Listener, nekonečná smyčka), po přijetí události provede nějakou akci. Podobné systému přerušení v HW.
+
+Většinou realizováno jako stavový automat.
+
+Implementace:
+\begin{description}
+	\item[Místem v programu] goto prasečiny, těžko spravovatelné, modifikovatelné a rozšiřitelné
+	\item[Stavovou proměnnou] case. Dobře modifikovatelné, reprezentování také funkcemi a dalšími dobrými zvyky strukturálního programování.
+\end{description}
+
+\section{Standardní prvky rozhraní}
+\begin{itemize}
+	\item Okna, Dialogy
+	\item Dialogové boxy -- obsahují další prvky. Stavebnice
+	\begin{description}
+		\item[Modální] Prioritní v aplikaci
+		\item[Nemodální] Uživatel může svoji reakci odložit a pokračovat v aplikaci dále
+		\item[Systémová modální] Mají prioritu nad aplikacemi.
+		
+		Implementace modality: Zabránění průchodu zpráv od uživatele do níže položených oken
+	\end{description}
+	\item Tlačítko
+	\item Label, Edit Box
+	\item Radio Button, Check Box
+	\item Seznam, Seznam s řádkem.
+\end{itemize}
 
 
 

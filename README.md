@@ -3,6 +3,8 @@ fit-isz
 
 Vypracované otázky ke státní závěrečné zkoušce na FIT VUT v Brně v roce 2013
 
-		Progress: 36/40
+Pouze textově zpracovaný obsah, bez obrázku a diagramů, které jsou součástí některých otázek!
 
-		Chybí: 1, 13, 26, 28
+		Progress: 38/40
+
+		Chybí: 26, 28
