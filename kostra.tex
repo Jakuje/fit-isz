@@ -4948,7 +4948,116 @@ Simulace poruch: trvalá 1, trvalá 0, zkrat.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setcounter{chapter}{26}
+\chapter{Datové a řídicí struktury} \label{cha:26}
+
+?. semestr, ??, cucáno z výcucu výcucu
+
+\section{Datové struktury}
+Abstraktní vyjádření vlastností prvků řešeného problému.
+
+Mohou být:
+\begin{itemize}
+	\item Homogenní $\times$ Heterogenní
+	\item Statické $\times$ Dynamické
+\end{itemize}
+Na strojové úrovni jsou struktury vždy statické a heterogenní.
+
+\section{Datové typy}
+Množina hodnot a množina operací nad nimi. Každý objekt má právě jeden datový typ.
+
+Je určen u proměnné definicí nebo deklarací. U výrazu podle operandů. Syntakticky správné operandy + výsledek. V některých případech jsou akceptovány implicitní konverze, jindy je třeba explicitní konverze / přetypování.
+
+\begin{description}
+	\item[Strukturované] Pole, struktura, záznam, množina, soubor
+	\item[Jednoduché] standardní číslo, znak, logická hodnota.
+\end{description}
+
+\section{Abstraktní datové typy ADT}
+
+Množina hodnot a operací. Zdůrazňuje vnější vlastnosti a chování, potlačuje implementaci (black-box).
+
+\paragraph{Generický ADT} nespecifikuje konstituční typ při implementaci, dodává se až po při použití. V Javě stačí použít nadtyp (Object), C++ šablonování.
+
+\subsection{Operace}
+\begin{description}
+	\item[Konstruktor] operace, která přijímá výčet komponent struktury. Výstupem je datová struktura s těmito komponentami.
+	\item[Selektor] Přístup k jednotlivé komponentě arr[n]
+	\item[Iterátor] Provedení zadaná činnosti nad všemi prvky datové struktury
+	\item[Destruktor] Zruší dynamickou strukturu
+\end{description}
+
+Syntax: Pravidla zápisu konstrukce, Sémantika: Význam zápisu konstrukce.
+
+\subsection{Seznam}
+Homogenní lineární dynamická struktura. Sekvenční průchod. Jednosměrně / Dvousměrně vázaný.
+
+Operace: Délka, Kopie, Zrušení, Ekvivalence, Nový prvek, Odstranění prvku.
+
+\subsection{Zásobník}
+Homogenní lineární dynamická struktura. LIFO.
+
+Operace: Push, Pop
+
+\subsection{Fronta}
+Homogenní lineární dynamická struktura. FIFO.
+
+Operace: Enqueue, Dequeue
+
+\subsection{Vyhledávací tabulka}
+Homogenní, obecně dynamická struktura.
+
+Každá položka obsahuje klíč, který má v tabulce jednoznačnou hodnotu.
+
+\subsection{Pole}
+Homogenní ortogonální (pravoúhlý): 1: Vektor, 2: Matice ...
+
+Indexem musí být ordinální datový typ. Řetězec podobný.
+
+\subsection{Binární strom}
+Strom je buď prázdný, nebo se skládá z uzlu a dvou podstromů, levého a pravého. Podstromy mají vlastnosti stromů.
+
+Průchody Preorder, Inorder, Postorder.
+
+\paragraph{Váhově vyvážený} Pro každý uzel platí, že počet uzlů jeho levého a pravého podstromu se liší maximálně o 1.
+
+\paragraph{Výškově vyvážený} Pro každý uzel platí, že výška jeho levého a pravého podstromu se liší maximálně o 1.
+
+\section{Řídící struktury}
+
+\begin{description}
+	\item[Příkazy jednoduché] Přiřazovací příkaz
+	\item[Příkazy strukturované] Složený příkaz, alternativní příkazy (case), podmíněné příkazy, příkazy cyklu.
+	\item[Procedury] zvyšování abstrakce příkazů.
+	\begin{description}
+		\item[Deklarace] Návratový typ, název funkce, seznam parametrů (Většinou lze deklaraci vynechat)
+		\item[Definice] Přidává tělo funkce. U funkce obsahuje kl. slovo return.
+	\end{description}
+	
+	Funkce se volá jejím názvem a zadanými parametry.
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Vyhledávání a řazení} \label{cha:27}
 
 3. semestr, IAL, 7. - 11. přednáška

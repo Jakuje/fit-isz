@@ -5,6 +5,8 @@ Vypracované otázky ke státní závěrečné zkoušce na FIT VUT v Brně v roc
 
 Pouze textově zpracovaný obsah, bez obrázku a diagramů, které jsou součástí některých otázek!
 
-		Progress: 38/40
+		Progress: 39/40
 
-		Chybí: 26, 28
+		Chybí: 28
+
+Zítra všem hodně štěstí! Překlepy opravím až potom.
