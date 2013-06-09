@@ -5384,7 +5384,77 @@ Ušetření pásek s výkonem srovnatelným s minulou metodou. Pouze k+1 pásek,
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setcounter{chapter}{28}
+\chapter{HTML a Javascript} \label{cha:28}
+
+výcucy
+
+(z pohledu návrhu webových stránek)
+
+\section{Značkovací jazyky}
+
+vkládání dodatečné informace do běžného textu. Založen na gramatice. Používaný pro popis dokumentů.
+
+\emph{Klasické programovací jazyky}: Převládá strukturovaný text pro zpracování počítačem.
+
+\begin{description}
+	\item[Procedurální značkování] Značky mají pevný význam (sémantika). Obsahuje i výkonné instrukce, kterými lze ovlivnit výsledný vzhled (např. \TeX)
+	\item[Univerzální značkování] popisuje strukturu dokumentu a jeho sémantické atributy. Bez přesné sémantiky (ta se určuje až při interpretaci a zpracování). (HTML, XML)
+\end{description}
+
+\subsection{SGML -- Standard Generalized Markup Language}
+
+metajazyk, umožňuje definovat jazyky jako své podmnožiny. Nejznámější HTML. Je určeno typem dokumentu DTD (elementy, atributy, povolené zanoření). Nezávislý na technickém vybavení!
+
+\section{HTML -- Hypertext Markup Language}
+
+značkovací jazyk pro hypertext. Webové stránky, publikování v internetu. Definován aplikací SGML (verze 5 již ne!).
+
+Určuje množinu značek a atributů. Elementy mohou být podle pravidel vnořené.
+
+Značkám je přiřazená sémantika hypertextového dokumentu v prostředí webu.
+
+Struktura dokumentu: Doctype, kořenové element html, který obsahuje hlavičku a tělo.
+
+\subsection{Značky}
+\begin{description}
+	\item[Strukturální] forma dokumentu: h1, p
+	\item[Popisné/sémantické] význam obsahu: address, title, video. Preferované!
+	\item[Stylistické] vzhled elementu při zpracování: b, i. Zavrhované $\to$ CSS
+\end{description}
+
+\section{Javascript}
+Interpretovaný programovací jazyk, základní OO koncepce, potlačená typová kontrola, case sensitive. Něco přebírá z Perlu, syntaxe podobná C. Funguje ve většině prohlížečích, ale lze uživatelsky zakázat.
+
+\subsection{OO Model} Přístup k prvkům prohlížeče, okna, dokumentu.
+
+\subsection{Klientský Javascript} integrován v prohlížeči, přístup k DOM (standardizován). Využíván k tvorbě dynamických webových stránek: DHTML.
+
+Globální objekt window, další objekt document
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Hodnocení složitosti algoritmů} \label{cha:29}
 
 1. semestr, IZP, 8. přednáška\\
