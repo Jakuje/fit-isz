@@ -4963,13 +4963,13 @@ Mohou být:
 Na strojové úrovni jsou struktury vždy statické a heterogenní.
 
 \section{Datové typy}
-Množina hodnot a množina operací nad nimi. Každý objekt má právě jeden datový typ.
+Množina hodnot a množina operací nad nimi (standardní operace, operace v knihovnách funkcí, operace definované uživatelem). Každý objekt má právě jeden datový typ.
 
 Je určen u proměnné definicí nebo deklarací. U výrazu podle operandů. Syntakticky správné operandy + výsledek. V některých případech jsou akceptovány implicitní konverze, jindy je třeba explicitní konverze / přetypování.
 
 \begin{description}
-	\item[Strukturované] Pole, struktura, záznam, množina, soubor
-	\item[Jednoduché] standardní číslo, znak, logická hodnota.
+	\item[Strukturované] Pole, struktura, záznam, množina, soubor. Potřeba bázového typu.
+	\item[Jednoduché] Ordinální: číslo, znak, logická hodnota, Neordinální: real/double
 \end{description}
 
 \section{Abstraktní datové typy ADT}
@@ -4988,10 +4988,14 @@ Množina hodnot a operací. Zdůrazňuje vnější vlastnosti a chování, potla
 
 Syntax: Pravidla zápisu konstrukce, Sémantika: Význam zápisu konstrukce.
 
-\subsection{Seznam}
-Homogenní lineární dynamická struktura. Sekvenční průchod. Jednosměrně / Dvousměrně vázaný.
+\paragraph{Algebraická signatura} Operace: Typy vstupních parametrů $\to$ Typy výstupních parametrů.
 
-Operace: Délka, Kopie, Zrušení, Ekvivalence, Nový prvek, Odstranění prvku.
+\paragraph{Diagram signatury} Grafický přepis algebraické signatury. Operace a datové typy v grafu. Šipky znázorňují vstupní a výstupní parametry.
+
+\subsection{Seznam}
+Homogenní lineární (jeden předchůdce a jeden následovník. Mimo první a poslední prvek) dynamická struktura. Sekvenční průchod. Jednosměrně / Dvousměrně vázaný, kruhový.
+
+Operace: Délka, Kopie, Zrušení, Ekvivalence, Nový prvek, Odstranění prvku, Vyhledání, Seřazení. Active, Succ (ukazatel na aktivní prvek).
 
 \subsection{Zásobník}
 Homogenní lineární dynamická struktura. LIFO.
@@ -5013,6 +5017,8 @@ Homogenní ortogonální (pravoúhlý): 1: Vektor, 2: Matice ...
 
 Indexem musí být ordinální datový typ. Řetězec podobný.
 
+Řídké pole: Trochu jiná implementace (menší paměťová náročnost, větší přístupová doba).
+
 \subsection{Binární strom}
 Strom je buď prázdný, nebo se skládá z uzlu a dvou podstromů, levého a pravého. Podstromy mají vlastnosti stromů.
 
@@ -5025,8 +5031,8 @@ Průchody Preorder, Inorder, Postorder.
 \section{Řídící struktury}
 
 \begin{description}
-	\item[Příkazy jednoduché] Přiřazovací příkaz
-	\item[Příkazy strukturované] Složený příkaz, alternativní příkazy (case), podmíněné příkazy, příkazy cyklu.
+	\item[Příkazy jednoduché] Přiřazovací příkaz (nepoužitelný pro soubory), prázdný příkaz
+	\item[Příkazy strukturované] Složený příkaz, alternativní příkazy (case), podmíněné příkazy, příkazy cyklu (počítané, nepočítané, řídící proměnná).
 	\item[Procedury] zvyšování abstrakce příkazů.
 	\begin{description}
 		\item[Deklarace] Návratový typ, název funkce, seznam parametrů (Většinou lze deklaraci vynechat)
